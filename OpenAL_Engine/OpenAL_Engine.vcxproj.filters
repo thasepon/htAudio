@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="htAudioDll">
+      <UniqueIdentifier>{39b1efce-5942-4438-a4dd-5cbd19b2ff28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect">
+      <UniqueIdentifier>{a3d9b680-e63a-4c82-a828-e2e24185ef80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenAL">
+      <UniqueIdentifier>{bc3760fe-3d08-4a0b-84dc-2201660accd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\Base">
+      <UniqueIdentifier>{e8f3f16a-a97b-4145-80b9-b17401d8d3a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\Chorus">
+      <UniqueIdentifier>{b244edd5-c2ec-4a7d-bb01-016ffc85772e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\Cone">
+      <UniqueIdentifier>{45875832-8d5f-4c3e-b6d3-143ef89a0334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\Distortion">
+      <UniqueIdentifier>{869506a3-daa5-4096-b6df-c168cc6cfc41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\Echo">
+      <UniqueIdentifier>{92c331c4-4dd0-4a32-abab-82bdff71ab9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\EQ">
+      <UniqueIdentifier>{40467b2e-cf13-407a-a983-72b42132c19e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\Flanger">
+      <UniqueIdentifier>{f371d762-aea1-42aa-a200-d7c6fa85b996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\FQ">
+      <UniqueIdentifier>{2b6a2b25-23aa-4f24-aa55-3902a3731e6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\3DAudio">
+      <UniqueIdentifier>{852575ba-d6c5-4429-958f-4a5a40a6cf71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\Pitch">
+      <UniqueIdentifier>{91525023-0710-4231-8d73-8de88b1b6dbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\Reverb">
+      <UniqueIdentifier>{56fb5892-a2ee-4d91-9874-5a16f058dc9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\Wah">
+      <UniqueIdentifier>{90f04de4-df34-4a45-a996-16a2c7b1a522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element">
+      <UniqueIdentifier>{d69d2204-52a2-4074-9de9-a1875e3762cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Group">
+      <UniqueIdentifier>{92ec11fe-79bb-4c39-837a-5d8cbe973f4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{01ed68b0-f510-42eb-a4dc-26060ff39dd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IOStream">
+      <UniqueIdentifier>{7eb5ab9d-d808-406f-88df-b86a456826f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AudioListener">
+      <UniqueIdentifier>{46c9bb20-f482-421f-99a6-195af5910a69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AudioSpeaker">
+      <UniqueIdentifier>{b3def917-b2db-4fff-ba62-b8b373d956ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AudioManager">
+      <UniqueIdentifier>{9ba31ced-4f81-42e1-b709-e407206e546a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Decoder">
+      <UniqueIdentifier>{9b1d495c-a030-41a2-9ae8-9ff3414ac627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command">
+      <UniqueIdentifier>{67aa806b-7edc-4459-a3bf-a32f3f7da401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\Play">
+      <UniqueIdentifier>{bf99c005-59ba-43f8-8368-b3eafdfc0405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\SetBuffer">
+      <UniqueIdentifier>{7ea9ffa8-67ae-4468-9d93-b5fe9124dd11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\Stop">
+      <UniqueIdentifier>{0e2d8d74-8df0-4ba1-aa53-fd0398c5ac84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\Pause">
+      <UniqueIdentifier>{dfbf8d11-a225-42c0-bfed-2104406e1743}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\AddEffect">
+      <UniqueIdentifier>{92de00ee-b52b-46a5-8048-4f4bc70dc1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataHeader">
+      <UniqueIdentifier>{ac99c41e-4ef4-44e1-806f-28fa6032484e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Handler">
+      <UniqueIdentifier>{fa71798b-f18e-42d1-80f5-63b1cb5f677b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Handler\Speaker">
+      <UniqueIdentifier>{39b212f6-bd32-4f9f-bc17-bd45c7f9b342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Order">
+      <UniqueIdentifier>{0772808e-7152-403a-9b95-96267da0c307}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Order\Base">
+      <UniqueIdentifier>{f957272a-4d9c-442f-8ae4-a897b54da554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Order\PlayOrder">
+      <UniqueIdentifier>{986b3612-7d34-470a-a911-d186936d8c99}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="htAudioDll.h">
+      <Filter>htAudioDll</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenAL\OpenAlCore\OpenALDevice.h">
+      <Filter>OpenAL</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioEffects.h">
+      <Filter>Effect\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ChorusEffect.h">
+      <Filter>Effect\Chorus</Filter>
+    </ClInclude>
+    <ClInclude Include="ConeState.h">
+      <Filter>Effect\Cone</Filter>
+    </ClInclude>
+    <ClInclude Include="DistortionEffect.h">
+      <Filter>Effect\Distortion</Filter>
+    </ClInclude>
+    <ClInclude Include="EchoEffect.h">
+      <Filter>Effect\Echo</Filter>
+    </ClInclude>
+    <ClInclude Include="EQEffect.h">
+      <Filter>Effect\EQ</Filter>
+    </ClInclude>
+    <ClInclude Include="FlangerEffect.h">
+      <Filter>Effect\Flanger</Filter>
+    </ClInclude>
+    <ClInclude Include="FQEffect.h">
+      <Filter>Effect\FQ</Filter>
+    </ClInclude>
+    <ClInclude Include="I3DAudio.h">
+      <Filter>Effect\3DAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="PitchEffect.h">
+      <Filter>Effect\Pitch</Filter>
+    </ClInclude>
+    <ClInclude Include="ReverbEffects.h">
+      <Filter>Effect\Reverb</Filter>
+    </ClInclude>
+    <ClInclude Include="WahEffect.h">
+      <Filter>Effect\Wah</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioElement.h">
+      <Filter>Element</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioGroup.h">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenAL\AudioFormatData\AudioFormatData.h">
+      <Filter>IOStream</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenAL\AudioListener\AudioListener.h">
+      <Filter>AudioListener</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenAL\AudioSpeaker\AudioSpeaker.h">
+      <Filter>AudioSpeaker</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>AudioManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioReSource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioDecoder.h">
+      <Filter>Resource\Decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioCommand.h">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayCommand.h">
+      <Filter>Command\Play</Filter>
+    </ClInclude>
+    <ClInclude Include="SetBufCommand.h">
+      <Filter>Command\SetBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="StopCommand.h">
+      <Filter>Command\Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseCommand.h">
+      <Filter>Command\Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="AddEffectCommand.h">
+      <Filter>Command\AddEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioData.h">
+      <Filter>DataHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="Definclude.h">
+      <Filter>DataHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeakerHandler.h">
+      <Filter>Handler\Speaker</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioOrder.h">
+      <Filter>Order\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayOrder.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="htAudioDll.cpp">
+      <Filter>htAudioDll</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenAL\OpenAlCore\OpenALDevice.cpp">
+      <Filter>OpenAL</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioEffects.cpp">
+      <Filter>Effect\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ChorusEffect.cpp">
+      <Filter>Effect\Chorus</Filter>
+    </ClCompile>
+    <ClCompile Include="ConeState.cpp">
+      <Filter>Effect\Cone</Filter>
+    </ClCompile>
+    <ClCompile Include="DistortionEffect.cpp">
+      <Filter>Effect\Distortion</Filter>
+    </ClCompile>
+    <ClCompile Include="EchoEffect.cpp">
+      <Filter>Effect\Echo</Filter>
+    </ClCompile>
+    <ClCompile Include="EQEffect.cpp">
+      <Filter>Effect\EQ</Filter>
+    </ClCompile>
+    <ClCompile Include="FlangerEffect.cpp">
+      <Filter>Effect\Flanger</Filter>
+    </ClCompile>
+    <ClCompile Include="FQEffect.cpp">
+      <Filter>Effect\FQ</Filter>
+    </ClCompile>
+    <ClCompile Include="I3DAudio.cpp">
+      <Filter>Effect\3DAudio</Filter>
+    </ClCompile>
+    <ClCompile Include="PitchEffect.cpp">
+      <Filter>Effect\Pitch</Filter>
+    </ClCompile>
+    <ClCompile Include="ReverbEffects.cpp">
+      <Filter>Effect\Reverb</Filter>
+    </ClCompile>
+    <ClCompile Include="WahEffect.cpp">
+      <Filter>Effect\Wah</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioElement.cpp">
+      <Filter>Element</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioGroup.cpp">
+      <Filter>Group</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenAL\AudioFormatData\AudioFormatData.cpp">
+      <Filter>IOStream</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenAL\AudioListener\AudioListener.cpp">
+      <Filter>AudioListener</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenAL\AudioSpeaker\AudioSpeaker.cpp">
+      <Filter>AudioSpeaker</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>AudioManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioReSource.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioDecoder.cpp">
+      <Filter>Resource\Decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayCommand.cpp">
+      <Filter>Command\Play</Filter>
+    </ClCompile>
+    <ClCompile Include="SetBufCommand.cpp">
+      <Filter>Command\SetBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="StopCommand.cpp">
+      <Filter>Command\Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseCommand.cpp">
+      <Filter>Command\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="AddEffectCommand.cpp">
+      <Filter>Command\AddEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeakerHandler.cpp">
+      <Filter>Handler\Speaker</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioOrder.cpp">
+      <Filter>Order\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayOrder.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

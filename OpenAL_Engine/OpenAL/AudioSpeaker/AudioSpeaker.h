@@ -17,7 +17,6 @@
 #include<AL/efx.h>
 #include<AL/efx-creative.h>
 
-
 namespace htAudio
 {
 	using namespace std;
@@ -29,42 +28,47 @@ namespace htAudio
 	class AudioSpeaker
 	{
 	public:
-		// 情報指定
-		AudioSpeaker(string filepath, string SoundName, string material);
-		// ID指定
-		AudioSpeaker(string filepath, int id);
-		//指定なし
-		AudioSpeaker(string filepath, string SoundName);
+		AudioSpeaker();
+		AudioSpeaker(string SoundName, string material);// 情報指定
+		AudioSpeaker(int id);							// ID指定
+		AudioSpeaker(string SoundName);					// 指定なし
+
+		~AudioSpeaker();								// お片付け
+
+		void SetMaterial(string Name);	// マテリアルデータの設定
 		
-		~AudioSpeaker();// デスト
+		void SetSpeakerAudio(string SoundName, string material);
+		void SetSpeakerAudio(int id);
+		void SetSpeakerAudio(string SoundName);
 
-		void StopUpdate();
+		void Play();	// 再生処理
+		void Stop();	// 停止処理
+		void Pause();	// 一時停止処理
+		
+		bool Update();		// 更新処理
+		void StartUpdate();	// 更新の開始
+		void StopUpdate();	// 更新の停止
 
-		bool AddEffects(AudioEffects* effect);
+		bool AddEffects(AudioEffects* effect);		// エフェクトの追加
+		bool RemoveEffects(AudioEffects* effect);	// エフェクトの追加
 
-		ALuint GetSpeakerNumb() { return Source; }
-		bool Update();									// 更新
+		uint16_t GetSpeakerNumb();					// ソースの番号を取得
 
 	private:
-		bool SetBuffer(ALuint Buf);						// バッファの設定
-		void Init();									// 共通初期化処理
-
-		bool Successinit = false;						// 初期化成功フラグ
-		bool LoopFlag = true;							// updateloopフラグ
-
-		std::shared_ptr<AudioResources> AudioSource;	// オーディオ情報
+		// === 関数 === //
+		bool SetBuffer(ALuint Buf);	// バッファの設定
+		void Init();				// 共通初期化処理
 		
-		std::string UseMaterialAtt;						// マテリアルの設定
-		std::string Filepath;							// ファイルパス
+		// === 変数 === //
+		bool Successinit = false;	// 初期化成功フラグ
+		bool UpdateFlag = false;	// 更新フラグ
 
-		// OpenAL情報
-		std::array<ALuint,2> Buffers;					// バッファの設定
-		ALuint Source;									// Sourceの設定
-		
-		std::vector<AudioEffects*> EffectSlot;		// エフェクトスロット
-		
-		ALfloat Volume;								// ボリューム
-
+		AudioResources AudioSource;	// オーディオ情報
+		string UseMaterialAtt;		// 対象マテリアルの情報
+		array<uint16_t,2> Buffers;	// バッファの設定
+		uint16_t Source;					// Sourceの設定
+		list<AudioEffects*> EffectSlot;	// エフェクトスロット
+		ALfloat Volume;					// ボリューム
 		AudioCommand* BufferCommand;	// バッファ回りのコマンド
 	};
 

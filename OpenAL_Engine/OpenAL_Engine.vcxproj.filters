@@ -118,6 +118,15 @@
     <Filter Include="Order\PlayOrder">
       <UniqueIdentifier>{986b3612-7d34-470a-a911-d186936d8c99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Order\StopOrder">
+      <UniqueIdentifier>{7aaedec5-e9e7-4c30-b27e-f644d096e857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Order\PauseOrder">
+      <UniqueIdentifier>{16d56199-263e-46c5-b3df-ea69737f5d1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\CreateAudio">
+      <UniqueIdentifier>{80eec0de-97f1-4f32-8f93-4ad0b0a9e3bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="htAudioDll.h">
@@ -217,6 +226,15 @@
       <Filter>Order\Base</Filter>
     </ClInclude>
     <ClInclude Include="PlayOrder.h">
+      <Filter>Order\PlayOrder</Filter>
+    </ClInclude>
+    <ClInclude Include="StopOrder.h">
+      <Filter>Order\StopOrder</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseOrder.h">
+      <Filter>Order\PauseOrder</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateSourceCommand.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -309,6 +327,15 @@
       <Filter>Order\Base</Filter>
     </ClCompile>
     <ClCompile Include="PlayOrder.cpp">
+      <Filter>Order\PlayOrder</Filter>
+    </ClCompile>
+    <ClCompile Include="StopOrder.cpp">
+      <Filter>Order\StopOrder</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseOrder.cpp">
+      <Filter>Order\PauseOrder</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateSourceCommand.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

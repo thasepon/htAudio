@@ -257,6 +257,7 @@
     <ClInclude Include="AudioReSource.h" />
     <ClInclude Include="ChorusEffect.h" />
     <ClInclude Include="ConeState.h" />
+    <ClInclude Include="CreateSourceCommand.h" />
     <ClInclude Include="Definclude.h" />
     <ClInclude Include="DistortionEffect.h" />
     <ClInclude Include="EchoEffect.h" />
@@ -270,6 +271,7 @@
     <ClInclude Include="OpenAL\AudioSpeaker\AudioSpeaker.h" />
     <ClInclude Include="OpenAL\OpenAlCore\OpenALDevice.h" />
     <ClInclude Include="PauseCommand.h" />
+    <ClInclude Include="PauseOrder.h" />
     <ClInclude Include="PitchEffect.h" />
     <ClInclude Include="PlayCommand.h" />
     <ClInclude Include="PlayOrder.h" />
@@ -277,6 +279,7 @@
     <ClInclude Include="SetBufCommand.h" />
     <ClInclude Include="SpeakerHandler.h" />
     <ClInclude Include="StopCommand.h" />
+    <ClInclude Include="StopOrder.h" />
     <ClInclude Include="WahEffect.h" />
   </ItemGroup>
   <ItemGroup>
@@ -290,6 +293,7 @@
     <ClCompile Include="AudioReSource.cpp" />
     <ClCompile Include="ChorusEffect.cpp" />
     <ClCompile Include="ConeState.cpp" />
+    <ClCompile Include="CreateSourceCommand.cpp" />
     <ClCompile Include="DistortionEffect.cpp" />
     <ClCompile Include="EchoEffect.cpp" />
     <ClCompile Include="EQEffect.cpp" />
@@ -302,6 +306,7 @@
     <ClCompile Include="OpenAL\AudioSpeaker\AudioSpeaker.cpp" />
     <ClCompile Include="OpenAL\OpenAlCore\OpenALDevice.cpp" />
     <ClCompile Include="PauseCommand.cpp" />
+    <ClCompile Include="PauseOrder.cpp" />
     <ClCompile Include="PitchEffect.cpp" />
     <ClCompile Include="PlayCommand.cpp" />
     <ClCompile Include="PlayOrder.cpp" />
@@ -309,6 +314,7 @@
     <ClCompile Include="SetBufCommand.cpp" />
     <ClCompile Include="SpeakerHandler.cpp" />
     <ClCompile Include="StopCommand.cpp" />
+    <ClCompile Include="StopOrder.cpp" />
     <ClCompile Include="WahEffect.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

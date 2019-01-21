@@ -6,49 +6,30 @@
 namespace htAudio {
 
 	/// <summary>
-	/// リスナーに使用するステート群
-	/// 外部ファイルへ読み込み/掻き込みするstateを持つ
-	/// </summary>
-	struct ListenerStates
-	{
-		float OuterGain;
-		float InnerAngle;
-		float OuterAngle;
-	};
-
-	/// <summary>
 	/// リスナーの設定等をするクラス
 	/// </summary>
 	class AudioListener
 	{
 	public:
+		
 		AudioListener();
+		AudioListener(double* Pos, double* Vec,double* Orient);
+		
 		~AudioListener();
 
-		void Setposition(float x,float y,float z);
-		void Setposition(float Pos[3]);
+		void Setposition(double x, double y, double z);
+		void Setposition(double Pos[3]);
 
-		void SetVelocity(float x, float y, float z);
-		void SetVelocity(float vec[3]);;
+		void SetVelocity(double x, double y, double z);
+		void SetVelocity(double vec[3]);;
 
-		void SetOrientation(float AtVec[3],float UpVec[3]);
-		void SetOrientation(float Orient[6]);
-
-		/*void SetConeOuterGain(float angle);
-		void SetConeInnerAngle(float angle);
-		void SetConeOuterAngle(float angle);
-		float GetConeOuterGain();
-		float GetConeInnerAngle();
-		float GetConeOuterAngle();*/
+		void SetOrientation(double AtVec[3], double UpVec[3]);
+		void SetOrientation(double Orient[6]);
 
 	private:
-		ListenerStates States;
-		ALfloat Position[3];
-		ALfloat Velocity[3];
-		ALfloat Pose[6];
-
-		std::string Path;
-
+		double* Position[3];	// ポジション
+		double* Velocity[3];	// 向き
+		double* Pose[6];		// 姿勢
 	};
 
 }

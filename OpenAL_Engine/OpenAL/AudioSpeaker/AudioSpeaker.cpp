@@ -7,13 +7,18 @@
 
 namespace htAudio {
 
+	AudioSpeaker::AudioSpeaker() 
+	{
+
+	}
+
 	/// <summary>
 	/// 再生情報の初期化
 	/// </summary>
 	/// <param name="filepath"></param>
 	/// <param name="SoundName"></param>
 	/// <param name="material"></param>
-	AudioSpeaker::AudioSpeaker(std::string filepath, std::string SoundName, std::string material)
+	AudioSpeaker::AudioSpeaker(string SoundName, string material)
 	{
 		// オーディオ情報をxmlから取得
 		AudioFormatData afd;
@@ -52,7 +57,7 @@ namespace htAudio {
 		}
 	}
 
-	AudioSpeaker::AudioSpeaker(std::string filepath, int id)
+	AudioSpeaker::AudioSpeaker(int id)
 	{
 		// オーディオ情報をxmlから取得
 		AudioFormatData afd;
@@ -79,7 +84,7 @@ namespace htAudio {
 		}
 	}
 
-	AudioSpeaker::AudioSpeaker(std::string filepath, std::string SoundName)
+	AudioSpeaker::AudioSpeaker(std::string SoundName)
 	{
 		// オーディオ情報をxmlから取得
 		AudioFormatData afd;
@@ -132,9 +137,15 @@ namespace htAudio {
 		
 	}
 
+	
+	void AudioSpeaker::StartUpdate()
+	{
+		UpdateFlag = true;
+	}
+
 	void AudioSpeaker::StopUpdate()
 	{
-		LoopFlag = false;
+		UpdateFlag = false;
 	}
 
 	/// <summary>
@@ -217,38 +228,47 @@ namespace htAudio {
 		return true;
 	}
 
-	bool AudioSpeaker::Stop()
+	void AudioSpeaker::Play()
 	{
-		StopUpdate();
-
-		alSourceStop(Source);
-		return true;
+		alSourcePlay(Source);
 	}
 
-	bool AudioSpeaker::Pause()
+	void AudioSpeaker::Stop()
+	{
+		StopUpdate();
+		alSourceStop(Source);
+	}
+
+	void AudioSpeaker::Pause()
 	{
 		alSourcePause(Source);
-		return true;
+	}
+
+	uint16_t AudioSpeaker::GetSpeakerNumb()
+	{ 
+		return Source; 
 	}
 
 	/// <summary>
 	/// 概要		:: 外部からのエフェクト呼び出し用の関数
 	/// アクセス制限	:: public
 	/// </summary>
-	/// <param name="num">エフェクトの種類</param>
-	/// <returns>エフェクト生成に成功しているかどうか</returns>
 	bool AudioSpeaker::AddEffects(AudioEffects* effect)
 	{
 		EffectSlot.push_back(effect);
-
 		return true;
-
 	}
 
-	bool AudioSpeaker::SpeakerCmd(COMMANDNUM cmd)
+	bool AudioSpeaker::RemoveEffects(AudioEffects* effect)
 	{
-
-		
+		for (auto itr : EffectSlot)
+		{
+			if (itr == effect)
+			{
+				delete itr;
+				EffectSlot.remove(itr);
+			}
+		}
 	}
 
 }

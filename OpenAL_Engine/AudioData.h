@@ -112,6 +112,7 @@ namespace htAudio
 
 	// Audioが保持している情報
 	struct AudioData {
+		std::string Filepath;				// ファイルパス
 		std::string	PresetSoundName;		// オーディオファイル名
 		int PlayTime;						// 再生時間
 		bool LoopSound;						// ループ情報

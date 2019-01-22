@@ -44,27 +44,27 @@ namespace htAudio
 		void Pause();	// 一時停止処理
 		
 		bool Update();		// 更新処理
-		void StartUpdate();	// 更新の開始
-		void StopUpdate();	// 更新の停止
 
 		bool AddEffects(AudioEffects* effect);		// エフェクトの追加
 		bool RemoveEffects(AudioEffects* effect);	// エフェクトの追加
 
-		uint16_t GetSpeakerNumb();					// ソースの番号を取得
+		ALuint GetSpeakerNumb();					// ソースの番号を取得
 
 	private:
 		// === 関数 === //
-		bool SetBuffer(uint8_t Buf);	// バッファの設定
-		void Init();				// 共通初期化処理
+		bool SetBuffer(ALuint Buf);	// バッファの設定
+		void Init();					// 共通初期化処理
+		
+		void RegistAudioSource(int numb); // 番号を指定してソースを取得
 		
 		// === 変数 === //
 		bool Successinit = false;	// 初期化成功フラグ
-		bool UpdateFlag = false;	// 更新フラグ
-
+		
+		INT16 NowUsedNumb;			// 現在使用しているSoundTypeの番号
 		AudioResources AudioSource;	// オーディオ情報
-		string UseMaterialAtt;		// 対象マテリアルの情報
-		array<uint16_t,2> Buffers;	// バッファの設定
-		uint16_t Source;					// Sourceの設定
+		string UseMaterialAtt = ""; // 対象マテリアルの情報
+		array<ALuint,2> Buffers;	// バッファの設定
+		ALuint Source;					// Sourceの設定
 		list<AudioEffects*> EffectSlot;	// エフェクトスロット
 		double Volume;					// ボリューム
 		AudioCommand* BufferCommand;	// バッファ回りのコマンド

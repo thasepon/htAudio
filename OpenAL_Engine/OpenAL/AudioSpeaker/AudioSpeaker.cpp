@@ -7,57 +7,57 @@
 
 namespace htAudio {
 
+	//
+	//	初期のサウンド指定無しでの動作
+	//
 	AudioSpeaker::AudioSpeaker() 
 	{
-
+		// 初期化終了
+		Successinit = true;
 	}
 
-	/// <summary>
-	/// 再生情報の初期化
-	/// </summary>
+	//
+	//	名前でサウンドを指定した初期化
+	//
 	AudioSpeaker::AudioSpeaker(string SoundName)
 	{
 		SetAudioSorce(SoundName);
+		
+		// 初期化終了
+		Successinit = true;
 	}
 
+	//
+	//	IDでサウンドを指定した初期化
+	//
 	AudioSpeaker::AudioSpeaker(int id)
 	{
 		SetAudioSorce(id);
+
+		// 初期化終了
+		Successinit = true;
 	}
 	
+	//
+	//	終了処理
+	//
 	AudioSpeaker::~AudioSpeaker()
 	{
-		StopUpdate();
-		
-		if (AudioSource.Soundtypes.StreamType == false)
+		// バッファの数を検索
+		if (AudioSource.Soundtypes[NowUsedNumb].StreamType == false)
 		{
-
 			alDeleteBuffers(1, &Buffers[0]);
 			alDeleteSources(1, &Source);
 		}
 		else {
 			alDeleteBuffers(2, &Buffers.front());
-			alDeleteSources(1, &Source);
+			alDeleteSources(2, &Source);
 		}
-
-		AudioFormatData afd;
-		afd.WriteAudioFormatData(Filepath,AudioResource.Soundtype);
-
-		// 初期化終了
-		Successinit = true;
-		
 	}
 
-	void AudioSpeaker::StartUpdate()
-	{
-		UpdateFlag = true;
-	}
-
-	void AudioSpeaker::StopUpdate()
-	{
-		UpdateFlag = false;
-	}
-
+	//
+	//	
+	//
 	void AudioSpeaker::SetMaterial(string Name)
 	{
 		UseMaterialAtt = Name;
@@ -72,24 +72,47 @@ namespace htAudio {
 		AudioSource.Soundtypes = AudioFormatData::GetAudioFormatData(AudioSource.Data.Filepath, SoundName);
 
 		// オーディオフォーマットの取得
-		if (AudioSource.Soundtype.CreateFlag == false)
+		if (AudioSource.Soundtypes.empty() == true)
 		{
 			// フォーマット取得できていません。
 			return;
 		}
 
-		if (AudioSource.Format.Riff.WaveFormatType == "wav")
+		// マテリアルの設定があるかどうか
+		if (UseMaterialAtt == "")
 		{
-			std::shared_ptr<CLoadSoundFile> shard(new CLoadWave(var.SoundName, AudioResource.Soundtype, filepath));
-			AudioSource = shard;
+			// マテリアル未設定
+			NowUsedNumb = 0;
+			RegistAudioSource(NowUsedNumb);
 		}
-		else if (AudioSource.Format.Riff.WaveFormatType == "ogg")
+		else
 		{
-			std::shared_ptr<CLoadSoundFile> shard(new CLoadOgg(var.SoundName, AudioResource.Soundtype, filepath));
-			AudioSource = shard;
+			int cnt = 0;
+
+			// マテリアル設定されている場合
+			for (auto itr : AudioSource.Soundtypes)
+			{
+				// マテリアル名と同一
+				if (itr.MaterialObj != UseMaterialAtt)
+				{
+					cnt++;
+					continue;
+				}
+
+				// 番号を指定してバッファの読み込み
+				NowUsedNumb = cnt;
+				RegistAudioSource(NowUsedNumb);
+			}
+
+			// すべての情報を参照して見つからなかった場合は
+			// 初期の音を鳴らす。
+			if (cnt >= AudioSource.Soundtypes.size())
+			{
+				NowUsedNumb = 0;
+				RegistAudioSource(NowUsedNumb);
+			}
+
 		}
-		
-		Init();
 		
 	}
 
@@ -99,27 +122,53 @@ namespace htAudio {
 	void AudioSpeaker::SetAudioSorce(int id)
 	{
 		// オーディオ情報をxmlから取得
-		AudioSource.Soundtype = AudioFormatData::GetAudioFormatData(AudioSource.Data.Filepath, id);
+		AudioSource.Soundtypes = AudioFormatData::GetAudioFormatData(AudioSource.Data.Filepath, id);
 
 		// オーディオフォーマットの取得
-		if (AudioSource.Soundtype.CreateFlag == false)
+		if (AudioSource.Soundtypes.empty() == true)
 		{
 			// フォーマット取得できていません。
 			return;
 		}
 
-		// マテリアルの設定がない場合id[0]の音を鳴らす
-		if (AudioResource.Soundtype.Soundinfo[id].Extension == "wav")
+		// マテリアルの設定があるかどうか
+		if (UseMaterialAtt == "")
 		{
-			std::shared_ptr<CLoadSoundFile> shard(new CLoadWave(AudioResource.Soundtype.Soundinfo[id].SoundName, AudioResource.Soundtype, filepath));
-			AudioSource = shard;
+			// マテリアル未設定
+			NowUsedNumb = 0;
+			RegistAudioSource(NowUsedNumb);
 		}
-		else if (AudioResource.Soundtype.Soundinfo[id].Extension == "ogg")
+		else
 		{
-			std::shared_ptr<CLoadSoundFile> shard(new CLoadOgg(AudioResource.Soundtype.Soundinfo[id].SoundName, AudioResource.Soundtype, filepath));
-			AudioSource = shard;
+			int cnt = 0;
+
+			// マテリアル設定されている場合
+			for (auto itr : AudioSource.Soundtypes)
+			{
+				// マテリアル名と同一
+				if (itr.MaterialObj != UseMaterialAtt)
+				{
+					cnt++;
+					continue;
+				}
+
+				// 番号を指定してバッファの読み込み
+				NowUsedNumb = cnt;
+				RegistAudioSource(NowUsedNumb);
+			}
+
+			// すべての情報を参照して見つからなかった場合は
+			// 初期の音を鳴らす。
+			if (cnt >= AudioSource.Soundtypes.size())
+			{
+				NowUsedNumb = 0;
+				RegistAudioSource(NowUsedNumb);
+			}
+
 		}
-		Init();	
+
+
+
 	}
 
 	/// <summary>
@@ -144,8 +193,6 @@ namespace htAudio {
 
 		// ソースの初期設定
 		alSourcei(Source,AL_SOURCE_RELATIVE,AL_TRUE);
-
-		LoopFlag = true;
 
 	}
 
@@ -209,7 +256,6 @@ namespace htAudio {
 
 	void AudioSpeaker::Stop()
 	{
-		StopUpdate();
 		alSourceStop(Source);
 	}
 
@@ -218,7 +264,23 @@ namespace htAudio {
 		alSourcePause(Source);
 	}
 
-	uint16_t AudioSpeaker::GetSpeakerNumb()
+	void AudioSpeaker::RegistAudioSource(int numb)
+	{
+		// マテリアルの設定がない場合id[0]の音を鳴らす
+		if (AudioResource.Soundtype.Soundinfo[id].Extension == "wav")
+		{
+			std::shared_ptr<CLoadSoundFile> shard(new CLoadWave(AudioResource.Soundtype.Soundinfo[id].SoundName, AudioResource.Soundtype, filepath));
+			AudioSource = shard;
+		}
+		else if (AudioResource.Soundtype.Soundinfo[id].Extension == "ogg")
+		{
+			std::shared_ptr<CLoadSoundFile> shard(new CLoadOgg(AudioResource.Soundtype.Soundinfo[id].SoundName, AudioResource.Soundtype, filepath));
+			AudioSource = shard;
+		}
+		Init();
+	}
+
+	ALuint AudioSpeaker::GetSpeakerNumb()
 	{ 
 		return Source; 
 	}

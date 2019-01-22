@@ -3,6 +3,7 @@
 #include<Windows.h>
 #include<string>
 #include<vector>
+#include<list>
 
 namespace htAudio
 {
@@ -94,7 +95,7 @@ namespace htAudio
 		std::size_t DataChunkSample; // サンプリング情報
 	};
 
-	// XMLからの情報
+	// サウンドそのものの情報
 	struct SoundType {
 		int AudioID;				// Audioの情報
 		std::string AudioName;		// オーディオファイルの名前
@@ -130,7 +131,7 @@ namespace htAudio
 		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
 		AudioData Data;				// Audioのデータ(使いまわしする予定)
 		AUDIOFILEFORMAT Format;		// ヘッダー情報
-		SoundType Soundtypes;		// XMLから得た情報(複数のデータがあります)
+		std::vector<SoundType> Soundtypes;		// XMLから得た情報(複数のデータがあります)
 		std::vector<char> PrimaryMixed;	// バッファ保存[1]
 		std::vector<char> SecondMixed;	// バッファ保存[2]
 	};

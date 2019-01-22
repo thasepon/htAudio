@@ -21,11 +21,11 @@ namespace htAudio
 		AudioFormatData();
 		~AudioFormatData();
 
-		SoundType GetAudioFormatData(std::string filepath, std::string Soundname);
-		SoundType GetAudioFormatData(std::string filepath, int id);
-		void WriteAudioFormatData(std::string filepath, SoundType registinfo);
-		bool ReadListenerState(ListenerStates* state, std::string filepath);
-		bool WriteListenerState(ListenerStates state, std::string filepath);
+		static SoundType GetAudioFormatData(std::string filepath, std::string Soundname);
+		static SoundType GetAudioFormatData(std::string filepath, int id);
+		static void WriteAudioFormatData(std::string filepath, SoundType registinfo);
+		static bool ReadListenerState(ListenerStates* state, std::string filepath);
+		static bool WriteListenerState(ListenerStates state, std::string filepath);
 
 		//bool ReadSpeakerState(ListenerStates* state, std::string filepath);
 		//bool WriteSpeakerState(ListenerStates state, std::string filepath);

@@ -29,17 +29,15 @@ namespace htAudio
 	{
 	public:
 		AudioSpeaker();
-		AudioSpeaker(string SoundName, string material);// 情報指定
-		AudioSpeaker(int id);							// ID指定
-		AudioSpeaker(string SoundName);					// 指定なし
+		AudioSpeaker(string SoundName);	// 情報指定
+		AudioSpeaker(int id);			// ID指定
 
 		~AudioSpeaker();								// お片付け
 
 		void SetMaterial(string Name);	// マテリアルデータの設定
-		
-		void SetSpeakerAudio(string SoundName, string material);
-		void SetSpeakerAudio(int id);
-		void SetSpeakerAudio(string SoundName);
+
+		void SetAudioSorce(string SoundName);	// オーディオデータの設定 ファイル名
+		void SetAudioSorce(int id);				// オーディオデータの設定 ID
 
 		void Play();	// 再生処理
 		void Stop();	// 停止処理
@@ -56,7 +54,7 @@ namespace htAudio
 
 	private:
 		// === 関数 === //
-		bool SetBuffer(ALuint Buf);	// バッファの設定
+		bool SetBuffer(uint8_t Buf);	// バッファの設定
 		void Init();				// 共通初期化処理
 		
 		// === 変数 === //
@@ -68,7 +66,7 @@ namespace htAudio
 		array<uint16_t,2> Buffers;	// バッファの設定
 		uint16_t Source;					// Sourceの設定
 		list<AudioEffects*> EffectSlot;	// エフェクトスロット
-		ALfloat Volume;					// ボリューム
+		double Volume;					// ボリューム
 		AudioCommand* BufferCommand;	// バッファ回りのコマンド
 	};
 

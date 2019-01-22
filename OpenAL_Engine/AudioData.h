@@ -108,6 +108,7 @@ namespace htAudio
 		double LowVolume;			// 最低音量
 		double DefaultVolume;		// デフォルト音量
 		double MaxVolume;			// 最大音量
+		bool CreateFlag;			// 作成フラグ
 	};
 
 	// Audioが保持している情報
@@ -127,9 +128,9 @@ namespace htAudio
 	struct AudioResources
 	{
 		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
-		AudioData Data;				// Audioのデータ
+		AudioData Data;				// Audioのデータ(使いまわしする予定)
 		AUDIOFILEFORMAT Format;		// ヘッダー情報
-		SoundType Soundtype;		// XMLから得た情報
+		SoundType Soundtypes;		// XMLから得た情報(複数のデータがあります)
 		std::vector<char> PrimaryMixed;	// バッファ保存[1]
 		std::vector<char> SecondMixed;	// バッファ保存[2]
 	};

@@ -56,37 +56,37 @@ namespace htAudio
 
 	struct OrderFormat
 	{
-		UINT16 SourceID;
-		UINT16 Latency;
+		uint16_t SourceID;
+		uint16_t Latency;
 	};
 
 	struct RIFFChunk
 	{
-		UCHAR RIFFID[4];
-		WORD FileSize;
-		UCHAR WaveFormatType[4];
+		unsigned char RIFFID[4];
+		unsigned short FileSize;
+		unsigned char WaveFormatType[4];
 	};
 
 	struct FormatChunk
 	{
-		UCHAR FmtID[4];		// fmtチャンク
+		unsigned char FmtID[4];		// fmtチャンク
 		unsigned long ChunkSize;// fmtチャンクのバイト数
-		WORD FormatType;		// PCMの種類
-		WORD Channels;			// チャンネル数
-		DWORD SamplesPerSec;	// サンプリングレート
-		DWORD BytesPerSec;	// データ転送速度
-		WORD  BlockSize;		// ブロックサイズ
-		WORD  BitsPerSample;	// サンプルあたりのビット数
+		unsigned short FormatType;		// PCMの種類
+		unsigned short Channels;			// チャンネル数
+		unsigned long SamplesPerSec;	// サンプリングレート
+		unsigned long BytesPerSec;	// データ転送速度
+		unsigned short  BlockSize;		// ブロックサイズ
+		unsigned short  BitsPerSample;	// サンプルあたりのビット数
 	};
 
 	struct DataChunk
 	{
-		UCHAR DataID[4];			// fmtチャンク
+		unsigned char DataID[4];			// fmtチャンク
 		std::size_t DataChunkSize;	// データバッファサイズ
 		std::size_t BufData;
 	};
 
-	// ヘッダー情報
+	// ファイルの情報
 	struct AUDIOFILEFORMAT{
 		RIFFChunk Riff;
 		FormatChunk Fmt;
@@ -95,7 +95,7 @@ namespace htAudio
 		std::size_t DataChunkSample; // サンプリング情報
 	};
 
-	// サウンドそのものの情報
+	// サウンドの初期値、設定情報
 	struct SoundType {
 		int AudioID;				// Audioの情報
 		std::string AudioName;		// オーディオファイルの名前
@@ -112,7 +112,7 @@ namespace htAudio
 		bool CreateFlag;			// 作成フラグ
 	};
 
-	// Audioが保持している情報
+	// Speaker側の情報
 	struct AudioData {
 		std::string Filepath;				// ファイルパス
 		std::string	PresetSoundName;		// オーディオファイル名
@@ -120,6 +120,7 @@ namespace htAudio
 		bool LoopSound;						// ループ情報
 		long TotalreadBufSize;				// 読みこんだバッファ量
 		long ReadBufSize;					// 一度に読み込むバッファ量
+		double Volume;						// ボリューム
 		std::size_t NextFirstSample = { 0 };
 		std::size_t SubmitTimes = { 0 };	// どのバッファを使用するかの判定
 		std::size_t BufferSample = { 0 };

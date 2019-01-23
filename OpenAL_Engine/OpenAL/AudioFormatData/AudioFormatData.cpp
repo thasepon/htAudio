@@ -1,6 +1,6 @@
 #include "AudioFormatData.h"
-
 #include <codecvt>
+
 namespace htAudio {
 
 	AudioFormatData::AudioFormatData()
@@ -13,7 +13,7 @@ namespace htAudio {
 
 	}
 
-	SoundType AudioFormatData::GetAudioFormatData(std::string filepath, std::string Soundname)
+	std::vector<SoundType> AudioFormatData::GetAudioFormatData(std::string filepath, std::string Soundname)
 	{
 		using namespace pugi;
 

@@ -2,8 +2,11 @@
 #include"../../SpeakerHandler.h"
 #include"../OpenAlCore/OpenALDevice.h"
 #include"../AudioFormatData/AudioFormatData.h"
+#include"../../AudioDecoder.h"
 #include <algorithm>
 #include<iterator>
+
+#include"../../SetBufCommand.h"
 
 namespace htAudio {
 
@@ -12,7 +15,8 @@ namespace htAudio {
 	//
 	AudioSpeaker::AudioSpeaker() 
 	{
-		// 初期化終了
+		BufferCommand = new SetBufCommand();
+
 		Successinit = true;
 	}
 
@@ -21,9 +25,9 @@ namespace htAudio {
 	//
 	AudioSpeaker::AudioSpeaker(string SoundName)
 	{
-		SetAudioSorce(SoundName);
+		BufferCommand = new SetBufCommand();
 		
-		// 初期化終了
+		SetAudioSorce(SoundName);
 		Successinit = true;
 	}
 
@@ -32,9 +36,9 @@ namespace htAudio {
 	//
 	AudioSpeaker::AudioSpeaker(int id)
 	{
-		SetAudioSorce(id);
+		BufferCommand = new SetBufCommand();
 
-		// 初期化終了
+		SetAudioSorce(id);
 		Successinit = true;
 	}
 	
@@ -43,7 +47,7 @@ namespace htAudio {
 	//
 	AudioSpeaker::~AudioSpeaker()
 	{
-		// バッファの数を検索
+		// バッファの数を特定
 		if (AudioSource.Soundtypes[NowUsedNumb].StreamType == false)
 		{
 			alDeleteBuffers(1, &Buffers[0]);
@@ -51,12 +55,12 @@ namespace htAudio {
 		}
 		else {
 			alDeleteBuffers(2, &Buffers.front());
-			alDeleteSources(2, &Source);
+			alDeleteSources(1, &Source);
 		}
 	}
 
 	//
-	//	
+	//	現在対象にしているマテリアルの設定
 	//
 	void AudioSpeaker::SetMaterial(string Name)
 	{
@@ -176,50 +180,34 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::Init()
 	{
-		if (AudioResource.Soundtype.StreamType == false)
+		if (AudioSource.Soundtypes[NowUsedNumb].StreamType == false)
 		{
 			alGenBuffers(1, &Buffers[0]);
 			alGenSources(1, &Source);
-			SetBuffer(Buffers[0]);
+			BufferCommand->Execute();
 			alSourcei(Source, AL_BUFFER, Buffers[0]);
 		}else{
 			alGenBuffers(2, &Buffers[0]);
 			alGenSources(1, &Source);
-			SetBuffer(Buffers[0]);
-			SetBuffer(Buffers[1]);
+			BufferCommand->Execute();
+			BufferCommand->Execute();
 			alSourceQueueBuffers(Source, 2, &Buffers[0]);
 		}
-
 
 		// ソースの初期設定
 		alSourcei(Source,AL_SOURCE_RELATIVE,AL_TRUE);
 
 	}
 
-	//
-	bool AudioSpeaker::SetBuffer(ALuint Buf)
-	{
-		if (!Buf) {
-			alGenBuffers(1, &Buf);
-		}
-
-		// バッファの更新
-		ALenum format = AudioSource->GetAudioChannel() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-		int fq = AudioSource->GetAudioSpS();
-		ALsizei size = (ALsizei)AudioSource->GetAudioBufferSize();
-
-		alBufferData(Buf, format, AudioSource->GetBuffer(), size, fq);
-		return true;
-	}
 
 	bool AudioSpeaker::Update()
 	{
 		// バッファの更新
-		if (AudioResource.Soundtype.StreamType == false)
+		if (AudioSource.Soundtypes[NowUsedNumb].StreamType == false)
 		{
 			int State = 0;
 			alGetSourcei(Source, AL_SOURCE_STATE, &State);
-			if (State != AL_PLAYING && AudioResource.LoopSound == 1)
+			if (State != AL_PLAYING && AudioSource.Soundtypes[NowUsedNumb].Loopflag == 1)
 			{
 				Play();
 			}
@@ -231,8 +219,7 @@ namespace htAudio {
 
 			if (State > 0)
 			{
-				printf("バッファ更新中\n");
-				AudioSource->Update();
+				// バッファのアップデート
 				ALuint Buf = 0;
 				alSourceUnqueueBuffers(Source, 1, &Buf);
 				SetBuffer(Buf);
@@ -267,15 +254,13 @@ namespace htAudio {
 	void AudioSpeaker::RegistAudioSource(int numb)
 	{
 		// マテリアルの設定がない場合id[0]の音を鳴らす
-		if (AudioResource.Soundtype.Soundinfo[id].Extension == "wav")
+		if (AudioSource.Soundtypes[numb].RIFFType == RIFF_WAV)
 		{
-			std::shared_ptr<CLoadSoundFile> shard(new CLoadWave(AudioResource.Soundtype.Soundinfo[id].SoundName, AudioResource.Soundtype, filepath));
-			AudioSource = shard;
+			AudioDecoder::AudioBufferDecoder(AudioSource.Format, AudioSource.Data, RIFF_WAV, );
 		}
-		else if (AudioResource.Soundtype.Soundinfo[id].Extension == "ogg")
+		else if (AudioSource.Soundtypes[numb].RIFFType == RIFF_OGG)
 		{
-			std::shared_ptr<CLoadSoundFile> shard(new CLoadOgg(AudioResource.Soundtype.Soundinfo[id].SoundName, AudioResource.Soundtype, filepath));
-			AudioSource = shard;
+			AudioDecoder::AudioBufferDecoder(AudioSource.Format, AudioSource.Data, RIFF_OGG, );
 		}
 		Init();
 	}

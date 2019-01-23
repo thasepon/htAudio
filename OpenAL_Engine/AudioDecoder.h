@@ -17,13 +17,13 @@ namespace htAudio
 	class AudioDecoder
 	{
 	public:
-		AudioDecoder();		// コンストラクタ
 		~AudioDecoder();	// デストラクタ
 
 		static bool LoadRIFFFormat(std::string filename, RIFFType type, AUDIOFILEFORMAT& format);		// ファイルフォーマットの取得		
 		static bool AudioBufferDecoder(AUDIOFILEFORMAT& Format, AudioData& audiodata, RIFFType type,void* buf);	// ファイルのバッファーを取得
 
 	private:
+		AudioDecoder();		// コンストラクタ
 
 		static bool RIFFDecoderOgg(std::string filename, AUDIOFILEFORMAT& format);
 		static bool RIFFDecoderWave(std::string filename, AUDIOFILEFORMAT& format);

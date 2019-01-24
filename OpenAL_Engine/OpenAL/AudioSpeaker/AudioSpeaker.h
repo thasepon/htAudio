@@ -38,15 +38,16 @@ namespace htAudio
 		void SetAudioSorce(int id);					// オーディオデータの設定 ID
 		
 		bool Update();								// 更新処理
+		
 		bool AddEffects(AudioEffects* effect);		// エフェクトの追加
-		bool RemoveEffects(AudioEffects* effect);	// エフェクトの削除
 
 		ALuint GetSpeakerNumb();					// ソースの番号を取得
 
 	private:
 		// === 関数 === //
 		void Init();						// 共通初期化処理
-		void RegistAudioSource(int numb);	// 指定したAudio情報からバッファを獲得
+		void DecodeAudioHeader();			// 指定したAudio情報からヘッダー情報を取得
+		void DecodeAudioBuffer();			// 指定したAudio情報からバッファを獲得
 		
 		void Play();						// 再生処理 [外部呼出しの予定は現在無し]
 		void Stop();						// 停止処理 [外部呼出しの予定は現在無し]
@@ -54,14 +55,20 @@ namespace htAudio
 
 		
 		// === 変数 === //
-		bool Successinit = false;			// 初期化成功フラグ
-		uint16_t NowUsedNumb;				// 現在使用しているSoundTypeの番号
-		AudioResources AudioSource;			// オーディオ情報
-		string UseMaterialAtt = "";			// 対象マテリアルの情報
-		array<ALuint,2> Buffers;			// バッファの設定
-		ALuint Source;						// Sourceの設定
-		list<AudioEffects*> EffectSlot;		// エフェクトスロット
+		bool Successinit = false;				// 初期化成功フラグ
+		uint16_t NowUsedNumb;					// 現在使用しているSoundTypeの番号
+		
+		AudioData SpeakerData;					// Audioのデータ(使いまわしする予定)
+		AUDIOFILEFORMAT HeaderFormat;			// ヘッダー情報
+		std::vector<SoundType> SoundData;		// XMLから得た情報(複数のデータがあります)
+		std::vector<char> PrimaryMixed;			// バッファ保存[1]
+		std::vector<char> SecondMixed;			// バッファ保存[2](Preloadの場合は未使用)
+		std::vector<AudioEffects*> EffectSlot;	// エフェクトスロット
 
+		ALuint Source;						// Sourceの設定
+		array<ALuint,2> Buffers;			// バッファの設定
+		
+		// === コマンド変数 === //
 		AudioCommand* BufferCommand;		// バッファ設定コマンド
 
 

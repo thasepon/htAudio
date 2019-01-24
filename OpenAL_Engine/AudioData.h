@@ -93,6 +93,7 @@ namespace htAudio
 		DataChunk Data;
 		long FirstSampleOffSet; // Bufferの開始位置
 		std::size_t DataChunkSample; // サンプリング情報
+		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
 	};
 
 	// サウンドの初期値、設定情報
@@ -130,11 +131,7 @@ namespace htAudio
 	struct AudioResources
 	{
 		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
-		AudioData Data;				// Audioのデータ(使いまわしする予定)
-		AUDIOFILEFORMAT Format;		// ヘッダー情報
-		std::vector<SoundType> Soundtypes;		// XMLから得た情報(複数のデータがあります)
-		std::vector<char> PrimaryMixed;	// バッファ保存[1]
-		std::vector<char> SecondMixed;	// バッファ保存[2]
+
 	};
 
 }

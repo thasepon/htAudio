@@ -19,8 +19,8 @@ namespace htAudio
 	public:
 		~AudioDecoder();	// デストラクタ
 
-		static bool LoadRIFFFormat(std::string filename, RIFFType type, AUDIOFILEFORMAT& format);		// ファイルフォーマットの取得		
-		static bool AudioBufferDecoder(AUDIOFILEFORMAT& Format, AudioData& audiodata, RIFFType type,void* buf);	// ファイルのバッファーを取得
+		static bool LoadRIFFFormat(AudioResources& source, int soundTypeNumber);		// ファイルフォーマットの取得		
+		static bool AudioBufferDecoder(AudioResources& source,int soundTypeNumber);	// ファイルのバッファーを取得
 
 	private:
 		AudioDecoder();		// コンストラクタ

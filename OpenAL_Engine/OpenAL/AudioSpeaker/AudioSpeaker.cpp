@@ -67,139 +67,135 @@ namespace htAudio {
 		UseMaterialAtt = Name;
 	}
 
-	//
-	//	オーディオ情報の取得と設定(名前)
-	//
+	/// <summary>
+	/// オーディオファイルの指定と読み込みの設定
+	/// オーディオフォーマット情報の読み込みとヘッダー部分のデコードをします。
+	/// </summary>
+	/// <param name="SoundName">オーディオファイル名</param>
 	void AudioSpeaker::SetAudioSorce(string SoundName)
 	{
-		// オーディオ情報をxmlから取得
+		int cnt = 0;
+		
+		// オーディオ情報を外部ファイルから取得
 		AudioSource.Soundtypes = AudioFormatData::GetAudioFormatData(AudioSource.Data.Filepath, SoundName);
 
 		// オーディオフォーマットの取得
 		if (AudioSource.Soundtypes.empty() == true)
-		{
-			// フォーマット取得できていません。
-			return;
-		}
+			return;			// フォーマット取得できていません。
 
 		// マテリアルの設定があるかどうか
 		if (UseMaterialAtt == "")
 		{
-			// マテリアル未設定
+			// マテリアル未設定処理
+			// 番号を初期に設定+指定オーディオファイルのヘッダー読み込み
 			NowUsedNumb = 0;
-			RegistAudioSource(NowUsedNumb);
+			DecodeAudioHeader();
 		}
 		else
 		{
-			int cnt = 0;
-
 			// マテリアル設定されている場合
 			for (auto itr : AudioSource.Soundtypes)
 			{
-				// マテリアル名と同一
 				if (itr.MaterialObj != UseMaterialAtt)
 				{
 					cnt++;
 					continue;
 				}
-
-				// 番号を指定してバッファの読み込み
+				// マテリアルが見つかった場合の処理
 				NowUsedNumb = cnt;
-				RegistAudioSource(NowUsedNumb);
+				DecodeAudioHeader();
+				break;
 			}
-
-			// すべての情報を参照して見つからなかった場合は
-			// 初期の音を鳴らす。
-			if (cnt >= AudioSource.Soundtypes.size())
+			// すべての情報を参照して見つからなかった場合は初期の音を鳴らす。
+			if (cnt > AudioSource.Soundtypes.size())
 			{
 				NowUsedNumb = 0;
-				RegistAudioSource(NowUsedNumb);
+				DecodeAudioHeader();
 			}
 
 		}
 		
 	}
 
-	//
-	//	オーディオ情報の取得と設定(ID)
-	//
+	/// <summary>
+	/// オーディオファイルの指定と読み込みの設定
+	/// オーディオフォーマット情報の読み込みとヘッダー部分のデコードをします。
+	/// </summary>
+	/// <param name="id">オーディオファイルID</param>
 	void AudioSpeaker::SetAudioSorce(int id)
 	{
+		int cnt = 0;
+
 		// オーディオ情報をxmlから取得
 		AudioSource.Soundtypes = AudioFormatData::GetAudioFormatData(AudioSource.Data.Filepath, id);
 
 		// オーディオフォーマットの取得
 		if (AudioSource.Soundtypes.empty() == true)
-		{
-			// フォーマット取得できていません。
-			return;
-		}
+			return; // フォーマット取得できていません。
 
-		// マテリアルの設定があるかどうか
+					// マテリアルの設定があるかどうか
 		if (UseMaterialAtt == "")
 		{
-			// マテリアル未設定
+			// マテリアル未設定処理
+			// 番号を初期に設定+指定オーディオファイルのヘッダー読み込み
 			NowUsedNumb = 0;
-			RegistAudioSource(NowUsedNumb);
+			DecodeAudioHeader();
 		}
 		else
 		{
-			int cnt = 0;
-
 			// マテリアル設定されている場合
 			for (auto itr : AudioSource.Soundtypes)
 			{
-				// マテリアル名と同一
 				if (itr.MaterialObj != UseMaterialAtt)
 				{
 					cnt++;
 					continue;
 				}
-
-				// 番号を指定してバッファの読み込み
+				// マテリアルが見つかった場合の処理
 				NowUsedNumb = cnt;
-				RegistAudioSource(NowUsedNumb);
+				DecodeAudioHeader();
+				break;
 			}
-
-			// すべての情報を参照して見つからなかった場合は
-			// 初期の音を鳴らす。
-			if (cnt >= AudioSource.Soundtypes.size())
+			// すべての情報を参照して見つからなかった場合は初期の音を鳴らす。
+			if (cnt > AudioSource.Soundtypes.size())
 			{
 				NowUsedNumb = 0;
-				RegistAudioSource(NowUsedNumb);
+				DecodeAudioHeader();
 			}
 
 		}
-
-
-
 	}
 
 	/// <summary>
-	/// 初期バッファの作成とxmlから読み込んだ情報の設定
+	/// 必要な情報の初期化と設定
 	/// </summary>
 	void AudioSpeaker::Init()
 	{
 		if (AudioSource.Soundtypes[NowUsedNumb].StreamType == false)
 		{
+			// Preloadタイプ読み込み
+			// 登録バッファバッファは一つ
 			alGenBuffers(1, &Buffers[0]);
 			alGenSources(1, &Source);
-			BufferCommand->Execute();
 			alSourcei(Source, AL_BUFFER, Buffers[0]);
 		}else{
+			// Streamloadタイプ読み込み
+			// 登録バッファは二つ
 			alGenBuffers(2, &Buffers[0]);
 			alGenSources(1, &Source);
-			BufferCommand->Execute();
-			BufferCommand->Execute();
 			alSourceQueueBuffers(Source, 2, &Buffers[0]);
 		}
 
-		// ソースの初期設定
+		// 3d属性の付与
 		alSourcei(Source,AL_SOURCE_RELATIVE,AL_TRUE);
 
 	}
 
-
+	/// <summary>
+	/// 非同期処理なので注意すること
+	/// バッファの更新とエフェクト情報の更新がメイン
+	/// </summary>
+	/// <returns></returns>
 	bool AudioSpeaker::Update()
 	{
 		// バッファの更新
@@ -229,67 +225,75 @@ namespace htAudio {
 		}
 
 		// エフェクトの更新
-		std::for_each(EffectSlot.begin(),EffectSlot.end(),[](AudioEffects* x) {
-			x->Update();
-		});
+		for(auto itr : EffectSlot) {
+			itr->Update();
+		};
 		
 		return true;
 	}
 
-	void AudioSpeaker::Play()
+	/// <summary>
+	/// 指定したオーディオのヘッダー情報を読み込む
+	/// </summary>
+	void AudioSpeaker::DecodeAudioHeader()
 	{
-		alSourcePlay(Source);
+		AudioDecoder::LoadRIFFFormat();
 	}
 
-	void AudioSpeaker::Stop()
+	/// <summary>
+	/// 指定したオーディオからDataBufferを読み込む
+	/// </summary>
+	void AudioSpeaker::DecodeAudioBuffer()
 	{
-		alSourceStop(Source);
+		// 引数説明	: ヘッダーフォーマット 、保存先data 、 拡張子 、使用バッファ
+		AudioDecoder::AudioBufferDecoder(AudioSource, NowUsedNumb);
 	}
 
-	void AudioSpeaker::Pause()
-	{
-		alSourcePause(Source);
-	}
-
-	void AudioSpeaker::RegistAudioSource(int numb)
-	{
-		// マテリアルの設定がない場合id[0]の音を鳴らす
-		if (AudioSource.Soundtypes[numb].RIFFType == RIFF_WAV)
-		{
-			AudioDecoder::AudioBufferDecoder(AudioSource.Format, AudioSource.Data, RIFF_WAV, );
-		}
-		else if (AudioSource.Soundtypes[numb].RIFFType == RIFF_OGG)
-		{
-			AudioDecoder::AudioBufferDecoder(AudioSource.Format, AudioSource.Data, RIFF_OGG, );
-		}
-		Init();
-	}
-
+	/// <summary>
+	/// ソース番号の取得
+	/// </summary>
+	/// <returns>使用しているID</returns>
 	ALuint AudioSpeaker::GetSpeakerNumb()
 	{ 
 		return Source; 
 	}
 
 	/// <summary>
-	/// 概要		:: 外部からのエフェクト呼び出し用の関数
-	/// アクセス制限	:: public
+	/// エフェクトの追加処理
 	/// </summary>
+	/// <param name="effect">追加するエフェクト</param>
+	/// <returns>成功しているかどうか</returns>
 	bool AudioSpeaker::AddEffects(AudioEffects* effect)
 	{
 		EffectSlot.push_back(effect);
 		return true;
 	}
-
-	bool AudioSpeaker::RemoveEffects(AudioEffects* effect)
+	
+	/// <summary>
+	/// 再生処理
+	/// 登録しているソースを再生します。
+	/// </summary>
+	void AudioSpeaker::Play()
 	{
-		for (auto itr : EffectSlot)
-		{
-			if (itr == effect)
-			{
-				delete itr;
-				EffectSlot.remove(itr);
-			}
-		}
+		alSourcePlay(Source);
+	}
+
+	/// <summary>
+	/// 停止処理
+	/// 登録しているソースを停止します。
+	/// </summary>
+	void AudioSpeaker::Stop()
+	{
+		alSourceStop(Source);
+	}
+
+	/// <summary>
+	/// 一時停止処理
+	/// 登録しているソースを一時停止します。
+	/// </summary>
+	void AudioSpeaker::Pause()
+	{
+		alSourcePause(Source);
 	}
 
 }

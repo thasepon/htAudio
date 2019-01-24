@@ -15,14 +15,14 @@ namespace htAudio
 	/// <summary>
 	/// Ogg,wavファイルのヘッダー部分の読み込み
 	/// </summary>
-	bool AudioDecoder::LoadRIFFFormat(std::string filename, RIFFType type, AUDIOFILEFORMAT& format)
+	bool AudioDecoder::LoadRIFFFormat(AudioResources& source, int soundTypeNumber)
 	{
 
-		if (type == RIFFType::RIFF_WAV)
+		if (source.Soundtypes[soundTypeNumber].RIFFType == RIFF_WAV)
 		{
 			return RIFFDecoderWave(filename,format);
 		}
-		else if (type == RIFFType::RIFF_OGG)
+		else if (source.Soundtypes[soundTypeNumber].RIFFType == RIFF_OGG)
 		{
 			return RIFFDecoderOgg(filename,format);
 		}
@@ -100,17 +100,21 @@ namespace htAudio
 	/// <summary>
 	/// オーディオバッファー読み込み用の窓口関数
 	/// </summary>
-	bool AudioDecoder::AudioBufferDecoder(AUDIOFILEFORMAT& Format, AudioData& audiodata, RIFFType type, void* buf)
+	bool AudioDecoder::AudioBufferDecoder(AudioResources& source, int soundTypeNumber)
 	{
+		// 使用するバッファの判断
+		void* buf;
 
-		if (type == RIFFType::RIFF_WAV)
+
+		// 拡張子の判断
+		if (source.Soundtypes[soundTypeNumber].RIFFType == RIFF_WAV)
 		{
-			BufferDecoderWav(Format,audiodata, buf);
+			BufferDecoderWav(source.Format, source.Data, buf);
 			return;
 		}
-		else if (type == RIFFType::RIFF_OGG)
+		else if (source.Soundtypes[soundTypeNumber].RIFFType == RIFF_OGG)
 		{
-			BufferDecoderOgg(audiodata, buf);
+			BufferDecoderOgg(source.Data, buf);
 			return;
 		}
 

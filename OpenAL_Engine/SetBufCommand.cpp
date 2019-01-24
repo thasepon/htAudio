@@ -19,6 +19,7 @@ namespace htAudio
 			alGenBuffers(1, &_buffer);
 			return false;
 		}
+
 		// モノステの判断
 		ALenum format;
 		if (channel == 1)
@@ -29,6 +30,7 @@ namespace htAudio
 		{
 			format == AL_FORMAT_STEREO16;
 		}
+
 		// バッファの設定
 		alBufferData(bufNumb, format, bufdata, bufsize, fq);
 

@@ -48,7 +48,7 @@ namespace htAudio {
 	AudioSpeaker::~AudioSpeaker()
 	{
 		// バッファの数を特定
-		if (AudioSource.Soundtypes[NowUsedNumb].StreamType == false)
+		if (SoundDatas[NowUsedNumb].StreamType == false)
 		{
 			alDeleteBuffers(1, &Buffers[0]);
 			alDeleteSources(1, &Source);
@@ -77,11 +77,40 @@ namespace htAudio {
 		int cnt = 0;
 		
 		// オーディオ情報を外部ファイルから取得
-		AudioSource.Soundtypes = AudioFormatData::GetAudioFormatData(AudioSource.Data.Filepath, SoundName);
+		SoundDatas = AudioFormatData::GetAudioFormatData(SpeakerData.Filepath, SoundName);
 
 		// オーディオフォーマットの取得
-		if (AudioSource.Soundtypes.empty() == true)
+		if (SoundDatas.empty() == true)
 			return;			// フォーマット取得できていません。
+
+		ReadHeaderInfo();
+		
+	}
+
+	/// <summary>
+	/// オーディオファイルの指定と読み込みの設定
+	/// オーディオフォーマット情報の読み込みとヘッダー部分のデコードをします。
+	/// </summary>
+	/// <param name="id">オーディオファイルID</param>
+	void AudioSpeaker::SetAudioSorce(int id)
+	{
+		// オーディオ情報をxmlから取得
+		SoundDatas = AudioFormatData::GetAudioFormatData(SpeakerData.Filepath, id);
+
+		// オーディオフォーマットの取得
+		if (SoundDatas.empty() == true)
+			return;			// フォーマット取得できていません。
+
+		ReadHeaderInfo();
+		
+	}
+
+	/// <summary>
+	/// ヘッダー情報の読み込み関数
+	/// </summary>
+	void AudioSpeaker::ReadHeaderInfo()
+	{
+		int cnt = 0;
 
 		// マテリアルの設定があるかどうか
 		if (UseMaterialAtt == "")
@@ -94,7 +123,7 @@ namespace htAudio {
 		else
 		{
 			// マテリアル設定されている場合
-			for (auto itr : AudioSource.Soundtypes)
+			for (auto itr : SoundDatas)
 			{
 				if (itr.MaterialObj != UseMaterialAtt)
 				{
@@ -107,62 +136,11 @@ namespace htAudio {
 				break;
 			}
 			// すべての情報を参照して見つからなかった場合は初期の音を鳴らす。
-			if (cnt > AudioSource.Soundtypes.size())
+			if (cnt > SoundDatas.size())
 			{
 				NowUsedNumb = 0;
 				DecodeAudioHeader();
 			}
-
-		}
-		
-	}
-
-	/// <summary>
-	/// オーディオファイルの指定と読み込みの設定
-	/// オーディオフォーマット情報の読み込みとヘッダー部分のデコードをします。
-	/// </summary>
-	/// <param name="id">オーディオファイルID</param>
-	void AudioSpeaker::SetAudioSorce(int id)
-	{
-		int cnt = 0;
-
-		// オーディオ情報をxmlから取得
-		AudioSource.Soundtypes = AudioFormatData::GetAudioFormatData(AudioSource.Data.Filepath, id);
-
-		// オーディオフォーマットの取得
-		if (AudioSource.Soundtypes.empty() == true)
-			return; // フォーマット取得できていません。
-
-					// マテリアルの設定があるかどうか
-		if (UseMaterialAtt == "")
-		{
-			// マテリアル未設定処理
-			// 番号を初期に設定+指定オーディオファイルのヘッダー読み込み
-			NowUsedNumb = 0;
-			DecodeAudioHeader();
-		}
-		else
-		{
-			// マテリアル設定されている場合
-			for (auto itr : AudioSource.Soundtypes)
-			{
-				if (itr.MaterialObj != UseMaterialAtt)
-				{
-					cnt++;
-					continue;
-				}
-				// マテリアルが見つかった場合の処理
-				NowUsedNumb = cnt;
-				DecodeAudioHeader();
-				break;
-			}
-			// すべての情報を参照して見つからなかった場合は初期の音を鳴らす。
-			if (cnt > AudioSource.Soundtypes.size())
-			{
-				NowUsedNumb = 0;
-				DecodeAudioHeader();
-			}
-
 		}
 	}
 
@@ -171,7 +149,7 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::Init()
 	{
-		if (AudioSource.Soundtypes[NowUsedNumb].StreamType == false)
+		if (SoundDatas[NowUsedNumb].StreamType == false)
 		{
 			// Preloadタイプ読み込み
 			// 登録バッファバッファは一つ
@@ -199,11 +177,11 @@ namespace htAudio {
 	bool AudioSpeaker::Update()
 	{
 		// バッファの更新
-		if (AudioSource.Soundtypes[NowUsedNumb].StreamType == false)
+		if (SoundDatas[NowUsedNumb].StreamType == false)
 		{
 			int State = 0;
 			alGetSourcei(Source, AL_SOURCE_STATE, &State);
-			if (State != AL_PLAYING && AudioSource.Soundtypes[NowUsedNumb].Loopflag == 1)
+			if (State != AL_PLAYING && SoundDatas[NowUsedNumb].Loopflag == 1)
 			{
 				Play();
 			}
@@ -237,7 +215,7 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::DecodeAudioHeader()
 	{
-		AudioDecoder::LoadRIFFFormat();
+		AudioDecoder::LoadRIFFFormat(HeaderFormat, SoundDatas[NowUsedNumb]);
 	}
 
 	/// <summary>
@@ -245,8 +223,9 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::DecodeAudioBuffer()
 	{
-		// 引数説明	: ヘッダーフォーマット 、保存先data 、 拡張子 、使用バッファ
-		AudioDecoder::AudioBufferDecoder(AudioSource, NowUsedNumb);
+		// どちらを読み込むかを設定する条件式を書く事
+		AudioDecoder::AudioBufferDecoder(&PrimaryMixed, SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat);
+		AudioDecoder::AudioBufferDecoder(&SecondMixed, SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat);
 	}
 
 	/// <summary>

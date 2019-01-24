@@ -124,7 +124,7 @@
     <Filter Include="Order\PauseOrder">
       <UniqueIdentifier>{16d56199-263e-46c5-b3df-ea69737f5d1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Command\CreateAudio">
+    <Filter Include="Command\CreateSource">
       <UniqueIdentifier>{80eec0de-97f1-4f32-8f93-4ad0b0a9e3bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -235,7 +235,7 @@
       <Filter>Order\PauseOrder</Filter>
     </ClInclude>
     <ClInclude Include="CreateSourceCommand.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Command\CreateSource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -336,7 +336,7 @@
       <Filter>Order\PauseOrder</Filter>
     </ClCompile>
     <ClCompile Include="CreateSourceCommand.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Command\CreateSource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

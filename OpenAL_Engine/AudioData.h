@@ -127,11 +127,5 @@ namespace htAudio
 		std::size_t BufferSample = { 0 };
 	};
 
-	// AudioInfo
-	struct AudioResources
-	{
-		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
-
-	};
 
 }

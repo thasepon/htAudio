@@ -5,7 +5,6 @@ namespace htAudio
 
 	AudioReSource::AudioReSource()
 	{
-		AudioresourceMap.clear();
 	}
 
 	AudioReSource::~AudioReSource()
@@ -15,9 +14,6 @@ namespace htAudio
 
 	void AudioReSource::PreLoad(std::string)
 	{
-		AudioResources* resource;
-
-
 
 	}
 
@@ -41,12 +37,6 @@ namespace htAudio
 	/// </summary>
 	void AudioReSource::ReleaseResource()
 	{
-
-		for (auto x : AudioresourceMap)
-		{
-
-		}
-
 	}
 
 }

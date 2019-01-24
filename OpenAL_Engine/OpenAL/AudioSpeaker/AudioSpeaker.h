@@ -48,7 +48,8 @@ namespace htAudio
 		void Init();						// 共通初期化処理
 		void DecodeAudioHeader();			// 指定したAudio情報からヘッダー情報を取得
 		void DecodeAudioBuffer();			// 指定したAudio情報からバッファを獲得
-		
+		void ReadHeaderInfo();				// ヘッダー情報の読み込み
+
 		void Play();						// 再生処理 [外部呼出しの予定は現在無し]
 		void Stop();						// 停止処理 [外部呼出しの予定は現在無し]
 		void Pause();						// 一時停止処理 [外部呼出しの予定は現在無し]
@@ -60,10 +61,11 @@ namespace htAudio
 		
 		AudioData SpeakerData;					// Audioのデータ(使いまわしする予定)
 		AUDIOFILEFORMAT HeaderFormat;			// ヘッダー情報
-		std::vector<SoundType> SoundData;		// XMLから得た情報(複数のデータがあります)
+		std::vector<SoundType> SoundDatas;		// XMLから得た情報(複数のデータがあります)
 		std::vector<char> PrimaryMixed;			// バッファ保存[1]
 		std::vector<char> SecondMixed;			// バッファ保存[2](Preloadの場合は未使用)
 		std::vector<AudioEffects*> EffectSlot;	// エフェクトスロット
+		std::string UseMaterialAtt;				// 現在のマテリアル情報
 
 		ALuint Source;						// Sourceの設定
 		array<ALuint,2> Buffers;			// バッファの設定

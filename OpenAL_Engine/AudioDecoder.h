@@ -19,8 +19,8 @@ namespace htAudio
 	public:
 		~AudioDecoder();	// デストラクタ
 
-		static bool LoadRIFFFormat(AudioResources& source, int soundTypeNumber);		// ファイルフォーマットの取得		
-		static bool AudioBufferDecoder(AudioResources& source,int soundTypeNumber);	// ファイルのバッファーを取得
+		static bool LoadRIFFFormat(AUDIOFILEFORMAT& headerfmt,SoundType audiodata);		// ファイルフォーマットの取得		
+		static bool AudioBufferDecoder(void* buf, AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt);	// ファイルのバッファーを取得
 
 	private:
 		AudioDecoder();		// コンストラクタ
@@ -34,6 +34,9 @@ namespace htAudio
 		static bool Mono16WavDecoder(AUDIOFILEFORMAT& Format, AudioData& audiodata, void* buf);
 		// 必要になったら実装します。
 		//static bool Streo16WavDecoder(AUDIOFILEFORMAT& Format, AudioData& audiodata, void* buf);
+
+		// ここにPreloadの用のメモリ配列を入れる？
+
 	};
 
 }

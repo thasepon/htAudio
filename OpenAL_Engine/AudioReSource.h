@@ -6,6 +6,13 @@
 
 namespace htAudio
 {
+	// リソース使いまわしに必要なデータ
+	struct ResourceData
+	{
+		AUDIOFILEFORMAT fmt;
+		void* DataBuffer;
+	};
+
 	/// <summary>
 	/// wavやoggのオーディオの管理をするクラス
 	/// ここを経由してリソースを取得する
@@ -25,7 +32,7 @@ namespace htAudio
 		
 	private:
 		// 読みこんだファイルの保存用map
-		std::map<int, AudioResources*> AudioresourceMap;
+		ResourceData* AudioresourceMap;
 
 	};
 

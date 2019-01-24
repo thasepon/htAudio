@@ -15,16 +15,16 @@ namespace htAudio
 	/// <summary>
 	/// Ogg,wavファイルのヘッダー部分の読み込み
 	/// </summary>
-	bool AudioDecoder::LoadRIFFFormat(AudioResources& source, int soundTypeNumber)
+	bool AudioDecoder::LoadRIFFFormat(AUDIOFILEFORMAT& headerfmt, SoundType audiodata)
 	{
 
-		if (source.Soundtypes[soundTypeNumber].RIFFType == RIFF_WAV)
+		if (audiodata.RIFFType == RIFF_WAV)
 		{
-			return RIFFDecoderWave(filename,format);
+			return RIFFDecoderWave(audiodata.AudioName, headerfmt);
 		}
-		else if (source.Soundtypes[soundTypeNumber].RIFFType == RIFF_OGG)
+		else if (audiodata.RIFFType == RIFF_OGG)
 		{
-			return RIFFDecoderOgg(filename,format);
+			return RIFFDecoderOgg(audiodata.AudioName, headerfmt);
 		}
 
 		// 処理なし
@@ -100,21 +100,17 @@ namespace htAudio
 	/// <summary>
 	/// オーディオバッファー読み込み用の窓口関数
 	/// </summary>
-	bool AudioDecoder::AudioBufferDecoder(AudioResources& source, int soundTypeNumber)
+	bool AudioDecoder::AudioBufferDecoder(void* buf,AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt)
 	{
-		// 使用するバッファの判断
-		void* buf;
-
-
 		// 拡張子の判断
-		if (source.Soundtypes[soundTypeNumber].RIFFType == RIFF_WAV)
+		if (type.RIFFType == RIFF_WAV)
 		{
-			BufferDecoderWav(source.Format, source.Data, buf);
+			BufferDecoderWav(headerfmt, audiodata, buf);
 			return;
 		}
-		else if (source.Soundtypes[soundTypeNumber].RIFFType == RIFF_OGG)
+		else if (type.RIFFType == RIFF_OGG)
 		{
-			BufferDecoderOgg(source.Data, buf);
+			BufferDecoderOgg(audiodata, buf);
 			return;
 		}
 

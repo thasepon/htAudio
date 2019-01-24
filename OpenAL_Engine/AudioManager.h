@@ -5,6 +5,7 @@
 
 #include"AudioOrder.h"
 #include"AudioCommand.h"
+#include"AudioReSource.h"
 
 #include<map>
 #include<utility>
@@ -37,6 +38,7 @@ namespace htAudio {
 	private:
 		list<AudioCommand*> OrderList;			// オーディオオーダー
 		map<UINT16,AudioSpeaker*> SpeakerMap;	// 現在のスピーカーの設定
+		AudioReSource* ResourcePtr;				// Preloadでの使いまわし用のリソースptr
 		thread UpdateThread;					// 非同期更新用
 		bool Updateflag;						// 非同期更新フラグ
 

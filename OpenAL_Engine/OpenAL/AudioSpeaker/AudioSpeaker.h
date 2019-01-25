@@ -7,6 +7,7 @@
 #include"../../PlayCommand.h"
 #include"../../StopCommand.h"
 #include"../../PauseCommand.h"
+#include"../../SetBufCommand.h"
 
 #include<string>
 #include<memory>
@@ -62,16 +63,18 @@ namespace htAudio
 		AudioData SpeakerData;					// Audioのデータ(使いまわしする予定)
 		AUDIOFILEFORMAT HeaderFormat;			// ヘッダー情報
 		std::vector<SoundType> SoundDatas;		// XMLから得た情報(複数のデータがあります)
+		AudioCue SpeakerCue;					// XMLから得た情報(単一データ)
 		std::vector<char> PrimaryMixed;			// バッファ保存[1]
 		std::vector<char> SecondMixed;			// バッファ保存[2](Preloadの場合は未使用)
 		std::vector<AudioEffects*> EffectSlot;	// エフェクトスロット
 		std::string UseMaterialAtt;				// 現在のマテリアル情報
 
 		ALuint Source;						// Sourceの設定
+		ALuint UpdateBufQue;				// インキューデキューするバッファの選択
 		array<ALuint,2> Buffers;			// バッファの設定
 		
 		// === コマンド変数 === //
-		AudioCommand* BufferCommand;		// バッファ設定コマンド
+		SetBufCommand* BufferCommand;		// バッファ設定コマンド
 
 
 	};

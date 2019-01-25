@@ -23,7 +23,7 @@ namespace htAudio
 	// バッファのロードタイプ
 	enum AudioLoadType
 	{
-		STREAM_LOAD,
+		STREAM_LOAD = 0,
 		PRE_LOAD,
 		MAX_LOAD
 	};
@@ -69,19 +69,27 @@ namespace htAudio
 
 	struct FormatChunk
 	{
-		unsigned char FmtID[4];		// fmtチャンク
-		unsigned long ChunkSize;// fmtチャンクのバイト数
+		unsigned char FmtID[4];			// fmtチャンク
+		unsigned long ChunkSize;		// fmtチャンクのバイト数
 		unsigned short FormatType;		// PCMの種類
-		unsigned short Channels;			// チャンネル数
+		unsigned short Channels;		// チャンネル数
 		unsigned long SamplesPerSec;	// サンプリングレート
-		unsigned long BytesPerSec;	// データ転送速度
+		unsigned long BytesPerSec;		// データ転送速度
 		unsigned short  BlockSize;		// ブロックサイズ
 		unsigned short  BitsPerSample;	// サンプルあたりのビット数
 	};
 
+	// リスナーコーンのステータス用
+	struct ConeState
+	{
+		double ConeOuterGain;	// コーンの外部ゲイン数値
+		double InnerAngle;		// 内部の角度
+		double OuterAngle;		// 外部の角度
+	};
+
 	struct DataChunk
 	{
-		unsigned char DataID[4];			// fmtチャンク
+		unsigned char DataID[4];	// fmtチャンク
 		std::size_t DataChunkSize;	// データバッファサイズ
 		std::size_t BufData;
 	};
@@ -104,24 +112,31 @@ namespace htAudio
 		std::string Cue;			// Cueの名前
 		std::string SubGroup;		// 属しているグループ
 		std::string MaterialObj;	// 属しているマテリアル
-		bool Loopflag;				// ループフラグ
 		AudioLoadType StreamType;	// ストリーミングタイプ
 		RIFFType RIFFType;			// ファイル拡張子の種類
 		double LowVolume;			// 最低音量
 		double DefaultVolume;		// デフォルト音量
 		double MaxVolume;			// 最大音量
 		bool CreateFlag;			// 作成フラグ
+		bool Loopflag;				// ループフラグ
+	};
+
+	// Cue(Soundtypeの大まとめ)の構造体
+	struct AudioCue
+	{
+		int CueID;							// Audioの情報
+		std::string Filepath;				// ファイルパス
+		std::string	CueName;				// Cueファイル名
+		double Volume;						// ボリューム
+		bool Loopflag;						// ループフラグ
+		std::vector<EFFECTSNUM> CueEffect;	// Cueに適応させるエフェクトの一覧
 	};
 
 	// Speaker側の情報
 	struct AudioData {
-		std::string Filepath;				// ファイルパス
-		std::string	PresetSoundName;		// オーディオファイル名
 		int PlayTime;						// 再生時間
-		bool LoopSound;						// ループ情報
 		long TotalreadBufSize;				// 読みこんだバッファ量
 		long ReadBufSize;					// 一度に読み込むバッファ量
-		double Volume;						// ボリューム
 		std::size_t NextFirstSample = { 0 };
 		std::size_t SubmitTimes = { 0 };	// どのバッファを使用するかの判定
 		std::size_t BufferSample = { 0 };

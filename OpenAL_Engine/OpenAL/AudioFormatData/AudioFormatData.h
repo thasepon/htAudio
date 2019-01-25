@@ -23,10 +23,11 @@ namespace htAudio
 
 		static std::vector<SoundType> GetAudioFormatData(std::string filepath, std::string Soundname);
 		static std::vector<SoundType> GetAudioFormatData(std::string filepath, int id);
-		static void WriteAudioFormatData(std::string filepath, SoundType registinfo);
-		static bool ReadListenerState(ListenerStates* state, std::string filepath);
-		static bool WriteListenerState(ListenerStates state, std::string filepath);
+		static bool ReadListenerState(ConeState& state, std::string filepath);
 
+		//static void WriteAudioFormatData(std::string filepath, SoundType registinfo);
+		//static bool WriteListenerState(ListenerStates state, std::string filepath);
+		
 		//bool ReadSpeakerState(ListenerStates* state, std::string filepath);
 		//bool WriteSpeakerState(ListenerStates state, std::string filepath);
 

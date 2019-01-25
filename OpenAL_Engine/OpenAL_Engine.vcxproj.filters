@@ -103,12 +103,6 @@
     <Filter Include="DataHeader">
       <UniqueIdentifier>{ac99c41e-4ef4-44e1-806f-28fa6032484e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Handler">
-      <UniqueIdentifier>{fa71798b-f18e-42d1-80f5-63b1cb5f677b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Handler\Speaker">
-      <UniqueIdentifier>{39b212f6-bd32-4f9f-bc17-bd45c7f9b342}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Order">
       <UniqueIdentifier>{0772808e-7152-403a-9b95-96267da0c307}</UniqueIdentifier>
     </Filter>
@@ -219,9 +213,6 @@
     <ClInclude Include="Definclude.h">
       <Filter>DataHeader</Filter>
     </ClInclude>
-    <ClInclude Include="SpeakerHandler.h">
-      <Filter>Handler\Speaker</Filter>
-    </ClInclude>
     <ClInclude Include="AudioOrder.h">
       <Filter>Order\Base</Filter>
     </ClInclude>
@@ -319,9 +310,6 @@
     </ClCompile>
     <ClCompile Include="AddEffectCommand.cpp">
       <Filter>Command\AddEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="SpeakerHandler.cpp">
-      <Filter>Handler\Speaker</Filter>
     </ClCompile>
     <ClCompile Include="AudioOrder.cpp">
       <Filter>Order\Base</Filter>

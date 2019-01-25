@@ -28,10 +28,10 @@ namespace htAudio
 		static bool RIFFDecoderOgg(std::string filename, AUDIOFILEFORMAT& format);
 		static bool RIFFDecoderWave(std::string filename, AUDIOFILEFORMAT& format);
 
-		static bool BufferDecoderOgg(AudioData& audiodata, void* buf);	// オーディオバッファーの取得(.wav)
-		static bool BufferDecoderWav(AUDIOFILEFORMAT& Format, AudioData& audiodata, void* buf); // オーディオバッファーの取得(.ogg)
+		static bool BufferDecoderOgg(AudioData& audiodata, SoundType type, void* buf);	// オーディオバッファーの取得(.wav)
+		static bool BufferDecoderWav(AUDIOFILEFORMAT& Format, SoundType type, AudioData& audiodata, void* buf); // オーディオバッファーの取得(.ogg)
 
-		static bool Mono16WavDecoder(AUDIOFILEFORMAT& Format, AudioData& audiodata, void* buf);
+		static bool Mono16WavDecoder(AUDIOFILEFORMAT& Format, SoundType type, AudioData& audiodata, void* buf);
 		// 必要になったら実装します。
 		//static bool Streo16WavDecoder(AUDIOFILEFORMAT& Format, AudioData& audiodata, void* buf);
 

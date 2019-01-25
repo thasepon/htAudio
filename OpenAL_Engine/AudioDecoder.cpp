@@ -105,24 +105,22 @@ namespace htAudio
 		// 拡張子の判断
 		if (type.RIFFType == RIFF_WAV)
 		{
-			BufferDecoderWav(headerfmt, audiodata, buf);
-			return;
+			return BufferDecoderWav(headerfmt, type,audiodata, buf);
 		}
 		else if (type.RIFFType == RIFF_OGG)
 		{
-			BufferDecoderOgg(audiodata, buf);
-			return;
+			return BufferDecoderOgg(audiodata, type, buf);
 		}
 
 		// 処理なし
-		return;
+		return false;
 	}
 
 	/// <summary>
 	/// バッファーの読み込み(.wav)
 	/// </summary>
 	/// <param name="buf"></param>
-	bool AudioDecoder::BufferDecoderOgg(AudioData& audiodata, void* buf)
+	bool AudioDecoder::BufferDecoderOgg(AudioData& audiodata, SoundType type, void* buf)
 	{
 		long requestsize = audiodata.ReadBufSize;
 		int bitstream = 0;
@@ -130,7 +128,7 @@ namespace htAudio
 		UINT comsize = 0;
 		OggVorbis_File Ovf;
 
-		if (ov_fopen(audiodata.PresetSoundName.c_str(), &Ovf))
+		if (ov_fopen(type.AudioName.c_str(), &Ovf))
 		{
 			// Oggファイルオープンの失敗
 			return false;
@@ -145,7 +143,7 @@ namespace htAudio
 			if (readsize == 0)
 			{
 				// ループ処理がある場合は読み込み位置を先頭に戻す。
-				if (audiodata.LoopSound == true)
+				if (type.Loopflag == true)
 				{
 					ov_time_seek(&Ovf,0.0);
 					audiodata.TotalreadBufSize = 0;
@@ -183,11 +181,11 @@ namespace htAudio
 	/// バッファーの読み込み(.wav)
 	/// </summary>
 	/// <param name="buf"></param>
-	bool AudioDecoder::BufferDecoderWav(AUDIOFILEFORMAT& Format, AudioData& audiodata, void* buf)
+	bool AudioDecoder::BufferDecoderWav(AUDIOFILEFORMAT& Format, SoundType type, AudioData& audiodata, void* buf)
 	{
 		if (Format.Fmt.Channels == 1)
 		{
-			Mono16WavDecoder(Format,audiodata,buf);
+			Mono16WavDecoder(Format,type,audiodata,buf);
 		}
 		else if (Format.Fmt.Channels == 2)
 		{
@@ -204,13 +202,13 @@ namespace htAudio
 	/// <param name="audiodata"></param>
 	/// <param name="buf"></param>
 	/// <returns></returns>
-	bool AudioDecoder::Mono16WavDecoder(AUDIOFILEFORMAT& Format,AudioData& audiodata, void* buf)
+	bool AudioDecoder::Mono16WavDecoder(AUDIOFILEFORMAT& Format, SoundType type, AudioData& audiodata, void* buf)
 	{
 		// ファイルポインタ
 		FILE* fp;
 
 		// ファイルのオープン
-		fopen_s(&fp, audiodata.PresetSoundName.c_str(),"rb");
+		fopen_s(&fp, type.AudioName.c_str(),"rb");
 
 		if (!buf)
 			return false;

@@ -3,6 +3,8 @@
 
 namespace htAudio {
 
+	using namespace pugi;
+
 	AudioFormatData::AudioFormatData()
 	{
 	}
@@ -15,21 +17,22 @@ namespace htAudio {
 
 	std::vector<SoundType> AudioFormatData::GetAudioFormatData(std::string filepath, std::string Soundname)
 	{
-		using namespace pugi;
-
+		
+		std::vector<SoundType> Formats;
 		SoundType Format;
 		xml_document doc;
+		xml_parse_result result;
+		
+		// ファイルパスの指定(仮)
 		filepath += "\\Xml\\SoundList.xml";
 
-		xml_parse_result result;
-		Format.CreateFlag = false;
-
+		// ドキュメントファイルの読み込み
 		result = doc.load_file(filepath.c_str(), parse_default | parse_pi);
 
 		if (result == false)
 		{
-			Format.CreateFlag = false;
-			return Format;
+			Format.CreateFlag = result;
+			return Formats;
 		}
 
 		xml_node tools = doc.child("SoundList");
@@ -40,57 +43,41 @@ namespace htAudio {
 			auto xmlname = tool.attribute("Name").value();
 			if (xmlname == Soundname)
 			{
-				Format.DataID = (int)tool.attribute("ID").hash_value();
-				Format.Cue = tool.child("SoundType").child_value("Cue");
-				Format.SubGroup = tool.child("SoundType").child_value("SubGroup");
-				Format.Loopflag = atoi(tool.child("SoundType").child_value("Loop"));
-				Format.StreamType = atoi(tool.child("SoundType").child_value("StreamType"));
-				Format.b3DAudio = atoi(tool.child("SoundType").child_value("SurroundFlag"));
-
-				int maxloop = atoi(tool.attribute("Size").value());
-
-				if (Format.b3DAudio == 1)
-				{
-					xml_node soundinfo = tool.child("SurroundInfo");
-					Format.Sorrundinfo.OuterGain = atof(soundinfo.child_value("OuterGain"));
-					Format.Sorrundinfo.OuterAngle = atof(soundinfo.child_value("OuterAngle"));
-					Format.Sorrundinfo.innerAngle = atof(soundinfo.child_value("InnerAngle"));
-				}
-
+				// サウンド情報の設定
 				for (xml_node soundinfo = tool.child("SoundInfo"); soundinfo; soundinfo = soundinfo.next_sibling())
 				{
-					SoundInfo info;
 
-					std::string id, maxvol;
+					Format.AudioID		= (int)tool.attribute("ID").hash_value();
+					Format.AudioName	= soundinfo.child_value("AudioName");
+					Format.b3DAudio		= atoi(tool.child("SoundType").child_value("SurroundFlag"));
+					Format.Cue			= tool.child("SoundType").child_value("Cue");
+					Format.SubGroup		= tool.child("SoundType").child_value("SubGroup");
+					Format.MaterialObj	= soundinfo.child_value("Material");
+					Format.Loopflag		= atoi(tool.child("SoundType").child_value("Loop"));
+					Format.StreamType	= (AudioLoadType)atoi(tool.child("SoundType").child_value("StreamType"));
+					Format.RIFFType		= (RIFFType)atoi(soundinfo.child_value("RIFFType"));
+					Format.LowVolume	= atof(soundinfo.child_value("LowVolume"));
+					Format.DefaultVolume= atof(soundinfo.child_value("DefaultVolume"));
+					Format.MaxVolume	= atof(soundinfo.child_value("MaxVolume"));
+					Format.CreateFlag	= true;
 
-					info.Id = atoi(soundinfo.child_value("ID"));
-					info.Extension = soundinfo.child_value("Extension");
-					info.SoundName = soundinfo.child_value("SoundName");
-					info.MaterialObj = soundinfo.child_value("Material");
-					info.Type = soundinfo.child_value("Type");
-					info.LowVolume = atof(soundinfo.child_value("LowVolume"));
-					info.DefaultVolume = atof(soundinfo.child_value("DefaultVolume"));
-					info.MaxVolume = atof(soundinfo.child_value("MaxVolume"));
-
-					Format.Soundinfo.push_back(info);
+					Formats.push_back(Format);
 				}
 
 			}
 		}
-		Format.CreateFlag = true;
-		return Format;
+		return Formats;
 	}
 
 
-	SoundType AudioFormatData::GetAudioFormatData(std::string filepath, int id)
+	std::vector<SoundType> AudioFormatData::GetAudioFormatData(std::string filepath, int id)
 	{
-		using namespace pugi;
-
+		std::vector<SoundType> Formats;
 		SoundType Format;
 		xml_document doc;
+		xml_parse_result result;
 
 		Format.CreateFlag = false;
-		xml_parse_result result;
 
 		filepath += "\\Xml\\SoundList.xml";
 
@@ -99,7 +86,7 @@ namespace htAudio {
 		if (result == false)
 		{
 			Format.CreateFlag = false;
-			return Format;
+			return Formats;
 		}
 
 		xml_node tools = doc.child("SoundList");
@@ -109,55 +96,35 @@ namespace htAudio {
 			// 指定したサウンドの階層
 			if (tool.attribute("Id").hash_value() == id)
 			{
-				std::string sub;
-				Format.DataID = id;
-				Format.Cue = tool.child("SoundType").child_value("Cue");
-				Format.SubGroup = tool.child("SoundType").child_value("SubGroup");
-				sub = tool.child("SoundType").child_value("Loop");
-				Format.Loopflag = atoi(sub.c_str());
-				sub = tool.child("SoundType").child_value("StreamType");
-				Format.StreamType = atoi(sub.c_str());
-				Format.b3DAudio = atoi(tool.child("SoundType").child_value("SurroundFlag"));
-
-				int maxloop = atoi(tool.attribute("Size").value());
-
-
-				if (Format.b3DAudio == 1)
-				{
-					xml_node soundinfo = tool.child("SurroundInfo");
-					Format.Sorrundinfo.OuterGain = atof(soundinfo.child_value("OuterGain"));
-					Format.Sorrundinfo.OuterAngle = atof(soundinfo.child_value("OuterAngle"));
-					Format.Sorrundinfo.innerAngle = atof(soundinfo.child_value("InnerAngle"));
-				}
-
+				// サウンド情報の設定
 				for (xml_node soundinfo = tool.child("SoundInfo"); soundinfo; soundinfo = soundinfo.next_sibling())
 				{
 
-					SoundInfo info;
+					Format.AudioID = (int)tool.attribute("ID").hash_value();
+					Format.AudioName = soundinfo.child_value("AudioName");
+					Format.b3DAudio = atoi(tool.child("SoundType").child_value("SurroundFlag"));
+					Format.Cue = tool.child("SoundType").child_value("Cue");
+					Format.SubGroup = tool.child("SoundType").child_value("SubGroup");
+					Format.MaterialObj = soundinfo.child_value("Material");
+					Format.Loopflag = atoi(tool.child("SoundType").child_value("Loop"));
+					Format.StreamType = (AudioLoadType)atoi(tool.child("SoundType").child_value("StreamType"));
+					Format.RIFFType = (RIFFType)atoi(soundinfo.child_value("RIFFType"));
+					Format.LowVolume = atof(soundinfo.child_value("LowVolume"));
+					Format.DefaultVolume = atof(soundinfo.child_value("DefaultVolume"));
+					Format.MaxVolume = atof(soundinfo.child_value("MaxVolume"));
+					Format.CreateFlag = true;
 
-					std::string id, maxvol;
-
-					info.Id = atoi(soundinfo.child_value("ID"));
-					info.Extension = soundinfo.child_value("Extension");
-					info.SoundName = soundinfo.child_value("SoundName");
-					info.MaterialObj = soundinfo.child_value("Material");
-					info.Type = soundinfo.child_value("Type");
-					info.LowVolume = atof(soundinfo.child_value("LowVolume"));
-					info.DefaultVolume = atof(soundinfo.child_value("DefaultVolume"));
-					info.MaxVolume = atof(soundinfo.child_value("MaxVolume"));
-
-					Format.Soundinfo.push_back(info);
+					Formats.push_back(Format);
 				}
-
-
 			}
 		}
+
 		Format.CreateFlag = true;
-		return Format;
+		return Formats;
 
 	}
 
-	void AudioFormatData::WriteAudioFormatData(std::string filepath, SoundType registinfo)
+	/*void AudioFormatData::WriteAudioFormatData(std::string filepath, SoundType registinfo)
 	{
 		using namespace pugi;
 
@@ -195,9 +162,9 @@ namespace htAudio {
 			}
 		}
 
-	}
+	}*/
 
-	bool AudioFormatData::ReadListenerState(ListenerStates* state, std::string filepath)
+	bool AudioFormatData::ReadListenerState(ConeState& state, std::string filepath)
 	{
 		using namespace pugi;
 		xml_document doc;
@@ -215,44 +182,44 @@ namespace htAudio {
 		xml_node tools = doc.child("ListenerState");
 		xml_node tool = tools.child("State");
 
-		state->OuterGain  = (float)atof(tool.child_value("ConeQuterGain"));
-		state->InnerAngle = (float)atof(tool.child_value("ConeInnerAngle"));
-		state->OuterAngle = (float)atof(tool.child_value("ConeOuterAngle"));
+		state.ConeOuterGain  = (float)atof(tool.child_value("ConeQuterGain"));
+		state.InnerAngle = (float)atof(tool.child_value("ConeInnerAngle"));
+		state.OuterAngle = (float)atof(tool.child_value("ConeOuterAngle"));
 
 		return true;
 	}
 
-	bool AudioFormatData::WriteListenerState(ListenerStates state, std::string filepath)
-	{
-		using namespace pugi;
-		xml_document doc;
-		xml_parse_result result;
+	//bool AudioFormatData::WriteListenerState(ListenerStates state, std::string filepath)
+	//{
+	//	using namespace pugi;
+	//	xml_document doc;
+	//	xml_parse_result result;
 
-		filepath += "\\Xml\\ListenerState.xml";
+	//	filepath += "\\Xml\\ListenerState.xml";
 
-		result = doc.load_file(filepath.c_str(), parse_default | parse_pi);
+	//	result = doc.load_file(filepath.c_str(), parse_default | parse_pi);
 
-		if (!result)
-		{
-			return false;
-		}
+	//	if (!result)
+	//	{
+	//		return false;
+	//	}
 
-		xml_node tools = doc.child("ListenerState");
-		xml_node tool = tools.child("State");
+	//	xml_node tools = doc.child("ListenerState");
+	//	xml_node tool = tools.child("State");
 
-		// 登録用の変数配列
-		char buf[24];
+	//	// 登録用の変数配列
+	//	char buf[24];
 
-		snprintf(buf,24,"%f",state.OuterGain);
-		tool.child("ConeQuterGain").set_value(buf);
+	//	snprintf(buf,24,"%f",state.OuterGain);
+	//	tool.child("ConeQuterGain").set_value(buf);
 
-		snprintf(buf, 24, "%f", state.InnerAngle);
-		tool.child("ConeInnerAngle").set_value(buf);
+	//	snprintf(buf, 24, "%f", state.InnerAngle);
+	//	tool.child("ConeInnerAngle").set_value(buf);
 
-		snprintf(buf, 24, "%f", state.OuterAngle);
-		tool.child("ConeOuterAngle").set_value(buf);
-		
-		return true;
-	}
+	//	snprintf(buf, 24, "%f", state.OuterAngle);
+	//	tool.child("ConeOuterAngle").set_value(buf);
+	//	
+	//	return true;
+	//}
 
 }

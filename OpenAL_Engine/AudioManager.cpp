@@ -40,12 +40,24 @@ namespace htAudio {
 	{
 		// IDŒŸõ
 		auto itr = SpeakerMap.find(numb);
-
 		// ‚ ‚Á‚½ê‡‚Ìˆ—
 		if (SpeakerMap.end() != itr)
 		{
 			delete SpeakerMap[numb];
 			SpeakerMap.erase(itr);
+		}
+	}
+
+	void AudioManager::RemoveSpeaker(AudioSpeaker* ptr)
+	{
+
+		for (auto itr : SpeakerMap)
+		{
+			if (itr.second == ptr)
+			{
+				delete itr.second;
+				SpeakerMap.erase(itr.first);
+			}
 		}
 
 	}

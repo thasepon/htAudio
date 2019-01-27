@@ -26,9 +26,10 @@ namespace htAudio {
 		~AudioManager();
 
 		void AddSpeaker(UINT16 id,AudioSpeaker* ptr);		// スピーカーの追加
-		void RemoveSpeaker( int numb );						// スピーカーの削除
+		void RemoveSpeaker(int numb);						// スピーカーの削除
+		void RemoveSpeaker(AudioSpeaker* ptr);				// スピーカーの削除
 		void AllSpeakerRemove();							// 登録されているスピーカーの全削除
-		void SetAudioOrder(ORDERTYPE type, OrderFormat fmt);	// Audioのコマンドを保存していく
+		void SetAudioOrder(ORDERTYPE type, OrderFormat fmt);// Audioのコマンドを保存していく
 		void ClearAudioOrder();								// セットされたオーディオデータの削除
 
 	private:

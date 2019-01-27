@@ -36,10 +36,10 @@ extern "C" {
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaListenerOrientationArray(AudioListener* Instance, float AtOrient[6]);
 
 	// SpeakerŠÖŒW
-	UNITY_INTERFACE_EXPORT int UNITY_INTERFACE_API htaSpeakerCreate(AudioManager* mgtPtr, wchar_t* filepath, wchar_t* soundname, wchar_t* material);
-	UNITY_INTERFACE_EXPORT int UNITY_INTERFACE_API htaSpeakerCreateID(AudioManager* mgtPtr, wchar_t* filepath, uint16_t id);
-	UNITY_INTERFACE_EXPORT int UNITY_INTERFACE_API htaSpeakerCreateName(AudioManager* mgtPtr, wchar_t* filepath, wchar_t* soundname);
+	UNITY_INTERFACE_EXPORT void* UNITY_INTERFACE_API htaSpeakerCreateI(AudioManager* mgtPtr,uint16_t id);
+	UNITY_INTERFACE_EXPORT void* UNITY_INTERFACE_API htaSpeakerCreateN(AudioManager* mgtPtr,wchar_t* soundname);
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaSpeakerDelete(AudioManager* mgtPtr, int Numb);
+	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaSpeakerDelete(AudioManager* mgtPtr, AudioSpeaker* speakerPtr);
 	
 	UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API Play(AudioManager* ptr,int speakerId);
 	UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API PlayL(AudioManager* ptr,int speakerId,int laytency);

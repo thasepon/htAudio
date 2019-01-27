@@ -1,62 +1,64 @@
 #include"htAudioDll.h"
 
 #include"PlayOrder.h"
+#include"AudioData.h"
 
 #include<uchar.h>
 #include<codecvt>
 #include<string>
 
-std::string wide_to_multi_capi(std::wstring const& src)
-{
-	std::size_t converted{};
-	std::vector<char> dest(src.size() * sizeof(wchar_t) + 1, '\0');
-	if (::_wcstombs_s_l(&converted, dest.data(), dest.size(), src.data(), _TRUNCATE, ::_create_locale(LC_ALL, "jpn")) != 0) {
-		throw std::system_error{ errno, std::system_category() };
-	}
-	dest.resize(std::char_traits<char>::length(dest.data()));
-	dest.shrink_to_fit();
-	return std::string(dest.begin(), dest.end());
-}
-
-int htaSpeakerCreate(AudioManager* mgtPtr, wchar_t* filepath, wchar_t* soundname, wchar_t* material)
+/// <summary>
+/// 名前でのスピーカーの生成をする
+/// </summary>
+/// <param name="mgtPtr">AudioMagrのポインタを作成</param>
+/// <param name="soundname">Cueネーム</param>
+/// <returns>作成したSpeakerPointer</returns>
+void* htaSpeakerCreateN(AudioManager* mgtPtr, wchar_t* soundname)
 {
 	std::string path, name, mat;
 
-	path = wide_to_multi_capi(filepath);
 	name = wide_to_multi_capi(soundname);
-	mat = wide_to_multi_capi(material);
+	
+	AudioSpeaker* _speakerPtr = new AudioSpeaker(name);
+	uint16_t _id = _speakerPtr->GetSpeakerNumb();
+	mgtPtr->AddSpeaker(_id,_speakerPtr);
 
-	int SpeakerNumb = mgtPtr->AddSpeaker(path, name, mat);
-
-	return SpeakerNumb;
+	return _speakerPtr;
 }
 
-int htaSpeakerCreateID(AudioManager* mgtPtr, wchar_t* filepath, uint16_t id)
+/// <summary>
+/// IDでスピーカーを生成する
+/// </summary>
+/// <param name="mgtPtr">AudioMagrのポインタを作成</param>
+/// <param name="id">Cueネーム</param>
+/// <returns>作成したSpeakerPointer</returns>
+void* htaSpeakerCreateI(AudioManager* mgtPtr,uint16_t id)
 {
-	std::string path;
+	AudioSpeaker* _speakerPtr = new AudioSpeaker(id);
+	uint16_t _id = _speakerPtr->GetSpeakerNumb();
+	mgtPtr->AddSpeaker(_id, _speakerPtr);
 
-	path = wide_to_multi_capi(filepath);
-
-	int SpeakerNumb = mgtPtr->AddSpeaker(path, id);
-
-	return SpeakerNumb;
+	return _speakerPtr;
 }
 
-int htaSpeakerCreateName(AudioManager* mgtPtr, wchar_t* filepath, wchar_t* soundname)
-{
-	std::string path, name;
-
-	path = wide_to_multi_capi(filepath);
-	name = wide_to_multi_capi(soundname);
-
-	int SpeakerNumb = mgtPtr->AddSpeaker(path, name);
-
-	return SpeakerNumb;
-}
-
-void  htaSpeakerDelete(AudioManager* mgtPtr, int Numb)
+/// <summary>
+/// 登録してあるスピーカーの削除
+/// </summary>
+/// <param name="mgtPtr"></param>
+/// <param name="Numb"></param>
+void  htaSpeakerDeleteN(AudioManager* mgtPtr, int Numb)
 {
 	mgtPtr->RemoveSpeaker(Numb);
+}
+
+/// <summary>
+/// 登録してあるスピーカーの削除
+/// </summary>
+/// <param name="mgtPtr"></param>
+/// <param name="Numb"></param>
+void  htaSpeakerDeleteP(AudioManager* mgtPtr, AudioSpeaker* speakerPtr)
+{
+	mgtPtr->RemoveSpeaker(speakerPtr);
 }
 
 bool  Play(AudioManager* ptr, int speakerId)
@@ -81,11 +83,6 @@ bool  Pause(int speakerId)
 {
 	alSourcePause(speakerId);
 	return true;
-}
-
-bool Formatflag(AudioManager* mgtPtr, int speakerId)
-{
-	return mgtPtr->SpeakerFormat(speakerId);
 }
 
 AudioListener* htaListenerCreate()

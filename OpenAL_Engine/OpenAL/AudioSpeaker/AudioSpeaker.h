@@ -4,10 +4,11 @@
 #include"../../AudioReSource.h"
 #include"../../AudioEffects.h"
 
-#include"../../PlayCommand.h"
-#include"../../StopCommand.h"
-#include"../../PauseCommand.h"
 #include"../../SetBufCommand.h"
+
+#include"../../PlayOrder.h"
+#include"../../StopOrder.h"
+#include"../../PauseOrder.h"
 
 #include<string>
 #include<memory>
@@ -51,9 +52,9 @@ namespace htAudio
 		void DecodeAudioBuffer();			// 指定したAudio情報からバッファを獲得
 		void ReadHeaderInfo();				// ヘッダー情報の読み込み
 
-		void Play();						// 再生処理 [外部呼出しの予定は現在無し]
-		void Stop();						// 停止処理 [外部呼出しの予定は現在無し]
-		void Pause();						// 一時停止処理 [外部呼出しの予定は現在無し]
+		void Play();						// 再生処理 ※[外部呼出しの予定は現在無し:Not_Used]
+		void Stop();						// 停止処理 ※[外部呼出しの予定は現在無し:Not_Used]
+		void Pause();						// 一時停止処理 ※[外部呼出しの予定は現在無し:Not_Used]
 
 		
 		// === 変数 === //
@@ -66,17 +67,14 @@ namespace htAudio
 		AudioCue SpeakerCue;					// XMLから得た情報(単一データ)
 		std::vector<char> PrimaryMixed;			// バッファ保存[1]
 		std::vector<char> SecondMixed;			// バッファ保存[2](Preloadの場合は未使用)
-		std::vector<AudioEffects*> EffectSlot;	// エフェクトスロット
+		std::vector<AudioEffects*> EffectSlot;	// スピーカー適応するエフェクトスロット
 		std::string UseMaterialAtt;				// 現在のマテリアル情報
 
 		ALuint Source;						// Sourceの設定
 		ALuint UpdateBufQue;				// インキューデキューするバッファの選択
 		array<ALuint,2> Buffers;			// バッファの設定
-		
-		// === コマンド変数 === //
-		SetBufCommand* BufferCommand;		// バッファ設定コマンド
 
-
+		SetBufCommand* BufferCommand;		// バッファ設定用コマンド
 	};
 
 }

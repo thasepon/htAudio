@@ -1,12 +1,10 @@
 ﻿#include "AudioSpeaker.h"
-#include"../../SpeakerHandler.h"
-#include"../OpenAlCore/OpenALDevice.h"
+
 #include"../AudioFormatData/AudioFormatData.h"
 #include"../../AudioDecoder.h"
+
 #include <algorithm>
 #include<iterator>
-
-#include"../../SetBufCommand.h"
 
 namespace htAudio {
 
@@ -16,7 +14,6 @@ namespace htAudio {
 	AudioSpeaker::AudioSpeaker() 
 	{
 		BufferCommand = new SetBufCommand();
-
 		Successinit = true;
 	}
 
@@ -26,7 +23,6 @@ namespace htAudio {
 	AudioSpeaker::AudioSpeaker(string SoundName)
 	{
 		BufferCommand = new SetBufCommand();
-		
 		SetAudioSorce(SoundName);
 		Successinit = true;
 	}
@@ -37,7 +33,6 @@ namespace htAudio {
 	AudioSpeaker::AudioSpeaker(int id)
 	{
 		BufferCommand = new SetBufCommand();
-
 		SetAudioSorce(id);
 		Successinit = true;
 	}
@@ -258,9 +253,6 @@ namespace htAudio {
 			BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &SecondMixed, HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
 
 		}
-
-
-
 	}
 
 	/// <summary>
@@ -289,7 +281,7 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::Play()
 	{
-		alSourcePlay(Source);
+		//alSourcePlay(Source);
 	}
 
 	/// <summary>
@@ -298,7 +290,7 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::Stop()
 	{
-		alSourceStop(Source);
+		//alSourceStop(Source);
 	}
 
 	/// <summary>
@@ -307,7 +299,7 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::Pause()
 	{
-		alSourcePause(Source);
+		//alSourcePause(Source);
 	}
 
 }

@@ -1,7 +1,5 @@
 #include"htAudioDll.h"
 
-#include"AudioData.h"
-
 #include"PlayOrder.h"
 #include"StopOrder.h"
 #include"PauseOrder.h"
@@ -11,6 +9,19 @@
 #include<string>
 
 // ========================================= Speaker ====================================== //
+
+/// <summary>
+/// スピーカーの生成をします。
+/// </summary>
+/// <param name="mgtPtr"></param>
+/// <returns></returns>
+void* htaSpeakerCreate(AudioManager* mgtPtr)
+{
+	AudioSpeaker* _speakerPtr = new AudioSpeaker();
+	uint16_t _id = _speakerPtr->GetSpeakerNumb();
+	mgtPtr->AddSpeaker(_id, _speakerPtr);
+	return _speakerPtr;
+}
 
 /// <summary>
 /// 名前でのスピーカーの生成をする
@@ -67,6 +78,25 @@ void  htaSpeakerDeleteP(AudioManager* mgtPtr, AudioSpeaker* speakerPtr)
 	speakerPtr = nullptr;
 }
 
+void htaSetAudioSourceI(AudioSpeaker* speakerPtr, uint16_t id)
+{
+	speakerPtr->SetAudioSorce(id);
+}
+
+void htaSetAudioSourceN(AudioSpeaker* speakerPtr, wchar_t* soundname)
+{
+	std::string name;
+	name = wide_to_multi_capi(soundname);
+	speakerPtr->SetAudioSorce(name);
+}
+
+void htaSetMaterialName(AudioSpeaker* speakerPtr, wchar_t* matereialname)
+{
+	std::string name;
+	name = wide_to_multi_capi(matereialname);
+	speakerPtr->SetMaterial(name);
+}
+
 bool  PlayI(AudioManager* ptr, int speakerId)
 {
 	PlayOrder::SetOrder(ptr, speakerId);
@@ -121,7 +151,7 @@ bool  PauseI(AudioManager* ptr, int speakerId)
 	return true;
 }
 
-bool  PauseL(AudioManager* ptr, int speakerId, int laytency)
+bool  PauseIL(AudioManager* ptr, int speakerId, int laytency)
 {
 	PauseOrder::SetOrder(ptr, speakerId, laytency);
 	return true;

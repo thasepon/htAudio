@@ -142,7 +142,10 @@ namespace htAudio {
 		// 全オーダーの起動
 		for (auto var : OrderList)
 		{
-			var->Execute();
+			if (var->Execute() == true)
+			{
+				// オーダー完了と削除
+			}
 		}
 	}
 }

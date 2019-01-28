@@ -1,0 +1,31 @@
+LIBRARY htAudio
+
+EXPORTS
+	htaCreateDevice
+	htaDeleteDevice
+	htaCreateManager
+	htaDeleteManager
+	htaListenerCreate
+	htaListenerDelete
+	htaListenerPosition
+	htaListenerPositionArray
+	htaListenerVelocity
+	htaListenerVelocityArray
+	htaListenerOrientation
+	htaListenerOrientationArray
+	htaSpeakerCreateI
+	htaSpeakerCreateN
+	htaSpeakerDeleteI
+	htaSpeakerDeleteP
+	PlayI
+	PlayIL
+	PlayP
+	PlayPL
+	StopI
+	StopIL
+	StopP
+	StopPL
+	PauseI
+	PauseIL
+	PauseP
+	PausePL

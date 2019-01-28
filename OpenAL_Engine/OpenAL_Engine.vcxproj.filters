@@ -121,6 +121,12 @@
     <Filter Include="Command\CreateSource">
       <UniqueIdentifier>{80eec0de-97f1-4f32-8f93-4ad0b0a9e3bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Command\Base">
+      <UniqueIdentifier>{726f73f5-426c-41c2-9311-5e793bfc72dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{1764c713-6458-4387-836e-927f8678e241}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="htAudioDll.h">
@@ -189,9 +195,6 @@
     <ClInclude Include="AudioDecoder.h">
       <Filter>Resource\Decoder</Filter>
     </ClInclude>
-    <ClInclude Include="AudioCommand.h">
-      <Filter>Command</Filter>
-    </ClInclude>
     <ClInclude Include="PlayCommand.h">
       <Filter>Command\Play</Filter>
     </ClInclude>
@@ -227,6 +230,12 @@
     </ClInclude>
     <ClInclude Include="CreateSourceCommand.h">
       <Filter>Command\CreateSource</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioCommand.h">
+      <Filter>Command\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ChronoTimer.h">
+      <Filter>Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -326,5 +335,16 @@
     <ClCompile Include="CreateSourceCommand.cpp">
       <Filter>Command\CreateSource</Filter>
     </ClCompile>
+    <ClCompile Include="AudioCommand.cpp">
+      <Filter>Command\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ChronoTimer.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="htAudio.def">
+      <Filter>ソース ファイル</Filter>
+    </None>
   </ItemGroup>
 </Project>

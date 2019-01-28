@@ -1,11 +1,16 @@
 #include"htAudioDll.h"
 
-#include"PlayOrder.h"
 #include"AudioData.h"
+
+#include"PlayOrder.h"
+#include"StopOrder.h"
+#include"PauseOrder.h"
 
 #include<uchar.h>
 #include<codecvt>
 #include<string>
+
+// ========================================= Speaker ====================================== //
 
 /// <summary>
 /// 名前でのスピーカーの生成をする
@@ -46,7 +51,7 @@ void* htaSpeakerCreateI(AudioManager* mgtPtr,uint16_t id)
 /// </summary>
 /// <param name="mgtPtr"></param>
 /// <param name="Numb"></param>
-void  htaSpeakerDeleteN(AudioManager* mgtPtr, int Numb)
+void  htaSpeakerDeleteI(AudioManager* mgtPtr, int Numb)
 {
 	mgtPtr->RemoveSpeaker(Numb);
 }
@@ -59,37 +64,97 @@ void  htaSpeakerDeleteN(AudioManager* mgtPtr, int Numb)
 void  htaSpeakerDeleteP(AudioManager* mgtPtr, AudioSpeaker* speakerPtr)
 {
 	mgtPtr->RemoveSpeaker(speakerPtr);
+	speakerPtr = nullptr;
 }
 
-bool  Play(AudioManager* ptr, int speakerId)
+bool  PlayI(AudioManager* ptr, int speakerId)
 {
 	PlayOrder::SetOrder(ptr, speakerId);
 	return true;
 }
 
-bool PlayL(AudioManager* ptr, int speakerId, int laytency)
+bool PlayIL(AudioManager* ptr, int speakerId, int laytency)
 {
 	PlayOrder::SetOrder(ptr, speakerId , laytency );
 	return true;
 }
 
-bool  Stop(int speakerId)
+bool  PlayP(AudioManager* ptr, AudioSpeaker* speakerPtr)
 {
-	alSourceStop(speakerId);
+	PlayOrder::SetOrder(ptr, speakerPtr->GetSpeakerNumb());
 	return true;
 }
 
-bool  Pause(int speakerId)
+bool PlayPL(AudioManager* ptr, AudioSpeaker* speakerPtr, int laytency)
 {
-	alSourcePause(speakerId);
+	PlayOrder::SetOrder(ptr, speakerPtr->GetSpeakerNumb(), laytency);
 	return true;
 }
 
+bool  StopI(AudioManager* ptr, int speakerId)
+{
+	StopOrder::SetOrder(ptr, speakerId);
+	return true;
+}
+
+bool  StopIL(AudioManager* ptr, int speakerId, int laytency)
+{
+	StopOrder::SetOrder(ptr, speakerId,laytency);
+	return true;
+}
+
+bool  StopP(AudioManager* ptr, AudioSpeaker* speakerPtr)
+{
+	StopOrder::SetOrder(ptr, speakerPtr->GetSpeakerNumb());
+	return true;
+}
+
+bool  StopPL(AudioManager* ptr, AudioSpeaker* speakerPtr, int laytency)
+{
+	PauseOrder::SetOrder(ptr, speakerPtr->GetSpeakerNumb(), laytency);
+	return true;
+}
+
+bool  PauseI(AudioManager* ptr, int speakerId)
+{
+	PauseOrder::SetOrder(ptr, speakerId);
+	return true;
+}
+
+bool  PauseL(AudioManager* ptr, int speakerId, int laytency)
+{
+	PauseOrder::SetOrder(ptr, speakerId, laytency);
+	return true;
+}
+
+bool  PauseP(AudioManager* ptr, AudioSpeaker* speakerPtr)
+{
+	PauseOrder::SetOrder(ptr, speakerPtr->GetSpeakerNumb());
+	return true;
+}
+
+bool  PausePL(AudioManager* ptr, AudioSpeaker* speakerPtr, int laytency)
+{
+	PauseOrder::SetOrder(ptr, speakerPtr->GetSpeakerNumb(), laytency);
+	return true;
+}
+
+
+// =================================== LIstener ===================================== //
+
+/// <summary>
+/// リスナーの生成処理
+/// </summary>
+/// <returns>生成されたリスナーを設定</returns>
 AudioListener* htaListenerCreate()
 {
 	return new AudioListener();
 }
 
+/// <summary>
+/// リスナーを削除します
+/// </summary>
+/// <param name="Instance"></param>
 void htaListenerDelete(AudioListener* Instance)
 {
 	if (Instance == nullptr)
@@ -100,35 +165,37 @@ void htaListenerDelete(AudioListener* Instance)
 	delete Instance;
 }
 
-void htaListenerPosition(AudioListener* Instance, float x, float y, float z)
+void htaListenerPosition(AudioListener* Instance, double x, double y, double z)
 {
 	Instance->Setposition(x, y, z);
 }
 
-void htaListenerPositionArray(AudioListener* Instance, float Pos[3])
+void htaListenerPositionArray(AudioListener* Instance, double Pos[3])
 {
 	Instance->Setposition(Pos);
 }
 
-void htaListenerVelocity(AudioListener* Instance, float x, float y, float z)
+void htaListenerVelocity(AudioListener* Instance, double x, double y, double z)
 {
 	Instance->SetVelocity(x, y, z);
 }
 
-void htaListenerVelocityArray(AudioListener* Instance, float vec[3])
+void htaListenerVelocityArray(AudioListener* Instance, double vec[3])
 {
 	Instance->SetVelocity(vec);
 }
 
-void htaListenerOrientation(AudioListener* Instance, float AtVec[3], float UpVec[3])
+void htaListenerOrientation(AudioListener* Instance, double AtVec[3], double UpVec[3])
 {
 	Instance->SetOrientation(AtVec, UpVec);
 }
 
-void htaListenerOrientationArray(AudioListener* Instance, float AtOrient[6])
+void htaListenerOrientationArray(AudioListener* Instance, double AtOrient[6])
 {
 	Instance->SetOrientation(AtOrient);
 }
+
+// ================================= Device ================================= //
 
 OpenALDevice* htaCreateDevice()
 {
@@ -145,6 +212,7 @@ void htaDeleteDevice(OpenALDevice* Instance)
 	delete Instance;
 }
 
+// =============================== AudioManager ================================= //
 
 AudioManager* htaCreateManager()
 {
@@ -161,72 +229,3 @@ void htaDeleteManager(AudioManager* instance)
 	delete instance;
 }
 
-/// <summary>
-/// 3DAudioの機能をOnにする
-/// 位置情報、向き情報、速度情報をポインタで渡して自動更新
-/// </summary>
-void htaAddI3DAudio(AudioManager* mgtPtr, int speakerId, I3DAudioInfo* info)
-{
-	I3DAudio* i3deffect = new I3DAudio(speakerId,info);
-	mgtPtr->AddEffect(i3deffect,speakerId);
-}
-
-/// <summary>
-/// 3DAudioのコーンを機能をOnにする
-/// インナーアングル、アウターアングル、アウターゲインを設定する
-/// </summary>
-void htaAddCone(AudioManager* mgtPtr, int speakerId, float innerangle, float outerangle, float outergain)
-{
-	ConeState* conestate = new ConeState(speakerId);
-	conestate->SetConeInnerAngle(innerangle);
-	conestate->SetConeOuterAngle(outerangle);
-	conestate->SetConeOuterGain(outergain);
-	mgtPtr->AddEffect(conestate,speakerId);
-}
-
-void htaSpeakerSetConeOuterGain(int speakerId, float val)
-{
-	alSourcef(speakerId, AL_CONE_OUTER_GAIN, val);
-}
-
-float htaSpeakerGetConeOuterGain(int speakerId)
-{
-	float val;
-	alGetSourcef(speakerId, AL_CONE_OUTER_GAIN, &val);
-	return val;
-}
-
-void htaSpeakerSetConeInnerAngle(int speakerId, float val)
-{
-	alSourcef(speakerId, AL_CONE_INNER_ANGLE, val);
-}
-
-float htaSpeakerGetConeInnerAngle(int speakerId)
-{
-	float val;
-	alGetSourcef(speakerId, AL_CONE_INNER_ANGLE, &val);
-	return val;
-}
-
-void htaSpeakerSetConeOuterAngle(int speakerId, float val)
-{
-	alSourcef(speakerId, AL_CONE_OUTER_ANGLE, val);
-}
-
-float htaSpeakerGetConeOuterAngle(int speakerId)
-{
-	float val;
-	alGetSourcef(speakerId, AL_CONE_OUTER_ANGLE, &val);
-	return val;
-}
-
-/// <summary>
-/// リバーヴの機能をOnにする
-/// 
-/// </summary>
-void htaAddReverb(AudioManager* mgtPtr, int speakerId, REVERB_INFO* info)
-{
-	ReverbEffects* effect = new ReverbEffects(speakerId);
-	effect->SetInfo(info);
-	mgtPtr->AddEffect(effect,speakerId);
-}

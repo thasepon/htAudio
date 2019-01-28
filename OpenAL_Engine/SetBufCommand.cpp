@@ -8,7 +8,7 @@ namespace htAudio
 	{
 	}
 
-	bool SetBufCommand::SetDataBuffer(int bufNumb, int channel, void* bufdata, int fq, int bufsize)
+	bool SetBufCommand::SetDataBuffer(int bufNumb, int channel, void* bufdata, int fq, int bufsize) 
 	{
 		// バッファ番号の設定
 		ALuint _buffer = (ALuint)bufNumb;

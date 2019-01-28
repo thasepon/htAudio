@@ -6,7 +6,7 @@
 namespace htAudio {
 
 
-	PauseCommand::PauseCommand(OrderFormat fmt)
+	PauseCommand::PauseCommand(OrderFormat fmt) : AudioCommand()
 	{
 		OrderFmt = fmt;
 	}
@@ -17,6 +17,10 @@ namespace htAudio {
 
 	bool PauseCommand::Pause(int source)
 	{
+
+		if (TimeCtrlCmd() == false)
+			return false;
+
 		alSourcePause(source);
 		return true;
 	}

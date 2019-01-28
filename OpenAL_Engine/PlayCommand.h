@@ -11,7 +11,7 @@ namespace htAudio {
 		~PlayCommand();
 
 		// DLL“àˆ——p
-		virtual bool Execute() { return Play(OrderFmt.SourceID); }
+		virtual bool Execute();
 		
 	private:
 		// DLL“àˆ——p

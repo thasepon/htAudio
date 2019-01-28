@@ -5,7 +5,7 @@
 namespace htAudio {
 
 
-	StopCommand::StopCommand(OrderFormat fmt)
+	StopCommand::StopCommand(OrderFormat fmt) : AudioCommand()
 	{
 		OrderFmt = fmt;
 	}
@@ -16,6 +16,9 @@ namespace htAudio {
 
 	bool StopCommand::Execute()
 	{
+		if (TimeCtrlCmd() == false)
+			return false;
+
 		return Stop(OrderFmt.SourceID);
 	}
 

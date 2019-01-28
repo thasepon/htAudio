@@ -5,7 +5,7 @@
 namespace htAudio {
 
 
-	PlayCommand::PlayCommand(OrderFormat fmt)
+	PlayCommand::PlayCommand(OrderFormat fmt) : AudioCommand()
 	{
 		OrderFmt = fmt;
 	}
@@ -13,6 +13,14 @@ namespace htAudio {
 	PlayCommand::~PlayCommand()
 	{
 
+	}
+
+	bool PlayCommand::Execute() 
+	{ 
+		if (TimeCtrlCmd() == false)
+			return false;
+
+		return Play(OrderFmt.SourceID); 
 	}
 
 	/// <summary>

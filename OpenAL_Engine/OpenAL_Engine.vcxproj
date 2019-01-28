@@ -135,6 +135,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>htAudio.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -153,6 +154,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>J:\SoundDLL\Data\lib\Linker;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>htAudio.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y $(TargetPath)  J:\UnityProj\RDProj\Assets\Plugins</Command>
@@ -174,6 +176,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>htAudio.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">
@@ -192,6 +195,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>htAudio.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -214,6 +218,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib\Linker</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>htAudio.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y $(TargetPath)  J:\UnityProj\RDProj\Assets\Plugins</Command>
@@ -239,6 +244,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>J:\SoundDLL\Data\lib\Linker;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>htAudio.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y $(TargetPath)  J:\UnityProj\RDProj\Assets\Plugins</Command>
@@ -256,6 +262,7 @@
     <ClInclude Include="AudioOrder.h" />
     <ClInclude Include="AudioReSource.h" />
     <ClInclude Include="ChorusEffect.h" />
+    <ClInclude Include="ChronoTimer.h" />
     <ClInclude Include="ConeState.h" />
     <ClInclude Include="CreateSourceCommand.h" />
     <ClInclude Include="Definclude.h" />
@@ -283,6 +290,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddEffectCommand.cpp" />
+    <ClCompile Include="AudioCommand.cpp" />
     <ClCompile Include="AudioDecoder.cpp" />
     <ClCompile Include="AudioEffects.cpp" />
     <ClCompile Include="AudioElement.cpp" />
@@ -291,6 +299,7 @@
     <ClCompile Include="AudioOrder.cpp" />
     <ClCompile Include="AudioReSource.cpp" />
     <ClCompile Include="ChorusEffect.cpp" />
+    <ClCompile Include="ChronoTimer.cpp" />
     <ClCompile Include="ConeState.cpp" />
     <ClCompile Include="CreateSourceCommand.cpp" />
     <ClCompile Include="DistortionEffect.cpp" />
@@ -314,6 +323,9 @@
     <ClCompile Include="StopCommand.cpp" />
     <ClCompile Include="StopOrder.cpp" />
     <ClCompile Include="WahEffect.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="htAudio.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

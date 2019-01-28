@@ -268,6 +268,7 @@
     <ClInclude Include="Definclude.h" />
     <ClInclude Include="DistortionEffect.h" />
     <ClInclude Include="EchoEffect.h" />
+    <ClInclude Include="EffectElementPram.h" />
     <ClInclude Include="EQEffect.h" />
     <ClInclude Include="FlangerEffect.h" />
     <ClInclude Include="FQEffect.h" />
@@ -304,6 +305,7 @@
     <ClCompile Include="CreateSourceCommand.cpp" />
     <ClCompile Include="DistortionEffect.cpp" />
     <ClCompile Include="EchoEffect.cpp" />
+    <ClCompile Include="EffectElementPram.cpp" />
     <ClCompile Include="EQEffect.cpp" />
     <ClCompile Include="FlangerEffect.cpp" />
     <ClCompile Include="FQEffect.cpp" />
@@ -323,9 +325,6 @@
     <ClCompile Include="StopCommand.cpp" />
     <ClCompile Include="StopOrder.cpp" />
     <ClCompile Include="WahEffect.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="htAudio.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

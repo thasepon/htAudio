@@ -237,6 +237,9 @@
     <ClInclude Include="ChronoTimer.h">
       <Filter>Timer</Filter>
     </ClInclude>
+    <ClInclude Include="EffectElementPram.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="htAudioDll.cpp">
@@ -341,10 +344,8 @@
     <ClCompile Include="ChronoTimer.cpp">
       <Filter>Timer</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="htAudio.def">
+    <ClCompile Include="EffectElementPram.cpp">
       <Filter>ソース ファイル</Filter>
-    </None>
+    </ClCompile>
   </ItemGroup>
 </Project>

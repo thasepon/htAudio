@@ -268,12 +268,14 @@
     <ClInclude Include="Definclude.h" />
     <ClInclude Include="DistortionEffect.h" />
     <ClInclude Include="EchoEffect.h" />
+    <ClInclude Include="EffectElementManager.h" />
     <ClInclude Include="EffectElementPram.h" />
     <ClInclude Include="EQEffect.h" />
     <ClInclude Include="FlangerEffect.h" />
     <ClInclude Include="FQEffect.h" />
     <ClInclude Include="htAudioDll.h" />
     <ClInclude Include="I3DAudio.h" />
+    <ClInclude Include="Lerp.h" />
     <ClInclude Include="OpenAL\AudioFormatData\AudioFormatData.h" />
     <ClInclude Include="OpenAL\AudioListener\AudioListener.h" />
     <ClInclude Include="OpenAL\AudioSpeaker\AudioSpeaker.h" />
@@ -285,6 +287,7 @@
     <ClInclude Include="PlayOrder.h" />
     <ClInclude Include="ReverbEffects.h" />
     <ClInclude Include="SetBufCommand.h" />
+    <ClInclude Include="SpeakerManager.h" />
     <ClInclude Include="StopCommand.h" />
     <ClInclude Include="StopOrder.h" />
     <ClInclude Include="WahEffect.h" />
@@ -305,12 +308,14 @@
     <ClCompile Include="CreateSourceCommand.cpp" />
     <ClCompile Include="DistortionEffect.cpp" />
     <ClCompile Include="EchoEffect.cpp" />
+    <ClCompile Include="EffectElementManager.cpp" />
     <ClCompile Include="EffectElementPram.cpp" />
     <ClCompile Include="EQEffect.cpp" />
     <ClCompile Include="FlangerEffect.cpp" />
     <ClCompile Include="FQEffect.cpp" />
     <ClCompile Include="htAudioDll.cpp" />
     <ClCompile Include="I3DAudio.cpp" />
+    <ClCompile Include="Lerp.cpp" />
     <ClCompile Include="OpenAL\AudioFormatData\AudioFormatData.cpp" />
     <ClCompile Include="OpenAL\AudioListener\AudioListener.cpp" />
     <ClCompile Include="OpenAL\AudioSpeaker\AudioSpeaker.cpp" />
@@ -322,6 +327,7 @@
     <ClCompile Include="PlayOrder.cpp" />
     <ClCompile Include="ReverbEffects.cpp" />
     <ClCompile Include="SetBufCommand.cpp" />
+    <ClCompile Include="SpeakerManager.cpp" />
     <ClCompile Include="StopCommand.cpp" />
     <ClCompile Include="StopOrder.cpp" />
     <ClCompile Include="WahEffect.cpp" />

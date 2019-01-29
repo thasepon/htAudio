@@ -13,6 +13,9 @@ namespace htAudio {
 		void SetElementValue(double _value);
 		double GetElementValue();
 
+		uint16_t GetElementId() { return ElementId; }
+		std::string GetElementName() { return ElementName; }
+
 	private:
 
 		uint16_t ElementId;		// Element‚Ì”Ô†

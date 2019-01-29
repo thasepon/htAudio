@@ -76,9 +76,6 @@
     <Filter Include="AudioSpeaker">
       <UniqueIdentifier>{b3def917-b2db-4fff-ba62-b8b373d956ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AudioManager">
-      <UniqueIdentifier>{9ba31ced-4f81-42e1-b709-e407206e546a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\Decoder">
       <UniqueIdentifier>{9b1d495c-a030-41a2-9ae8-9ff3414ac627}</UniqueIdentifier>
     </Filter>
@@ -126,6 +123,27 @@
     </Filter>
     <Filter Include="Timer">
       <UniqueIdentifier>{1764c713-6458-4387-836e-927f8678e241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffectMain">
+      <UniqueIdentifier>{6231bdea-4257-4c4e-9b93-dd9d8c51fad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffectMain\EffectElementPram">
+      <UniqueIdentifier>{d64335ef-4efc-4ad9-87e2-a32a523e4241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffectMain\EffectElementManager">
+      <UniqueIdentifier>{4bf1ef4b-3493-45e1-8448-d04ea1b3816a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lerp">
+      <UniqueIdentifier>{6ffda867-d123-4317-814c-260cb13e1d51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{5f27aca5-eb21-4237-83d0-1b2823d1c354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\AudioManager">
+      <UniqueIdentifier>{9ba31ced-4f81-42e1-b709-e407206e546a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\SpeakerManager">
+      <UniqueIdentifier>{bed996c8-2443-4925-841a-674823228213}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,7 +205,7 @@
       <Filter>AudioSpeaker</Filter>
     </ClInclude>
     <ClInclude Include="AudioManager.h">
-      <Filter>AudioManager</Filter>
+      <Filter>Manager\AudioManager</Filter>
     </ClInclude>
     <ClInclude Include="AudioReSource.h">
       <Filter>Resource</Filter>
@@ -238,6 +256,15 @@
       <Filter>Timer</Filter>
     </ClInclude>
     <ClInclude Include="EffectElementPram.h">
+      <Filter>EffectMain\EffectElementPram</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectElementManager.h">
+      <Filter>EffectMain\EffectElementManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Lerp.h">
+      <Filter>Lerp</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeakerManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -300,7 +327,7 @@
       <Filter>AudioSpeaker</Filter>
     </ClCompile>
     <ClCompile Include="AudioManager.cpp">
-      <Filter>AudioManager</Filter>
+      <Filter>Manager\AudioManager</Filter>
     </ClCompile>
     <ClCompile Include="AudioReSource.cpp">
       <Filter>Resource</Filter>
@@ -345,6 +372,15 @@
       <Filter>Timer</Filter>
     </ClCompile>
     <ClCompile Include="EffectElementPram.cpp">
+      <Filter>EffectMain\EffectElementPram</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectElementManager.cpp">
+      <Filter>EffectMain\EffectElementManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Lerp.cpp">
+      <Filter>Lerp</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeakerManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

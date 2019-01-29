@@ -50,7 +50,6 @@ namespace htAudio {
 
 	void AudioManager::RemoveSpeaker(AudioSpeaker* ptr)
 	{
-
 		for (auto itr : SpeakerMap)
 		{
 			if (itr.second == ptr)

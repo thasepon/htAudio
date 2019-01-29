@@ -6,6 +6,7 @@
 #include"AudioOrder.h"
 #include"AudioCommand.h"
 #include"AudioReSource.h"
+#include"EffectElementManager.h"
 
 #include<map>
 #include<utility>
@@ -32,16 +33,22 @@ namespace htAudio {
 		void SetAudioOrder(ORDERTYPE type, OrderFormat fmt);// Audioのコマンドを保存していく
 		void ClearAudioOrder();								// セットされたオーディオデータの削除
 
-	private:
-		void ThreadUpdate();					// スレッド更新
-		void ExecOrderCmd();					// コマンドの消化
+		EffectElementManager* GetEffectElementPtr() { return EffectElementMgrPtr; }
+		AudioReSource* GeteAudioResoucePtr() { return ResourcePtr; }
 
 	private:
-		list<AudioCommand*> OrderList;			// オーディオオーダー
-		map<UINT16,AudioSpeaker*> SpeakerMap;	// 現在のスピーカーの設定
-		AudioReSource* ResourcePtr;				// Preloadでの使いまわし用のリソースptr
-		thread UpdateThread;					// 非同期更新用
-		bool Updateflag;						// 非同期更新フラグ
+		void ThreadUpdate();						// スレッド更新
+		void ExecOrderCmd();						// コマンドの消化
+
+	private:
+		list<AudioCommand*> OrderList;				// オーディオオーダー
+		map<UINT16,AudioSpeaker*> SpeakerMap;		// 現在のスピーカーの設定
+		
+		AudioReSource* ResourcePtr;					// Preloadでの使いまわし用のリソースptr
+		EffectElementManager* EffectElementMgrPtr;	// エフェクトエレメントを保持するためのポインタ
+
+		thread UpdateThread;						// 非同期更新用
+		bool Updateflag;							// 非同期更新フラグ
 
 	};
 

@@ -21,44 +21,7 @@ namespace htAudio {
 	//
 	AudioManager::~AudioManager()
 	{
-		AllSpeakerRemove();
-	}
-
-	//
-	//	スピーカーの登録処理
-	//
-	void AudioManager::AddSpeaker(UINT16 id, AudioSpeaker* ptr)
-	{
-		// マップに設定
-		SpeakerMap.insert( make_pair(id, ptr) );
-	}
-
-	//
-	//	スピーカーの削除
-	//
-	void AudioManager::RemoveSpeaker(int numb)
-	{
-		// ID検索
-		auto itr = SpeakerMap.find(numb);
-		// あった場合の処理
-		if (SpeakerMap.end() != itr)
-		{
-			delete SpeakerMap[numb];
-			SpeakerMap.erase(itr);
-		}
-	}
-
-	void AudioManager::RemoveSpeaker(AudioSpeaker* ptr)
-	{
-		for (auto itr : SpeakerMap)
-		{
-			if (itr.second == ptr)
-			{
-				delete itr.second;
-				SpeakerMap.erase(itr.first);
-			}
-		}
-
+		SpeakerMgrPtr->AllDeleteSpeaker();
 	}
 
 	//
@@ -68,29 +31,8 @@ namespace htAudio {
 	{
 		while (Updateflag)
 		{
-			for (auto itr = SpeakerMap.begin(); itr != SpeakerMap.end(); itr++)
-			{
-				itr->second->Update();
-			}
+			SpeakerMgrPtr->SpeakerUpdate();
 		}
-	}
-
-	//
-	//	登録してあるスピーカーの全削除
-	//
-	void AudioManager::AllSpeakerRemove()
-	{
-		Updateflag = false;
-		
-		// スレッドのアップデートの終了待機
-		UpdateThread.join();
-
-		// SpeakerMapを全削除
-		for (auto var : SpeakerMap)
-		{
-			delete var.second;
-		}
-		SpeakerMap.clear();
 	}
 
 	//

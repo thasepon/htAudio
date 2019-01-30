@@ -265,7 +265,7 @@
       <Filter>Lerp</Filter>
     </ClInclude>
     <ClInclude Include="SpeakerManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Manager\SpeakerManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -381,7 +381,7 @@
       <Filter>Lerp</Filter>
     </ClCompile>
     <ClCompile Include="SpeakerManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Manager\SpeakerManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

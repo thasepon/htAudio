@@ -1,0 +1,70 @@
+{
+  
+  "Test1" : {
+    "id" : 0,
+    "name" : "Test1",
+    "volumetype" : "BGM",
+    "loopflag" : true,
+    "effects" : [
+      {"0" : "REVERB","element" : "State1"},
+      {"1" : "PITCH","element" : "State2"}
+    ],
+    "soundinfo" :[
+      {
+        "id" : 0 ,
+        "name" : "TestBGM1",
+        "cue" : "Test1",
+        "material" : null,
+        "loadtype" : "Stream",
+        "riff" : "wav",
+        "defaultvolume" : 100,
+        "maxvolume" : 100
+      },
+      {
+        "id" : 1 ,
+        "name" : "TestBGM2",
+        "cue" : "Test1",
+        "material" : null,
+        "loadtype" : "Stream",
+        "riff" : "wav",
+        "defaultvolume" : 70,
+        "maxvolume" : 80
+      }
+    ]
+  },
+  "Test2" : {
+    "id" : 0,
+    "name" : "Test2",
+    "volumetype" : "SE",
+    "loopflag" : false,
+    "effects" : [
+       {"0" : "REVERB","element" : "State3"},
+       {"1" : "PITCH", "element" : "State4"},
+       {"2" : "I3DAUDIO","element" : "State5"}
+    ],
+    "soundinfo" :[
+      {
+        "id" : 0 ,
+        "name" : "TestSE1",
+        "cue" : "Test2",
+        "material" : null,
+        "loadtype" : "Preload",
+        "riff" : "wav",
+        "defaultvolume" : 100,
+        "maxvolume" : 100
+      },
+      {
+        "id" : 1 ,
+        "name" : "TestSE2",
+        "cue" : "Test2",
+        "material" : "Sand",
+        "loadtype" : "Preload",
+        "riff" : "wav",
+        "defaultvolume" : 100,
+        "maxvolume" : 100
+      }
+    ]
+  }
+  
+  
+}

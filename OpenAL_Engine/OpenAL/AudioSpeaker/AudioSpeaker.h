@@ -38,13 +38,15 @@ namespace htAudio
 		void SetMaterial(string Name);				// マテリアルデータの設定
 		void SetAudioSorce(string SoundName);		// オーディオデータの設定 ファイル名
 		void SetAudioSorce(int id);					// オーディオデータの設定 ID
+		void SetVolume(double volume);				// ボリュームの設定
 		
 		bool Update();								// 更新処理
 		
 		bool AddEffects(AudioEffects* effect);		// エフェクトの追加
 
 		ALuint GetSpeakerNumb();					// ソースの番号を取得
-
+		VOLUMETYPE GetVolumeType();					// Cueのボリュームタイプを取得
+		
 	private:
 		// === 関数 === //
 		void Init();						// 共通初期化処理

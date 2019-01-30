@@ -101,6 +101,15 @@ namespace htAudio {
 	}
 
 	/// <summary>
+	/// ボリュームを設定
+	/// </summary>
+	/// <param name="volume"></param>
+	void AudioSpeaker::SetVolume(double volume)
+	{
+		SpeakerCue.Volume = SoundDatas[NowUsedNumb].MaxVolume*volume;
+	}
+
+	/// <summary>
 	/// ヘッダー情報の読み込み関数
 	/// </summary>
 	void AudioSpeaker::ReadHeaderInfo()
@@ -263,6 +272,17 @@ namespace htAudio {
 	{ 
 		return Source; 
 	}
+
+	/// <summary>
+	/// どのボリュームタイプかを取得する
+	/// </summary>
+	/// <returns></returns>
+	VOLUMETYPE AudioSpeaker::GetVolumeType()
+	{
+		return SpeakerCue.VolType;
+	}
+
+
 
 	/// <summary>
 	/// エフェクトの追加処理

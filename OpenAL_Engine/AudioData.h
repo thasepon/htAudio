@@ -52,6 +52,15 @@ namespace htAudio
 		MAX_ORDER
 	};
 
+	enum VOLUMETYPE
+	{
+		ALL,
+		BGM,
+		SE,
+		VOICE,
+		MAX_VOLUMETYPE
+	};
+
 	// ================= ↓構造体 =================== //
 
 	struct OrderFormat
@@ -108,13 +117,10 @@ namespace htAudio
 	struct SoundType {
 		int AudioID;				// Audioの情報
 		std::string AudioName;		// オーディオファイルの名前
-		double b3DAudio;			// 3DAudioを使用するかどうか
 		std::string Cue;			// Cueの名前
-		std::string SubGroup;		// 属しているグループ
 		std::string MaterialObj;	// 属しているマテリアル
 		AudioLoadType StreamType;	// ストリーミングタイプ
 		RIFFType RIFFType;			// ファイル拡張子の種類
-		double LowVolume;			// 最低音量
 		double DefaultVolume;		// デフォルト音量
 		double MaxVolume;			// 最大音量
 		bool CreateFlag;			// 作成フラグ
@@ -128,6 +134,7 @@ namespace htAudio
 		std::string Filepath;				// ファイルパス
 		std::string	CueName;				// Cueファイル名
 		double Volume;						// ボリューム
+		VOLUMETYPE VolType;					// ボリュームのタイプ
 		bool Loopflag;						// ループフラグ
 		std::vector<EFFECTSNUM> CueEffect;	// Cueに適応させるエフェクトの一覧
 	};

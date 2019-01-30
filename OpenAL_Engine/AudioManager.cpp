@@ -86,6 +86,8 @@ namespace htAudio {
 			if (var->Execute() == true)
 			{
 				// オーダー完了と削除
+				delete var;
+				OrderList.remove(var);
 			}
 		}
 	}

@@ -26,6 +26,11 @@ namespace htAudio {
 	private:
 		WAH_INFO Info;
 
+		double MaxAttackTime, MinAttackTime;
+		double MaxRleaseTime, MinRleaseTime;
+		double MaxResonace, MinResonace;
+		double MaxPeakGain, MinPeakGain;
+
 	};
 
 }

@@ -15,7 +15,7 @@ namespace htAudio
 	// ファイル拡張子
 	enum RIFFType
 	{
-		RIFF_WAV,
+		RIFF_WAV = 0,
 		RIFF_OGG,
 		RIFF_MAX
 	};
@@ -103,6 +103,12 @@ namespace htAudio
 		std::size_t BufData;
 	};
 
+	struct EffectState
+	{
+		EFFECTSNUM UseEffect;
+		std::string UseElement;
+	};
+
 	// ファイルの情報
 	struct AUDIOFILEFORMAT{
 		RIFFChunk Riff;
@@ -136,7 +142,7 @@ namespace htAudio
 		double Volume;						// ボリューム
 		VOLUMETYPE VolType;					// ボリュームのタイプ
 		bool Loopflag;						// ループフラグ
-		std::vector<EFFECTSNUM> CueEffect;	// Cueに適応させるエフェクトの一覧
+		std::vector<EffectState> CueEffect;	// Cueに適応させるエフェクトの一覧
 	};
 
 	// Speaker側の情報

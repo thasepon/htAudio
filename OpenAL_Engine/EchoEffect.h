@@ -28,6 +28,12 @@ namespace htAudio {
 	private:
 		ECHO_INFO Info;
 
+		double MaxDelay, MinDelay;
+		double MaxLRDelay, MinLRDelay;
+		double MaxDamping,MinDamping;
+		double MaxFeedBack,MinFeedBack;
+		double MaxSPRead, MinSPRead;
+
 	};
 
 }

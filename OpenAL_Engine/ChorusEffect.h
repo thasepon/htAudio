@@ -32,5 +32,11 @@ namespace htAudio
 	private:
 		CHORUS_INFO Info;
 
+		uint16_t MaxWaveRotm, MinWaveRotm;
+		uint16_t MaxPhase, MinPhase;
+		double MaxRate, MinRate;
+		double MaxDepth,MinDepth;
+		double MaxFeedback,MinFeedback;
+		double MaxDelay,MinDelay;
 	};
 }

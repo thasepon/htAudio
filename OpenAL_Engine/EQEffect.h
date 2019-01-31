@@ -32,6 +32,18 @@ namespace htAudio {
 
 	private:
 		EQ_INFO Info;
+
+		double MaxLowGain,MinLowGain;
+		double MaxLowCutOff,MinLowCutOff;
+		double MaxMidGain,MinMidGain;
+		double MaxMidCenter,MinMidCenter;
+		double MaxMidWidth,MinMidWidth;
+		double MaxMid2Gain, MinMid2Gain;
+		double MaxMid2Center, MinMid2Center;
+		double MaxMid2Width, MinMid2Width;
+		double MaxHighGain,MinHighGain;
+		double MaxHighCutOff, MinHighCutOff;
+
 	};
 
 }

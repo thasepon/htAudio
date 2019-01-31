@@ -28,6 +28,12 @@ namespace htAudio {
 	private:
 		DISTORTION_INFO Info;
 
+		double MaxEdge,MinEdge;
+		double MaxGain,MinGain;
+		double MaxLowpassCutOff, MinLowpassCutOff;
+		double MaxEQCenter, MinEQCenter;
+		double MaxEQBandWidth, MainEQBandWidth;
+
 	};
 
 }

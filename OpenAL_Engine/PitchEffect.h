@@ -23,6 +23,10 @@ namespace htAudio
 
 		PITCH_INFO Info;
 
+
+		uint16_t MaxCoarseTune, MinCoarseTune;
+		uint16_t MaxFineTune, MinFineTune;
+
 	};
 
 }

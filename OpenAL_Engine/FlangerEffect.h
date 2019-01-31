@@ -31,6 +31,13 @@ namespace htAudio {
 	private:
 		FLANGER_INFO Info;
 
+		uint16_t MaxWaveForm, MinWaveForm;
+		uint16_t MaxPhase,MinPhase;
+		double MaxRate,MinRate;
+		double MaxDepth,MinDepth;
+		double MaxFeedback, MinFeedback;
+		double MaxDelay,MinDelay;
+
 	};
 
 }

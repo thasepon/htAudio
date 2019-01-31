@@ -41,6 +41,19 @@ namespace htAudio
 
 	private:
 		REVERB_INFO* Info;		// ÉäÉoÅ[ÉuèÓïÒ
+
+		double MaxDensity,MinDensity;
+		double MaxDiffusion,MinDiffusion;
+		double MaxGain,MinGain;
+		double MaxGainHF,MinGainHF;
+		double MaxDecayTime,MinDecayTime;
+		double MaxDecayHFRatio,MinDecayHFRatio;
+		double MaxReflectionsGain,MinReflectionsGain;
+		double MaxReflectionsDelay,MinReflectionsDelay;
+		double MaxLateGain,MinLateGain;
+		double MaxLateDelay,MinLateDelay;
+		double MaxRoomRollOff, MinRoomRollOff;
+		double MaxAirGainHF, MinAirGainHF;
 	};
 
 }

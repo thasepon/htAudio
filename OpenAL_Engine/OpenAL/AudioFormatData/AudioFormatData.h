@@ -5,26 +5,23 @@
 #include<tchar.h>
 
 #include"../../AudioData.h"
-#include"../../DLL/include/json/picojson.h"
-
-#include<pugixml.hpp>
-#pragma comment(lib, "pugixml.lib")
 
 namespace htAudio
 {
 	/// <summary>
-	/// xmlの読み込み
+	/// 外部ファイルに保存してある情報を読み込む処理
 	/// </summary>
-	/// 
 	class AudioFormatData
 	{
 	public:
 		AudioFormatData();
 		~AudioFormatData();
 
-		static std::vector<SoundType> GetAudioFormatData(std::string filepath, std::string Soundname);
-		static std::vector<SoundType> GetAudioFormatData(std::string filepath, int id);
-		static bool ReadListenerState(ConeState& state, std::string filepath);
+		static bool LoadAudioFormatData(AudioCue& cue,std::vector<SoundType>& types, std::string filepath, std::string Soundname);
+		static bool LoadAudioFormatData(AudioCue& cue, std::vector<SoundType>& types, std::string filepath, int id);
+		
+		// 各種エフェクトのデータを呼び込む
+		static bool LoadEffectData();
 
 	private:
 

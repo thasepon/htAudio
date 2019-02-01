@@ -4,13 +4,6 @@
 
 namespace htAudio {
 
-	struct WAH_INFO
-	{
-		double ATTACK_TIME;
-		double RELEASE_TIME;
-		double RESONANCE;
-		double PEAK_GAIN;
-	};
 
 	class WahEffect :public AudioEffects
 	{
@@ -26,10 +19,6 @@ namespace htAudio {
 	private:
 		WAH_INFO Info;
 
-		double MaxAttackTime, MinAttackTime;
-		double MaxRleaseTime, MinRleaseTime;
-		double MaxResonace, MinResonace;
-		double MaxPeakGain, MinPeakGain;
 
 	};
 

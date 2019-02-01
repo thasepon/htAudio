@@ -5,15 +5,7 @@
 
 namespace htAudio {
 
-	struct FLANGER_INFO
-	{
-		uint16_t WAVEFORM;
-		uint16_t PHASE;
-		double RATE;
-		double DEPTH;
-		double FEEDBACK;
-		double DELAY;
-	};
+	
 
 	class FlangerEffect : public AudioEffects
 	{
@@ -31,12 +23,6 @@ namespace htAudio {
 	private:
 		FLANGER_INFO Info;
 
-		uint16_t MaxWaveForm, MinWaveForm;
-		uint16_t MaxPhase,MinPhase;
-		double MaxRate,MinRate;
-		double MaxDepth,MinDepth;
-		double MaxFeedback, MinFeedback;
-		double MaxDelay,MinDelay;
 
 	};
 

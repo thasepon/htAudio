@@ -4,15 +4,6 @@
 
 namespace htAudio {
 
-	struct ECHO_INFO
-	{
-		double DELAY;
-		double LRDELAY;
-		double DAMPING;
-		double FEEDBACK;
-		double SPREAD;
-	};
-
 	class EchoEffect : public AudioEffects
 	{
 	public:
@@ -27,13 +18,6 @@ namespace htAudio {
 
 	private:
 		ECHO_INFO Info;
-
-		double MaxDelay, MinDelay;
-		double MaxLRDelay, MinLRDelay;
-		double MaxDamping,MinDamping;
-		double MaxFeedBack,MinFeedBack;
-		double MaxSPRead, MinSPRead;
-
 	};
 
 }

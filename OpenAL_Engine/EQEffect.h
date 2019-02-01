@@ -4,20 +4,6 @@
 
 namespace htAudio {
 
-	struct EQ_INFO
-	{
-		double LOW_GAIN;
-		double LOW_CUTOFF;
-		double MID1_GAIN;
-		double MID1_CENTER;
-		double MID1_WIDTH;
-		double MID2_GAIN;
-		double MID2_CENTER;
-		double MID2_WIDTH;
-		double HIGH_GAIN;
-		double HIGH_CUTOFF;
-	};
-
 	class EQEffect :public AudioEffects
 	{
 	public:
@@ -33,16 +19,6 @@ namespace htAudio {
 	private:
 		EQ_INFO Info;
 
-		double MaxLowGain,MinLowGain;
-		double MaxLowCutOff,MinLowCutOff;
-		double MaxMidGain,MinMidGain;
-		double MaxMidCenter,MinMidCenter;
-		double MaxMidWidth,MinMidWidth;
-		double MaxMid2Gain, MinMid2Gain;
-		double MaxMid2Center, MinMid2Center;
-		double MaxMid2Width, MinMid2Width;
-		double MaxHighGain,MinHighGain;
-		double MaxHighCutOff, MinHighCutOff;
 
 	};
 

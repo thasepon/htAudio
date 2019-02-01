@@ -4,12 +4,6 @@
 
 namespace htAudio
 {
-	struct PITCH_INFO
-	{
-		uint16_t COARSE_TUNE;
-		uint16_t FINE_TUNE;
-	};
-
 	class PitchEffect : public AudioEffects
 	{
 	public:
@@ -22,11 +16,6 @@ namespace htAudio
 	private:
 
 		PITCH_INFO Info;
-
-
-		uint16_t MaxCoarseTune, MinCoarseTune;
-		uint16_t MaxFineTune, MinFineTune;
-
 	};
 
 }

@@ -5,22 +5,7 @@
 
 namespace htAudio
 {
-	struct REVERB_INFO
-	{
-		double DENSITY;
-		double DIFFUSION;
-		double GAIN;
-		double GAINHF;
-		double DECAY_TIME;
-		double DECAY_HFRATIO;
-		double REFLECTIONS_GAIN;
-		double REFLECTIONS_DELAY;
-		double LATE_GAIN;
-		double LATE_DELAY;
-		double ROOM_ROLL_OFF;
-		double AIR_GAINHF;
-		bool AIR_HFLIMIT;
-	};
+	
 
 	class ReverbEffects : public AudioEffects
 	{
@@ -42,18 +27,6 @@ namespace htAudio
 	private:
 		REVERB_INFO* Info;		// ÉäÉoÅ[ÉuèÓïÒ
 
-		double MaxDensity,MinDensity;
-		double MaxDiffusion,MinDiffusion;
-		double MaxGain,MinGain;
-		double MaxGainHF,MinGainHF;
-		double MaxDecayTime,MinDecayTime;
-		double MaxDecayHFRatio,MinDecayHFRatio;
-		double MaxReflectionsGain,MinReflectionsGain;
-		double MaxReflectionsDelay,MinReflectionsDelay;
-		double MaxLateGain,MinLateGain;
-		double MaxLateDelay,MinLateDelay;
-		double MaxRoomRollOff, MinRoomRollOff;
-		double MaxAirGainHF, MinAirGainHF;
 	};
 
 }

@@ -6,15 +6,6 @@
 
 namespace htAudio {
 
-	struct I3DAudioInfo
-	{
-		ALfloat* Position[3];	// Position
-		ALfloat* Velocity[3];	// ˆÚ“®‘¬“x
-		ALfloat* Direction[3];	// Œü‚«
-		double OuterGain;
-		double OuterAngle;
-		double innerAngle;
-	};
 	
 	class I3DAudio : public AudioEffects
 	{

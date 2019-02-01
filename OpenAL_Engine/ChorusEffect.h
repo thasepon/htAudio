@@ -4,19 +4,7 @@
 
 namespace htAudio
 {
-
-	struct CHORUS_INFO
-	{
-		uint16_t WAVEROTM;
-		uint16_t PHASE;
-		double RATE;
-		double DEPTH;
-		double FEEDBACK;
-		double DELAY;
-	};
-
-	class ChorusEffect :
-		public AudioEffects
+	class ChorusEffect : public AudioEffects
 	{
 	public:
 		ChorusEffect(ALuint source);
@@ -32,11 +20,5 @@ namespace htAudio
 	private:
 		CHORUS_INFO Info;
 
-		uint16_t MaxWaveRotm, MinWaveRotm;
-		uint16_t MaxPhase, MinPhase;
-		double MaxRate, MinRate;
-		double MaxDepth,MinDepth;
-		double MaxFeedback,MinFeedback;
-		double MaxDelay,MinDelay;
 	};
 }

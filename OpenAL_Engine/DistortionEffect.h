@@ -4,15 +4,6 @@
 
 namespace htAudio {
 
-	struct DISTORTION_INFO
-	{
-		double EDGE;
-		double GAIN;
-		double LOWPASS_CUTOFF;
-		double EQCENTER;
-		double EQBANDWIDTH;
-	};
-
 	class DistortionEffect : public AudioEffects
 	{
 	public:
@@ -28,11 +19,6 @@ namespace htAudio {
 	private:
 		DISTORTION_INFO Info;
 
-		double MaxEdge,MinEdge;
-		double MaxGain,MinGain;
-		double MaxLowpassCutOff, MinLowpassCutOff;
-		double MaxEQCenter, MinEQCenter;
-		double MaxEQBandWidth, MainEQBandWidth;
 
 	};
 

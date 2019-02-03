@@ -21,14 +21,15 @@ namespace htAudio
 		}
 
 		// モノステの判断
-		ALenum format;
+		ALenum format = AL_FORMAT_MONO16;
+
 		if (channel == 1)
 		{
-			format == AL_FORMAT_MONO16;
+			format = AL_FORMAT_MONO16;
 		}
 		else
 		{
-			format == AL_FORMAT_STEREO16;
+			format = AL_FORMAT_STEREO16;
 		}
 
 		// バッファの設定

@@ -1,12 +1,15 @@
 #include "AudioEffects.h"
 
-
-
-AudioEffects::AudioEffects()
+namespace htAudio
 {
-}
+
+	AudioEffects::AudioEffects()
+	{
+	}
 
 
-AudioEffects::~AudioEffects()
-{
+	AudioEffects::~AudioEffects()
+	{
+	}
+
 }

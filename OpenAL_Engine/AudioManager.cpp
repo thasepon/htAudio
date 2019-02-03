@@ -6,27 +6,30 @@
 
 namespace htAudio {
 
-	//
-	//	スレッドの開始
-	//
+	/// <summary>
+	/// AudioMgrの作成と更新スレッドの開始
+	/// </summary>
 	AudioManager::AudioManager()
 	{
 		Updateflag = true;
+
 		// Updateのスレッド化
 		UpdateThread = std::thread(&AudioManager::ThreadUpdate , this);
 	}
 
-	//
-	//	全、登録スピーカーの削除
-	//
+	/// <summary>
+	/// 登録されているスピーカーの全削除
+	/// </summary>
 	AudioManager::~AudioManager()
 	{
+		ClearAudioOrder();
 		SpeakerMgrPtr->AllDeleteSpeaker();
 	}
 
-	//
-	//	更新スレッド
-	//
+	
+	/// <summary>
+	/// 非同期更新
+	/// </summary>
 	void AudioManager::ThreadUpdate()
 	{
 		while (Updateflag)
@@ -75,9 +78,9 @@ namespace htAudio {
 		OrderList.clear();
 	}
 
-	//
-	//	AudioOrderの起動
-	//
+	/// <summary>
+	/// おーだの始動更新
+	/// </summary>
 	void AudioManager::ExecOrderCmd()
 	{
 		// 全オーダーの起動

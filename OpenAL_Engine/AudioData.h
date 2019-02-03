@@ -7,9 +7,13 @@
 
 namespace htAudio
 {
+	// ================= ↓グローバル =================== //
+	std::string ExeDirectory;
+	const std::string DataPath = "../Data/";
+
 	// ================= ↓定数型 =================== //
 	#define USE_OGG_LIB
-
+	
 	// ================= ↓列挙型 =================== //
 	
 	// ファイル拡張子
@@ -66,7 +70,7 @@ namespace htAudio
 	struct OrderFormat
 	{
 		uint16_t SourceID;
-		uint16_t Latency;
+		double Latency;
 	};
 
 	struct RIFFChunk
@@ -99,8 +103,8 @@ namespace htAudio
 	struct DataChunk
 	{
 		unsigned char DataID[4];	// fmtチャンク
-		std::size_t DataChunkSize;	// データバッファサイズ
-		std::size_t BufData;
+		unsigned long DataChunkSize;	// データバッファサイズ
+		unsigned long BufData;
 	};
 
 	struct EffectState
@@ -115,7 +119,7 @@ namespace htAudio
 		FormatChunk Fmt;
 		DataChunk Data;
 		long FirstSampleOffSet; // Bufferの開始位置
-		std::size_t DataChunkSample; // サンプリング情報
+		unsigned long DataChunkSample; // サンプリング情報
 		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
 	};
 
@@ -150,28 +154,11 @@ namespace htAudio
 		int PlayTime;						// 再生時間
 		long TotalreadBufSize;				// 読みこんだバッファ量
 		long ReadBufSize;					// 一度に読み込むバッファ量
-		std::size_t NextFirstSample = { 0 };
-		std::size_t SubmitTimes = { 0 };	// どのバッファを使用するかの判定
-		std::size_t BufferSample = { 0 };
+		unsigned long NextFirstSample = { 0 };
+		unsigned long SubmitTimes = { 0 };	// どのバッファを使用するかの判定
+		unsigned long BufferSample = { 0 };
 	};
 
-	// ================= 機能関数 ======================= //
-
-	/// <summary>
-	/// wstring型をstring型に変換する
-	/// </summary>
-	/// <param name="src"></param>
-	/// <returns></returns>
-	std::string wide_to_multi_capi(std::wstring const& src)
-	{
-		std::size_t converted{};
-		std::vector<char> dest(src.size() * sizeof(wchar_t) + 1, '\0');
-		if (::_wcstombs_s_l(&converted, dest.data(), dest.size(), src.data(), _TRUNCATE, ::_create_locale(LC_ALL, "jpn")) != 0) {
-			throw std::system_error{ errno, std::system_category() };
-		}
-		dest.resize(std::char_traits<char>::length(dest.data()));
-		dest.shrink_to_fit();
-		return std::string(dest.begin(), dest.end());
-	}
+	
 
 }

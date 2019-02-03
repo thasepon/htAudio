@@ -1,12 +1,12 @@
 #pragma once
 
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
-#include"SpeakerManager.h"
 
 #include"AudioOrder.h"
 #include"AudioCommand.h"
 #include"AudioReSource.h"
 #include"EffectElementManager.h"
+#include"SpeakerManager.h"
 
 #include<memory>
 #include<map>
@@ -28,6 +28,7 @@ namespace htAudio {
 		~AudioManager();
 
 		void SetAudioOrder(ORDERTYPE type, OrderFormat fmt);// Audioのコマンドを保存していく
+		void ExecOrderCmd();								// コマンドの消化
 		void ClearAudioOrder();								// セットされたオーディオデータの削除
 
 		shared_ptr<AudioReSource> GeteAudioResoucePtr() { return ResourcePtr; }
@@ -36,9 +37,7 @@ namespace htAudio {
 
 	private:
 		void ThreadUpdate();						// スレッド更新
-		void ExecOrderCmd();						// コマンドの消化
 
-	private:
 		list<AudioCommand*> OrderList;				// オーディオオーダー
 		
 		shared_ptr<AudioReSource> ResourcePtr;					// Preloadでの使いまわし用のリソースptr

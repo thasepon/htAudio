@@ -89,7 +89,7 @@ namespace htAudio
 		fread(&format.Data.DataChunkSize,4,1,fp);
 
 		// データチャンクの開始位置
-		format.FirstSampleOffSet = format.Riff.FileSize - format.Data.DataChunkSize;
+		format.FirstSampleOffSet = (long)(format.Riff.FileSize - format.Data.DataChunkSize);
 
 		fclose(fp);
 
@@ -122,7 +122,7 @@ namespace htAudio
 	/// <param name="buf"></param>
 	bool AudioDecoder::BufferDecoderOgg(AudioData& audiodata, SoundType type, void* buf)
 	{
-		long requestsize = audiodata.ReadBufSize;
+		unsigned long requestsize = audiodata.ReadBufSize;
 		int bitstream = 0;
 		int readsize = 0;
 		UINT comsize = 0;
@@ -235,8 +235,8 @@ namespace htAudio
 			return false;
 		}
 
-		size_t readSample = 0;
-		size_t ret = 0;
+		unsigned long readSample = 0;
+		unsigned long ret = 0;
 
 		while (readSample < actualSamples)
 		{

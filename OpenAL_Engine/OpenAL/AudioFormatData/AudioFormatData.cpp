@@ -1,9 +1,11 @@
 #include "AudioFormatData.h"
 #include"../../DLL/include/json/picojson.h"
 
+
 #include<iostream>
 #include <fstream>
 #include <sstream>
+#include<Windows.h>
 
 namespace htAudio {
 	
@@ -17,11 +19,11 @@ namespace htAudio {
 
 	}
 
-	bool AudioFormatData::LoadAudioFormatData(AudioCue& cue, std::vector<SoundType>& types, std::string filepath, std::string Soundname)
+	bool AudioFormatData::LoadAudioFormatData(AudioCue& cue, std::vector<SoundType>& types, std::string Soundname)
 	{
 		
 		SoundType Format;
-		std::string Path;	// ファイルパス
+		std::string Path = CreateFormatDataPath();
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 		
@@ -50,7 +52,7 @@ namespace htAudio {
 			{
 				picojson::object obj = cueitr.second.get<picojson::object>();
 
-				cue.CueID = obj["id"].get<double>();
+				cue.CueID = (uint16_t)obj["id"].get<double>();
 				cue.CueName = obj["name"].get < std::string >();
 				cue.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
 				cue.Loopflag = obj["loopflag"].get<bool>();
@@ -69,7 +71,7 @@ namespace htAudio {
 				{
 					picojson::object itrobj = infoitr.get<picojson::object>();
 
-					Format.AudioID = itrobj["id"].get<double>();
+					Format.AudioID = (uint16_t)itrobj["id"].get<double>();
 					Format.AudioName = itrobj["name"].get<std::string>();
 					Format.Cue = itrobj["cue"].get<std::string>();
 					Format.MaterialObj = itrobj["material"].get<std::string>();
@@ -88,11 +90,11 @@ namespace htAudio {
 	}
 
 
-	bool AudioFormatData::LoadAudioFormatData(AudioCue& cue, std::vector<SoundType>& types, std::string filepath, int id)
+	bool AudioFormatData::LoadAudioFormatData(AudioCue& cue, std::vector<SoundType>& types, int id)
 	{
 		SoundType Format;
 
-		std::string Path;	// ファイルパス設定
+		std::string Path = CreateFormatDataPath();
 		
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -121,7 +123,7 @@ namespace htAudio {
 
 			if (obj["id"].get<double>() == id)
 			{
-				cue.CueID = obj["id"].get<double>();
+				cue.CueID = (uint16_t)obj["id"].get<double>();
 				cue.CueName = obj["name"].get < std::string >();
 				cue.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
 				cue.Loopflag = obj["loopflag"].get<bool>();
@@ -140,7 +142,7 @@ namespace htAudio {
 				{
 					picojson::object itrobj = infoitr.get<picojson::object>();
 
-					Format.AudioID = itrobj["id"].get<double>();
+					Format.AudioID = (uint16_t)itrobj["id"].get<double>();
 					Format.AudioName = itrobj["name"].get<std::string>();
 					Format.Cue = itrobj["cue"].get<std::string>();
 					Format.MaterialObj = itrobj["material"].get<std::string>();
@@ -161,7 +163,8 @@ namespace htAudio {
 	{
 
 		std::string Path;	// ファイルパス設定
-		
+		std::string Path = CreateEffectDataPath(effectelementpath);
+
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
 		if (ifs.fail())
@@ -222,7 +225,7 @@ namespace htAudio {
 
 	bool AudioFormatData::LoadEffectData(DISTORTION_INFO& info, std::string effectelementpath)
 	{
-		std::string Path;	// ファイルパス設定
+		std::string Path = CreateEffectDataPath(effectelementpath);	// ファイルパス設定
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -279,7 +282,7 @@ namespace htAudio {
 
 	bool AudioFormatData::LoadEffectData(ECHO_INFO& info, std::string effectelementpath)
 	{
-		std::string Path;	// ファイルパス設定
+		std::string Path = CreateEffectDataPath(effectelementpath);	// ファイルパス設定
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -335,7 +338,7 @@ namespace htAudio {
 
 	bool AudioFormatData::LoadEffectData(EQ_INFO& info, std::string effectelementpath)
 	{
-		std::string Path;	// ファイルパス設定
+		std::string Path = CreateEffectDataPath(effectelementpath);	// ファイルパス設定
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -412,7 +415,7 @@ namespace htAudio {
 
 	bool AudioFormatData::LoadEffectData(FLANGER_INFO& info, std::string effectelementpath)
 	{
-		std::string Path;	// ファイルパス設定
+		std::string Path = CreateEffectDataPath(effectelementpath);	// ファイルパス設定
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -472,7 +475,7 @@ namespace htAudio {
 
 	bool AudioFormatData::LoadEffectData(FQ_INFO& info, std::string effectelementpath)
 	{
-		std::string Path;	// ファイルパス設定
+		std::string Path = CreateEffectDataPath(effectelementpath);	// ファイルパス設定
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -511,15 +514,15 @@ namespace htAudio {
 				info.MinLeftDirection = (uint16_t)varobj["MIN"].get<double>();
 
 				varobj = obj["rightdirection"].get<picojson::object>();
-				info.MaxRightDirection = varobj["MAX"].get<double>();
-				info.MinRightDirection = varobj["MIN"].get<double>();
+				info.MaxRightDirection = (uint16_t)varobj["MAX"].get<double>();
+				info.MinRightDirection = (uint16_t)varobj["MIN"].get<double>();
 			}
 		}
 	}
 
 	bool AudioFormatData::LoadEffectData(PITCH_INFO& info, std::string effectelementpath)
 	{
-		std::string Path;	// ファイルパス設定
+		std::string Path = CreateEffectDataPath(effectelementpath);	// ファイルパス設定
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -562,7 +565,7 @@ namespace htAudio {
 
 	bool AudioFormatData::LoadEffectData(REVERB_INFO& info, std::string effectelementpath)
 	{
-		std::string Path;	// ファイルパス設定
+		std::string Path = CreateEffectDataPath(effectelementpath);	// ファイルパス設定
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -647,7 +650,7 @@ namespace htAudio {
 
 	bool AudioFormatData::LoadEffectData(WAH_INFO& info, std::string effectelementpath)
 	{
-		std::string Path;	// ファイルパス設定
+		std::string Path = CreateEffectDataPath(effectelementpath);	// ファイルパス設定
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -697,5 +700,14 @@ namespace htAudio {
 		}
 	}
 
+	std::string AudioFormatData::CreateFormatDataPath()
+	{
+		return ExeDirectory + DataPath + "json/htAudioInfo.json";
+	}
+
+	std::string AudioFormatData::CreateEffectDataPath(std::string dataname)
+	{
+		return ExeDirectory + DataPath + "json/" + dataname;
+	}
 
 }

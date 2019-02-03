@@ -20,10 +20,10 @@ namespace htAudio {
 	//
 	//	名前でサウンドを指定した初期化
 	//
-	AudioSpeaker::AudioSpeaker(string SoundName)
+	AudioSpeaker::AudioSpeaker(string filename)
 	{
 		BufferCommand = new SetBufCommand();
-		SetAudioSorce(SoundName);
+		SetAudioSorce(filename);
 		Successinit = true;
 	}
 
@@ -67,12 +67,12 @@ namespace htAudio {
 	/// オーディオフォーマット情報の読み込みとヘッダー部分のデコードをします。
 	/// </summary>
 	/// <param name="SoundName">オーディオファイル名</param>
-	void AudioSpeaker::SetAudioSorce(string SoundName)
+	void AudioSpeaker::SetAudioSorce(string filename)
 	{
 		int cnt = 0;
 		
 		// オーディオ情報を外部ファイルから取得
-		SoundDatas = AudioFormatData::GetAudioFormatData(SpeakerCue.Filepath, SoundName);
+		AudioFormatData::LoadAudioFormatData(SpeakerCue,SoundDatas,filename);
 
 		// オーディオフォーマットの取得
 		if (SoundDatas.empty() == true)
@@ -90,7 +90,7 @@ namespace htAudio {
 	void AudioSpeaker::SetAudioSorce(int id)
 	{
 		// オーディオ情報をxmlから取得
-		SoundDatas = AudioFormatData::GetAudioFormatData(SpeakerCue.Filepath, id);
+		AudioFormatData::LoadAudioFormatData(SpeakerCue,SoundDatas, id);
 
 		// オーディオフォーマットの取得
 		if (SoundDatas.empty() == true)
@@ -281,8 +281,6 @@ namespace htAudio {
 	{
 		return SpeakerCue.VolType;
 	}
-
-
 
 	/// <summary>
 	/// エフェクトの追加処理

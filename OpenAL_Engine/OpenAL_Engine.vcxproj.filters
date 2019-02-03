@@ -159,9 +159,6 @@
     <ClInclude Include="ChorusEffect.h">
       <Filter>Effect\Chorus</Filter>
     </ClInclude>
-    <ClInclude Include="ConeState.h">
-      <Filter>Effect\Cone</Filter>
-    </ClInclude>
     <ClInclude Include="DistortionEffect.h">
       <Filter>Effect\Distortion</Filter>
     </ClInclude>
@@ -267,6 +264,9 @@
     <ClInclude Include="SpeakerManager.h">
       <Filter>Manager\SpeakerManager</Filter>
     </ClInclude>
+    <ClInclude Include="Cone.h">
+      <Filter>Effect\Cone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="htAudioDll.cpp">
@@ -280,9 +280,6 @@
     </ClCompile>
     <ClCompile Include="ChorusEffect.cpp">
       <Filter>Effect\Chorus</Filter>
-    </ClCompile>
-    <ClCompile Include="ConeState.cpp">
-      <Filter>Effect\Cone</Filter>
     </ClCompile>
     <ClCompile Include="DistortionEffect.cpp">
       <Filter>Effect\Distortion</Filter>
@@ -382,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="SpeakerManager.cpp">
       <Filter>Manager\SpeakerManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Cone.cpp">
+      <Filter>Effect\Cone</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

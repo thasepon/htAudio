@@ -1,12 +1,9 @@
 #include "AudioOrder.h"
 
 
-
-AudioOrder::AudioOrder()
+namespace htAudio
 {
-}
-
-
-AudioOrder::~AudioOrder()
-{
+	AudioOrder::~AudioOrder()
+	{
+	}
 }

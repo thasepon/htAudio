@@ -2,7 +2,6 @@
 
 #include "AudioEffects.h"
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
-#include"ConeState.h"
 
 namespace htAudio {
 

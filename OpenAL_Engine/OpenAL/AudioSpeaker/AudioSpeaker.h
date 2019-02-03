@@ -6,10 +6,6 @@
 
 #include"../../SetBufCommand.h"
 
-#include"../../PlayOrder.h"
-#include"../../StopOrder.h"
-#include"../../PauseOrder.h"
-
 #include<string>
 #include<memory>
 #include<array>
@@ -31,12 +27,12 @@ namespace htAudio
 	{
 	public:
 		AudioSpeaker();								// スピーカーのみを生成
-		AudioSpeaker(string SoundName);				// 名前指定でソースを生成
+		AudioSpeaker(string filename);				// 名前指定でソースを生成
 		AudioSpeaker(int id);						// ID指定でソースを生成
 		~AudioSpeaker();							// スピーカーの削除処理
 
 		void SetMaterial(string Name);				// マテリアルデータの設定
-		void SetAudioSorce(string SoundName);		// オーディオデータの設定 ファイル名
+		void SetAudioSorce(string filename);		// オーディオデータの設定 ファイル名
 		void SetAudioSorce(int id);					// オーディオデータの設定 ID
 		void SetVolume(double volume);				// ボリュームの設定
 		

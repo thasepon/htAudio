@@ -7,7 +7,6 @@ namespace htAudio
 	{
 	}
 
-
 	SpeakerManager::~SpeakerManager()
 	{
 	}
@@ -23,7 +22,6 @@ namespace htAudio
 		{
 			itr->Update();
 		}
-
 	}
 
 	void SpeakerManager::RemoveSpeaker(AudioSpeaker* speakerptr)
@@ -56,7 +54,7 @@ namespace htAudio
 
 		for (auto itr : SpeakerList)
 		{
-			if (itr->GetVolumeType == type)
+			if (itr->GetVolumeType() == type)
 			{
 				itr->SetVolume(VolumeArray[type]);
 			}

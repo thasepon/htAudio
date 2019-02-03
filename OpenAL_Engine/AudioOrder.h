@@ -1,6 +1,6 @@
 #pragma once
-#include"AudioManager.h"
 
+class AudioManager;
 
 namespace htAudio
 {
@@ -8,8 +8,8 @@ namespace htAudio
 	{
 	public:
 		~AudioOrder();
-		static void SetOrder(AudioManager* ptr, int source) {};
-		static void SetOrder(AudioManager* ptr, int source, int latency) {};
+		void SetOrder(AudioManager* ptr, int source) {};
+		void SetOrder(AudioManager* ptr, int source, int latency) {};
 
 	private:
 	};

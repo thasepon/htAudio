@@ -20,7 +20,7 @@ namespace htAudio
 
 		for (auto itr : ParameterList)
 		{
-			if (itr->GetElementName == _elementpramname)
+			if (itr->GetElementName() == _elementpramname)
 				return itr;
 		}
 

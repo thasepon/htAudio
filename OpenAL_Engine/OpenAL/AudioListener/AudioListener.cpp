@@ -25,9 +25,9 @@ namespace htAudio {
 		Position[2] = &Pos[2];
 
 		ALfloat _pos[3];
-		_pos[0] = *Position[0];
-		_pos[1] = *Position[1];
-		_pos[2] = *Position[3];
+		_pos[0] = (ALfloat)*Position[0];
+		_pos[1] = (ALfloat)*Position[1];
+		_pos[2] = (ALfloat)*Position[3];
 
 		alListenerfv(AL_POSITION, _pos);
 	}
@@ -39,9 +39,9 @@ namespace htAudio {
 		Position[2] = &z;
 
 		ALfloat _pos[3];
-		_pos[0] = *Position[0];
-		_pos[1] = *Position[1];
-		_pos[2] = *Position[3];
+		_pos[0] = (ALfloat)*Position[0];
+		_pos[1] = (ALfloat)*Position[1];
+		_pos[2] = (ALfloat)*Position[3];
 
 		alListenerfv(AL_POSITION,_pos);
 	}
@@ -53,9 +53,9 @@ namespace htAudio {
 		Velocity[2] = &z;
 
 		ALfloat _vec[3];
-		_vec[0] = *Velocity[0];
-		_vec[1] = *Velocity[1];
-		_vec[2] = *Velocity[2];
+		_vec[0] = (ALfloat)*Velocity[0];
+		_vec[1] = (ALfloat)*Velocity[1];
+		_vec[2] = (ALfloat)*Velocity[2];
 
 		alListenerfv(AL_VELOCITY, _vec);
 	}
@@ -68,9 +68,9 @@ namespace htAudio {
 		Velocity[2] = &vec[2];
 
 		ALfloat _vec[3];
-		_vec[0] = *Velocity[0];
-		_vec[1] = *Velocity[1];
-		_vec[2] = *Velocity[2];
+		_vec[0] = (ALfloat)*Velocity[0];
+		_vec[1] = (ALfloat)*Velocity[1];
+		_vec[2] = (ALfloat)*Velocity[2];
 
 		alListenerfv(AL_VELOCITY, _vec);
 	}
@@ -87,12 +87,12 @@ namespace htAudio {
 		Pose[4] = &UpVec[1];
 		Pose[5] = &UpVec[2];
 
-		_pose[0] = *Pose[0];
-		_pose[1] = *Pose[1];
-		_pose[2] = *Pose[2];
-		_pose[3] = *Pose[3];
-		_pose[4] = *Pose[4];
-		_pose[5] = *Pose[5];
+		_pose[0] = (ALfloat)*Pose[0];
+		_pose[1] = (ALfloat)*Pose[1];
+		_pose[2] = (ALfloat)*Pose[2];
+		_pose[3] = (ALfloat)*Pose[3];
+		_pose[4] = (ALfloat)*Pose[4];
+		_pose[5] = (ALfloat)*Pose[5];
 
 		alListenerfv(AL_ORIENTATION, _pose);
 	}
@@ -108,12 +108,12 @@ namespace htAudio {
 		Pose[4] = &Orient[4];
 		Pose[5] = &Orient[5];
 
-		_pose[0] = *Pose[0];
-		_pose[1] = *Pose[1];
-		_pose[2] = *Pose[2];
-		_pose[3] = *Pose[3];
-		_pose[4] = *Pose[4];
-		_pose[5] = *Pose[5];
+		_pose[0] = (ALfloat)*Pose[0];
+		_pose[1] = (ALfloat)*Pose[1];
+		_pose[2] = (ALfloat)*Pose[2];
+		_pose[3] = (ALfloat)*Pose[3];
+		_pose[4] = (ALfloat)*Pose[4];
+		_pose[5] = (ALfloat)*Pose[5];
 
 		alListenerfv(AL_ORIENTATION, _pose);
 	}

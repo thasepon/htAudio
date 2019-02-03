@@ -8,9 +8,8 @@ namespace htAudio
 	{
 	public:
 		~PlayOrder();
-
-		static void SetOrder(AudioManager* ptr, int source);
-		static void SetOrder(AudioManager* ptr, int source, int latency);
+		static void SetPlayOrder(AudioManager* ptr, uint16_t source);
+		static void SetPlayOrder(AudioManager* ptr, uint16_t source, double latency);
 
 	};
 }

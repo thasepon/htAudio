@@ -1,4 +1,6 @@
 #include "StopOrder.h"
+#include"AudioData.h"
+#include"AudioManager.h"
 
 namespace htAudio
 {
@@ -6,13 +8,13 @@ namespace htAudio
 	{
 	}
 
-	void StopOrder::SetOrder(AudioManager* ptr, int source)
+	void StopOrder::SetStopOrder(AudioManager* ptr, uint16_t source)
 	{
 		OrderFormat fmt = { source , 0 };
 		ptr->SetAudioOrder(ORDERTYPE::STOP, fmt);
 	}
 
-	void StopOrder::SetOrder(AudioManager* ptr, int source, int latency)
+	void StopOrder::SetStopOrder(AudioManager* ptr, uint16_t source, double latency)
 	{
 		OrderFormat fmt = { source , latency };
 		ptr->SetAudioOrder(ORDERTYPE::STOP, fmt);

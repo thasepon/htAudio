@@ -18,8 +18,8 @@ namespace htAudio
 		AudioFormatData();
 		~AudioFormatData();
 
-		static bool LoadAudioFormatData(AudioCue& cue,std::vector<SoundType>& types, std::string filepath, std::string Soundname);
-		static bool LoadAudioFormatData(AudioCue& cue, std::vector<SoundType>& types, std::string filepath, int id);
+		static bool LoadAudioFormatData(AudioCue& cue,std::vector<SoundType>& types, std::string Soundname);
+		static bool LoadAudioFormatData(AudioCue& cue,std::vector<SoundType>& types, int id);
 		
 		// 各種エフェクトのデータを呼び込
 		// エフェクトの分だけオーバーライドしないとダメな気がする
@@ -34,8 +34,7 @@ namespace htAudio
 		static bool LoadEffectData(WAH_INFO& info, std::string effectelementpath);
 
 	private:
-
-
+		static std::string CreateFormatDataPath();
+		static std::string CreateEffectDataPath(std::string dataname);
 	};
-
 }

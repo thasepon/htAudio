@@ -8,7 +8,7 @@ namespace htAudio
 	{
 	public:
 		virtual ~AudioCommand() {}
-		virtual bool Execute() {}
+		virtual bool Execute() { return true; }
 
 	protected:
 		AudioCommand();

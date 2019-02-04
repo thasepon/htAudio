@@ -45,6 +45,7 @@ namespace htAudio
 		WAH,
 		EQ,
 		I3DAUDIO,
+		CONE,
 		MAX_EFFECTS,
 	};
 

@@ -1,13 +1,14 @@
 #pragma once
 #include "AudioEffects.h"
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
+#include<string>
 
 namespace htAudio
 {
 	class ChorusEffect : public AudioEffects
 	{
 	public:
-		ChorusEffect(ALuint source);
+		ChorusEffect(ALuint source, std::string elementjsonname);
 		~ChorusEffect();
 	
 		void SetWaveForm(int form);

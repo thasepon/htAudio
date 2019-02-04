@@ -1,24 +1,68 @@
 {
-  
-  "REVERB" : {
-    "currectionvalue" : 0.5,
-    "density": {"MAX": 1.0,"MIN": 0},
-    "diffusion": {"MAX": 1.0,"MIN": 0},
-    "gain" : {"MAX" : 1.0 ,"MIN" : 0 },
-    "gainhf" : {"MAX" : 1.0,"MIN" : 0 },
-    "decaytime" : {"MAX": 1.0,"MIN" : 0 },
-    "decayhfratio": {"MAX": 1.0,"MIN" : 0 },
-    "reflectiongain" : {"MAX": 1.0,"MIN" : 0 },
-    "reflectiondelay": {"MAX": 1.0,"MIN" : 0 },
-    "lategain":  {"MAX": 1.0,"MIN" : 0 },
-    "latedelay": {"MAX": 1.0,"MIN" : 0 },
-    "roomrolloff": {"MAX": 1.0,"MIN" : 0 },
-    "airgain":{"MAX": 1.0,"MIN" : 0 },
-    "airhflimit" : true
+
+  "REVERB": {
+    "effectelementpram" :  "ReverbTest1",
+    "currectionvalue": 0.5,
+    "density": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "diffusion": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "gain": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "gainhf": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "decaytime": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "decayhfratio": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "reflectiongain": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "reflectiondelay": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "lategain": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "latedelay": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "roomrolloff": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "airgain": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "airhflimit": true
   },
-  "PITCH":{
-    "currectionvalue" : 0.5,
-    "coarsetune" : {"MAX": 1.0,"MIN" : 0 },
-    "finetune" : {"MAX": 1.0,"MIN" : 0 }
+  "PITCH": {
+    "effectelementpram": "PitchTest1",
+    "currectionvalue": 0.5,
+    "coarsetune": {
+      "MAX": 1.0,
+      "MIN": 0
+    },
+    "finetune": {
+      "MAX": 1.0,
+      "MIN": 0
+    }
   }
 }

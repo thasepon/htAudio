@@ -7,7 +7,7 @@
     "loopflag" : true,
     "effects" : [
       {"effect":0,"element":"State1"},
-      {"effect":6,"element": "State1"}
+      {"effect":6,"element":"State1"}
     ],
     "soundinfo" :[
       {

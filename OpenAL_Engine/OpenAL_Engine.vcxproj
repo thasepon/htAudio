@@ -269,7 +269,7 @@
     <ClInclude Include="Definclude.h" />
     <ClInclude Include="DistortionEffect.h" />
     <ClInclude Include="EchoEffect.h" />
-    <ClInclude Include="EffectElementManager.h" />
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EffectElementPram.h" />
     <ClInclude Include="EQEffect.h" />
     <ClInclude Include="FlangerEffect.h" />
@@ -309,7 +309,7 @@
     <ClCompile Include="CreateSourceCommand.cpp" />
     <ClCompile Include="DistortionEffect.cpp" />
     <ClCompile Include="EchoEffect.cpp" />
-    <ClCompile Include="EffectElementManager.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="EffectElementPram.cpp" />
     <ClCompile Include="EQEffect.cpp" />
     <ClCompile Include="FlangerEffect.cpp" />

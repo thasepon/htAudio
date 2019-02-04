@@ -1,13 +1,14 @@
 #pragma once
 #include "AudioEffects.h"
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
+#include<string>
 
 namespace htAudio {
 
 	class EQEffect :public AudioEffects
 	{
 	public:
-		EQEffect(ALuint source);
+		EQEffect(ALuint source, std::string elementjsonname);
 		~EQEffect();
 
 		void SetLow(float gain,float cutoff);

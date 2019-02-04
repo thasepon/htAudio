@@ -1,11 +1,14 @@
 #include "Cone.h"
+#include"OpenAL\AudioFormatData\AudioFormatData.h"
+
 
 namespace htAudio
 {
 
-	Cone::Cone(ALuint source)
+	Cone::Cone(ALuint source, std::string elementjsonname)
 	{
 		Source = source;
+		AudioFormatData::LoadEffectData(Info, elementjsonname);
 	}
 
 
@@ -16,38 +19,41 @@ namespace htAudio
 
 	void Cone::SetConeOuterGain(float val)
 	{
-		ConeOuterGain = val;
-		alSourcef(Source, AL_CONE_OUTER_GAIN, ConeOuterGain);
+		Info.ConeOuterGain = val;
+		alSourcef(Source, AL_CONE_OUTER_GAIN, Info.ConeOuterGain);
 	}
 
 	float Cone::GetConeOuterGain()
 	{
-		alGetSourcef(Source, AL_CONE_OUTER_GAIN, &ConeOuterGain);
-		return ConeOuterGain;
+		ALfloat getval;
+		alGetSourcef(Source, AL_CONE_OUTER_GAIN, &getval);
+		return getval;
 	}
 
 	void Cone::SetConeInnerAngle(float val)
 	{
-		InnerAngle = val;
-		alSourcef(Source, AL_CONE_INNER_ANGLE, InnerAngle);
+		Info.InnerAngle = val;
+		alSourcef(Source, AL_CONE_INNER_ANGLE, Info.InnerAngle);
 	}
 
 	float Cone::GetConeInnerAngle()
 	{
-		alGetSourcef(Source, AL_CONE_INNER_ANGLE, &InnerAngle);
-		return InnerAngle;
+		ALfloat getval;
+		alGetSourcef(Source, AL_CONE_INNER_ANGLE, &getval);
+		return Info.InnerAngle;
 	}
 
 	void Cone::SetConeOuterAngle(float val)
 	{
-		OuterAngle = val;
-		alSourcef(Source, AL_CONE_OUTER_ANGLE, OuterAngle);
+		Info.OuterAngle = val;
+		alSourcef(Source, AL_CONE_OUTER_ANGLE, Info.OuterAngle);
 	}
 
 	float Cone::GetConeOuterAngle()
 	{
-		alGetSourcef(Source, AL_CONE_OUTER_ANGLE, &OuterAngle);
-		return OuterAngle;
+		ALfloat getval;
+		alGetSourcef(Source, AL_CONE_OUTER_ANGLE, &getval);
+		return getval;
 	}
 
 

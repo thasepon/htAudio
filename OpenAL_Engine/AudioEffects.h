@@ -163,6 +163,14 @@ namespace htAudio
 		double MaxPeakGain, MinPeakGain;
 	};
 
+	struct CONE_INFO
+	{
+		double CorrectionValue;
+		double ConeOuterGain;	// コーンの外部ゲイン数値
+		double InnerAngle;		// 内部の角度
+		double OuterAngle;		// 外部の角度
+	};
+
 	// === 各種エフェクトのベースクラス === //
 	class AudioEffects
 	{

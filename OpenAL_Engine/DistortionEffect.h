@@ -1,13 +1,14 @@
 #pragma once
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
 #include"AudioEffects.h"
+#include<string>
 
 namespace htAudio {
 
 	class DistortionEffect : public AudioEffects
 	{
 	public:
-		DistortionEffect(ALuint source);
+		DistortionEffect(ALuint source, std::string elementjsonname);
 		~DistortionEffect();
 
 		void SetEdge(float val);

@@ -2,13 +2,14 @@
 
 #include "AudioEffects.h"
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
+#include<string>
 
 namespace htAudio {
 
 	class Cone : public AudioEffects
 	{
 	public:
-		Cone(ALuint source);
+		Cone(ALuint source, std::string elementjsonname);
 		~Cone();
 
 		void SetConeOuterGain(float val);
@@ -23,10 +24,7 @@ namespace htAudio {
 	private:
 		ALuint Source;
 
-		ALfloat ConeOuterGain;	// コーンの外部ゲイン数値
-		ALfloat InnerAngle;		// 内部の角度
-		ALfloat OuterAngle;		// 外部の角度
-
+		CONE_INFO Info;
 	};
 
 }

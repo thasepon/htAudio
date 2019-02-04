@@ -38,7 +38,6 @@ namespace htAudio
 		
 		bool Update();								// 更新処理
 		
-		bool AddEffects(AudioEffects* effect);		// エフェクトの追加
 
 		ALuint GetSpeakerNumb();					// ソースの番号を取得
 		VOLUMETYPE GetVolumeType();					// Cueのボリュームタイプを取得
@@ -49,6 +48,7 @@ namespace htAudio
 		void DecodeAudioHeader();			// 指定したAudio情報からヘッダー情報を取得
 		void DecodeAudioBuffer();			// 指定したAudio情報からバッファを獲得
 		void ReadHeaderInfo();				// ヘッダー情報の読み込み
+		bool AddEffects();					// エフェクトの適応と設定
 
 		void Play();						// 再生処理 ※[外部呼出しの予定は現在無し:Not_Used]
 		void Stop();						// 停止処理 ※[外部呼出しの予定は現在無し:Not_Used]

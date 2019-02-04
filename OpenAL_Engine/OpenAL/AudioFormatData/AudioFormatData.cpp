@@ -700,6 +700,47 @@ namespace htAudio {
 		}
 	}
 
+	bool AudioFormatData::LoadEffectData(CONE_INFO& info, std::string effectelementpath)
+	{
+		std::string Path = CreateEffectDataPath(effectelementpath);	// ファイルパス設定
+
+		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
+
+		if (ifs.fail())
+			return false;
+
+		const std::string json((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+		ifs.close();
+
+		// jsonデータの解析
+		picojson::value Val;
+		const std::string err = picojson::parse(Val, json);
+		if (err.empty() == false)
+		{
+			return false;
+		}
+
+		// エフェクトのデータを抜け出す
+		picojson::object obj = Val.get<picojson::object>();
+		for (auto cueitr : obj)
+		{
+			// 同一名の物を検索
+			if (cueitr.first == "CORN")
+			{
+				picojson::object varobj; // 色々なものを書くのするよう
+				picojson::object obj = cueitr.second.get<picojson::object>();
+
+				info.CorrectionValue = obj["correctionvalue"].get<double>();
+
+				varobj = obj["attacktime"].get<picojson::object>();
+				info.ConeOuterGain = varobj["coneoutergain"].get<double>();
+				info.InnerAngle = varobj["innerangle"].get<double>();
+				info.OuterAngle = varobj["outerangle"].get<double>();
+
+			}
+		}
+	}
+
 	std::string AudioFormatData::CreateFormatDataPath()
 	{
 		return ExeDirectory + DataPath + "json/htAudioInfo.json";
@@ -707,7 +748,7 @@ namespace htAudio {
 
 	std::string AudioFormatData::CreateEffectDataPath(std::string dataname)
 	{
-		return ExeDirectory + DataPath + "json/" + dataname;
+		return ExeDirectory + DataPath + "json/" + dataname +".json";
 	}
 
 }

@@ -32,6 +32,7 @@ namespace htAudio
 		static bool LoadEffectData(PITCH_INFO& info, std::string effectelementpath);
 		static bool LoadEffectData(REVERB_INFO& info, std::string effectelementpath);
 		static bool LoadEffectData(WAH_INFO& info, std::string effectelementpath);
+		static bool LoadEffectData(CONE_INFO& info ,std::string effectelementpath);
 
 	private:
 		static std::string CreateFormatDataPath();

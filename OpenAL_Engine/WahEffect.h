@@ -1,6 +1,7 @@
 #pragma once
 #include "AudioEffects.h"
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
+#include<string>
 
 namespace htAudio {
 
@@ -8,7 +9,7 @@ namespace htAudio {
 	class WahEffect :public AudioEffects
 	{
 	public:
-		WahEffect(ALuint source);
+		WahEffect(ALuint source, std::string elementjsonname);
 		~WahEffect();
 
 		void SetAttackTime(float time);

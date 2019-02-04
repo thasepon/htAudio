@@ -1,13 +1,14 @@
 #pragma once
 #include "AudioEffects.h"
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
+#include<string>
 
 namespace htAudio {
 
 	class EchoEffect : public AudioEffects
 	{
 	public:
-		EchoEffect(ALuint source);
+		EchoEffect(ALuint source, std::string elementjsonname);
 		~EchoEffect();
 
 		void SetDelay(float delay);

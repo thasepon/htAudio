@@ -2,6 +2,7 @@
 
 #include"../AudioFormatData/AudioFormatData.h"
 #include"../../AudioDecoder.h"
+#include"../../EffectManager.h"
 
 #include <algorithm>
 #include<iterator>
@@ -287,9 +288,9 @@ namespace htAudio {
 	/// </summary>
 	/// <param name="effect">追加するエフェクト</param>
 	/// <returns>成功しているかどうか</returns>
-	bool AudioSpeaker::AddEffects(AudioEffects* effect)
+	bool AudioSpeaker::AddEffects()
 	{
-		EffectSlot.push_back(effect);
+		EffectManager::AddEffectToSpeaker(EffectSlot, SpeakerCue, Source);
 		return true;
 	}
 	

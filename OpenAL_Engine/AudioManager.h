@@ -5,7 +5,7 @@
 #include"AudioOrder.h"
 #include"AudioCommand.h"
 #include"AudioReSource.h"
-#include"EffectElementManager.h"
+#include"EffectManager.h"
 #include"SpeakerManager.h"
 
 #include<memory>
@@ -32,7 +32,7 @@ namespace htAudio {
 		void ClearAudioOrder();								// セットされたオーディオデータの削除
 
 		shared_ptr<AudioReSource> GeteAudioResoucePtr() { return ResourcePtr; }
-		shared_ptr<EffectElementManager> GetEffectElementPtr() { return EffectElementMgrPtr; }
+		shared_ptr<EffectManager> GetEffectElementPtr() { return EffectElementMgrPtr; }
 		shared_ptr<SpeakerManager> GetSpeakerManagerPtr() { return SpeakerMgrPtr; }
 
 	private:
@@ -41,7 +41,7 @@ namespace htAudio {
 		list<AudioCommand*> OrderList;				// オーディオオーダー
 		
 		shared_ptr<AudioReSource> ResourcePtr;					// Preloadでの使いまわし用のリソースptr
-		shared_ptr<EffectElementManager> EffectElementMgrPtr;	// エフェクトエレメントを保持するためのポインタ
+		shared_ptr<EffectManager> EffectElementMgrPtr;	// エフェクトエレメントを保持するためのポインタ
 		shared_ptr<SpeakerManager> SpeakerMgrPtr;				// スピーカーマネージャーポインタ
 
 		thread UpdateThread;						// 非同期更新用

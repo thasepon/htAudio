@@ -2,6 +2,7 @@
 
 #include "AudioEffects.h"
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
+#include<string>
 
 namespace htAudio
 {
@@ -10,10 +11,10 @@ namespace htAudio
 	class ReverbEffects : public AudioEffects
 	{
 	public:
-		ReverbEffects(ALuint source);
+		ReverbEffects(ALuint source,std::string elementjsonname);
 		~ReverbEffects();
 
-		void SetInfo(REVERB_INFO* Info);
+		void SetInfo(REVERB_INFO Info);
 
 		void SetDensity(float density);
 		void SetDiffusion(float diffusion);
@@ -25,7 +26,7 @@ namespace htAudio
 		void SetAir(float gainhf, int hflimit);
 
 	private:
-		REVERB_INFO* Info;		// リバーブ情報
+		REVERB_INFO Info;		// リバーブ情報
 
 	};
 

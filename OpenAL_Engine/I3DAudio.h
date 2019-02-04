@@ -2,6 +2,7 @@
 
 #include "AudioEffects.h"
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
+#include<string>
 
 namespace htAudio {
 
@@ -9,8 +10,7 @@ namespace htAudio {
 	class I3DAudio : public AudioEffects
 	{
 	public:
-		I3DAudio(ALuint source);
-		I3DAudio(ALuint source, I3DAudioInfo* info);
+		I3DAudio(ALuint source, I3DAudioInfo info);
 		~I3DAudio();
 
 		void SetPosition(float* x, float* y, float* z);
@@ -32,7 +32,7 @@ namespace htAudio {
 		float Gain;
 		
 		// É|ÉCÉìÉ^Ç≈ó~ÇµÇ¢èÓïÒ
-		I3DAudioInfo* Info;
+		I3DAudioInfo Info;
 
 	};
 

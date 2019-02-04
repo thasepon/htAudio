@@ -1,4 +1,5 @@
 #include "EchoEffect.h"
+#include"OpenAL\AudioFormatData\AudioFormatData.h"
 
 namespace htAudio {
 
@@ -7,7 +8,7 @@ namespace htAudio {
 	/// アクセス制限 :: public
 	/// </summary>
 	/// <param name="source">対象とするSource</param>
-	EchoEffect::EchoEffect(ALuint source)
+	EchoEffect::EchoEffect(ALuint source, std::string elementjsonname)
 	{
 		LPALGENEFFECTS algeneffect = (LPALGENEFFECTS)alGetProcAddress("alGenEffects");
 
@@ -36,6 +37,7 @@ namespace htAudio {
 		{
 			alSource3i(source, AL_AUXILIARY_SEND_FILTER, EffectSlot, 0, NULL);
 		}
+		AudioFormatData::LoadEffectData(Info, elementjsonname);
 	}
 
 	EchoEffect::~EchoEffect()

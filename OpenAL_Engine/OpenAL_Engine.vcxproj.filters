@@ -130,9 +130,6 @@
     <Filter Include="EffectMain\EffectElementPram">
       <UniqueIdentifier>{d64335ef-4efc-4ad9-87e2-a32a523e4241}</UniqueIdentifier>
     </Filter>
-    <Filter Include="EffectMain\EffectElementManager">
-      <UniqueIdentifier>{4bf1ef4b-3493-45e1-8448-d04ea1b3816a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Lerp">
       <UniqueIdentifier>{6ffda867-d123-4317-814c-260cb13e1d51}</UniqueIdentifier>
     </Filter>
@@ -144,6 +141,9 @@
     </Filter>
     <Filter Include="Manager\SpeakerManager">
       <UniqueIdentifier>{bed996c8-2443-4925-841a-674823228213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\EffectElementManager">
+      <UniqueIdentifier>{4bf1ef4b-3493-45e1-8448-d04ea1b3816a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -255,9 +255,6 @@
     <ClInclude Include="EffectElementPram.h">
       <Filter>EffectMain\EffectElementPram</Filter>
     </ClInclude>
-    <ClInclude Include="EffectElementManager.h">
-      <Filter>EffectMain\EffectElementManager</Filter>
-    </ClInclude>
     <ClInclude Include="Lerp.h">
       <Filter>Lerp</Filter>
     </ClInclude>
@@ -266,6 +263,9 @@
     </ClInclude>
     <ClInclude Include="Cone.h">
       <Filter>Effect\Cone</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>Manager\EffectElementManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -371,9 +371,6 @@
     <ClCompile Include="EffectElementPram.cpp">
       <Filter>EffectMain\EffectElementPram</Filter>
     </ClCompile>
-    <ClCompile Include="EffectElementManager.cpp">
-      <Filter>EffectMain\EffectElementManager</Filter>
-    </ClCompile>
     <ClCompile Include="Lerp.cpp">
       <Filter>Lerp</Filter>
     </ClCompile>
@@ -382,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="Cone.cpp">
       <Filter>Effect\Cone</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>Manager\EffectElementManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -741,6 +741,53 @@ namespace htAudio {
 		}
 	}
 
+	bool AudioFormatData::LoadEffefctPramData(std::list<EffectElementPram*> pram)
+	{
+		std::string Path = CreateEffectDataPath("EffectElementPram");	// ファイルパス設定
+
+		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
+
+		if (ifs.fail())
+			return false;
+
+		const std::string json((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+		ifs.close();
+
+		// jsonデータの解析
+		picojson::value Val;
+		const std::string err = picojson::parse(Val, json);
+		if (err.empty() == false)
+		{
+			return false;
+		}
+		
+		
+		uint16_t id;
+		std::string name;
+		double initvalue;
+		double maxvalue;
+		double minvalue;
+
+		picojson::object obj = Val.get<picojson::object>();
+		for (auto cueitr : obj)
+		{
+			picojson::object varobj; // 色々なものを書くのするよう
+			picojson::object obj = cueitr.second.get<picojson::object>();
+
+			id = obj["id"].get<double>();
+			name = obj["name"].get<std::string>();
+			name = obj["default"].get<double>();
+			name = obj["max"].get<double>();
+			name = obj["min"].get<double>();
+
+			pram.push_back(new EffectElementPram(id,name,initvalue,maxvalue,minvalue));
+		}
+
+		return true;
+
+
+	}
+
 	std::string AudioFormatData::CreateFormatDataPath()
 	{
 		return ExeDirectory + DataPath + "json/htAudioInfo.json";

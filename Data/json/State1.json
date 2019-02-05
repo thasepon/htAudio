@@ -1,7 +1,7 @@
 {
 
   "REVERB": {
-    "effectelementpram" :  "ReverbTest1",
+    "effectelementpram" :  "ReverbTest",
     "currectionvalue": 0.5,
     "density": {
       "MAX": 1.0,
@@ -54,7 +54,7 @@
     "airhflimit": true
   },
   "PITCH": {
-    "effectelementpram": "PitchTest1",
+    "effectelementpram": "PitchTest",
     "currectionvalue": 0.5,
     "coarsetune": {
       "MAX": 1.0,

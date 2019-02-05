@@ -1,4 +1,5 @@
 #include "EffectManager.h"
+#include"OpenAL\AudioFormatData\AudioFormatData.h"
 #include"ReverbEffects.h"
 #include"ChorusEffect.h"
 #include"DistortionEffect.h"
@@ -15,6 +16,7 @@ namespace htAudio
 {
 	EffectManager::EffectManager()
 	{
+		LoadExternalFileElementPram();
 	}
 
 
@@ -74,6 +76,13 @@ namespace htAudio
 		}
 	}
 
+	/// <summary>
+	/// パラメーターの取得
+	/// </summary>
+	void EffectManager::LoadExternalFileElementPram()
+	{
+		AudioFormatData::LoadEffefctPramData(ParameterList);
+	}
 
 	EffectElementPram* EffectManager::GetElementPram(std::string _elementpramname)
 	{

@@ -17,7 +17,7 @@ namespace htAudio
 		// 指定スピーカーにエフェクトを適応
 		static void AddEffectToSpeaker(std::vector<AudioEffects*> effectptr,AudioCue effectinfo, uint16_t sourceid);
 		
-		// ElementPramを初期化時に全初期化
+		// ElementPramを初期化時に全取得
 		void LoadExternalFileElementPram();
 		
 		// EffectParameterの取得

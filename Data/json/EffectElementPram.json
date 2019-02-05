@@ -1,0 +1,16 @@
+{
+  "ReverbTest": {
+    "id": 0,
+    "name": "ReverbTest",
+    "default": 0.5,
+    "max": 1.0,
+    "min": 0.1
+  },
+  "PitchTest": {
+    "id": 1,
+    "name": "PitchTest",
+    "default": 0.5,
+    "max": 1.0,
+    "min": 0.1
+  },
+}

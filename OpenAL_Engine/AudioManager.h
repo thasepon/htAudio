@@ -36,13 +36,13 @@ namespace htAudio {
 		shared_ptr<SpeakerManager> GetSpeakerManagerPtr() { return SpeakerMgrPtr; }
 
 	private:
-		void ThreadUpdate();						// スレッド更新
+		void ThreadUpdate();							// スレッド更新
 
-		list<AudioCommand*> OrderList;				// オーディオオーダー
-		
-		shared_ptr<AudioReSource> ResourcePtr;					// Preloadでの使いまわし用のリソースptr
+		list<AudioCommand*> OrderList;					// オーディオオーダー
+
+		shared_ptr<AudioReSource> ResourcePtr;			// Preloadでの使いまわし用のリソースptr
 		shared_ptr<EffectManager> EffectElementMgrPtr;	// エフェクトエレメントを保持するためのポインタ
-		shared_ptr<SpeakerManager> SpeakerMgrPtr;				// スピーカーマネージャーポインタ
+		shared_ptr<SpeakerManager> SpeakerMgrPtr;		// スピーカーマネージャーポインタ
 
 		thread UpdateThread;						// 非同期更新用
 		bool Updateflag;							// 非同期更新フラグ

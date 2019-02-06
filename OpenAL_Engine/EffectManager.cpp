@@ -24,58 +24,6 @@ namespace htAudio
 	{
 	}
 
-	void EffectManager::AddEffectToSpeaker(std::vector<AudioEffects*> effectptr, AudioCue effectinfo,uint16_t sourceid)
-	{
-		for (auto itr : effectinfo.CueEffect)
-		{
-			switch (itr.UseEffect)
-			{
-			case REVERB:
-				effectptr.push_back(new ReverbEffects(sourceid, itr.UseElement));
-				break;
-
-			case CHORUS:
-				effectptr.push_back(new ChorusEffect(sourceid, itr.UseElement));
-				break;
-
-			case DISTORTION:
-				effectptr.push_back(new DistortionEffect(sourceid, itr.UseElement));
-				break;
-
-			case ECHO:
-				effectptr.push_back(new EchoEffect(sourceid,itr.UseElement));
-				break;
-
-			case FLANGER:
-				effectptr.push_back(new FlangerEffect(sourceid, itr.UseElement));
-				break;
-
-			case FQ:
-				effectptr.push_back(new FQEffect(sourceid, itr.UseElement));
-				break;
-
-			case PITCH:
-				effectptr.push_back(new PitchEffect(sourceid, itr.UseElement));
-				break;
-
-			case WAH:
-				effectptr.push_back(new WahEffect(sourceid, itr.UseElement));
-				break;
-
-			case EQ:
-				effectptr.push_back(new EQEffect(sourceid, itr.UseElement));
-				break;
-				
-			case CONE:
-				effectptr.push_back(new Cone(sourceid, itr.UseElement));
-				break;
-
-			default:
-				break;
-			}
-		}
-	}
-
 	/// <summary>
 	/// パラメーターの取得
 	/// </summary>

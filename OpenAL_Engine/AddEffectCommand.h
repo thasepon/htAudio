@@ -9,9 +9,9 @@ namespace htAudio
 	{
 	public:
 		~AddEffectCommand();
-		virtual AudioEffects* Execute(int sourceID,int effect) { return CreateEffect(sourceID,effect); }
+		virtual AudioEffects* Execute(int sourceID, int effectid, std::string useelement) { return CreateEffect(sourceID,effectid,useelement); }
 
 	private:
-		AudioEffects* CreateEffect(int sourceID, int effect);	// エフェクト追加関数
+		AudioEffects* CreateEffect(int sourceID, int effectid, std::string useelement);	// エフェクト追加関数
 	};
 }

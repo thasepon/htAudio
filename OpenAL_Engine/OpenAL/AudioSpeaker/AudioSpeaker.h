@@ -5,6 +5,7 @@
 #include"../../AudioEffects.h"
 
 #include"../../SetBufCommand.h"
+#include"../../AddEffectCommand.h"
 
 #include<string>
 #include<memory>
@@ -38,7 +39,6 @@ namespace htAudio
 		
 		bool Update();								// 更新処理
 		
-
 		ALuint GetSpeakerNumb();					// ソースの番号を取得
 		VOLUMETYPE GetVolumeType();					// Cueのボリュームタイプを取得
 		
@@ -54,7 +54,6 @@ namespace htAudio
 		void Stop();						// 停止処理 ※[外部呼出しの予定は現在無し:Not_Used]
 		void Pause();						// 一時停止処理 ※[外部呼出しの予定は現在無し:Not_Used]
 
-		
 		// === 変数 === //
 		bool Successinit = false;				// 初期化成功フラグ
 		uint16_t NowUsedNumb;					// 現在使用しているSoundTypeの番号
@@ -63,16 +62,19 @@ namespace htAudio
 		AUDIOFILEFORMAT HeaderFormat;			// ヘッダー情報
 		std::vector<SoundType> SoundDatas;		// XMLから得た情報(複数のデータがあります)
 		AudioCue SpeakerCue;					// XMLから得た情報(単一データ)
+
 		std::vector<char> PrimaryMixed;			// バッファ保存[1]
 		std::vector<char> SecondMixed;			// バッファ保存[2](Preloadの場合は未使用)
-		std::vector<AudioEffects*> EffectSlot;	// スピーカー適応するエフェクトスロット
 		std::string UseMaterialAtt;				// 現在のマテリアル情報
 
-		ALuint Source;						// Sourceの設定
-		ALuint UpdateBufQue;				// インキューデキューするバッファの選択
-		array<ALuint,2> Buffers;			// バッファの設定
+		ALuint Source;							// Sourceの設定
+		ALuint UpdateBufQue;					// インキューデキューするバッファの選択
+		array<ALuint,2> Buffers;				// バッファの設定
 
-		SetBufCommand* BufferCommand;		// バッファ設定用コマンド
+		unique_ptr<SetBufCommand> BufferCommand;	// バッファ設定用コマンド
+		unique_ptr<AddEffectCommand> EffectCommand;	// エフェクトコマンド
+
+		std::vector<AudioEffects*> EffectSlot;	// スピーカー適応するエフェクトスロット
 	};
 
 }

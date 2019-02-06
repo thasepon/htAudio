@@ -1,5 +1,7 @@
 #include "AddEffectCommand.h"
 
+#include<string>
+
 #include"ReverbEffects.h"
 #include"ChorusEffect.h"
 #include"DistortionEffect.h"
@@ -10,6 +12,7 @@
 #include"WahEffect.h"
 #include"EQEffect.h"
 #include"I3DAudio.h"
+#include"Cone.h"
 
 namespace htAudio
 {
@@ -18,62 +21,64 @@ namespace htAudio
 
 	}
 
-	AudioEffects* AddEffectCommand::CreateEffect(int sourceID,int effect)
+	AudioEffects* AddEffectCommand::CreateEffect(int sourceID,int effectid ,std::string useelement)
 	{
 		// エフェクトの生成と返信
 		AudioEffects* effectPtr;
 
 		// 指定エフェクトの生成と返信
-		switch (effect)
+		switch (effectid)
 		{
 		case REVERB:
-			effectPtr = new ReverbEffects(sourceID);
+			effectPtr = new ReverbEffects(sourceID, useelement);
+			effectPtr->SetEffectParametr();
 			break;
 
 		case CHORUS:
-			effectPtr = new ChorusEffect(sourceID);
+			effectPtr = new ChorusEffect(sourceID, useelement);
 			break;
 
 		case DISTORTION:
-			effectPtr = new DistortionEffect(sourceID);
+			effectPtr = new DistortionEffect(sourceID, useelement);
 			break;
 
 		case ECHO:
-			effectPtr = new EchoEffect(sourceID);
+			effectPtr = new EchoEffect(sourceID, useelement);
 			break;
 
 		case FLANGER:
-			effectPtr = new FlangerEffect(sourceID);
+			effectPtr = new FlangerEffect(sourceID, useelement);
 			break;
 
 		case FQ:
-			effectPtr = new FQEffect(sourceID);
+			effectPtr = new FQEffect(sourceID, useelement);
 			break;
 
 		case PITCH:
-			effectPtr = new PitchEffect(sourceID);
+			effectPtr = new PitchEffect(sourceID, useelement);
 			break;
 
 		case WAH:
-			effectPtr = new WahEffect(sourceID);
+			effectPtr = new WahEffect(sourceID, useelement);
 			break;
 
 		case EQ:
-			effectPtr = new EQEffect(sourceID);
+			effectPtr = new EQEffect(sourceID, useelement);
 			break;
 
 		case I3DAUDIO:
-			effectPtr = new I3DAudio(sourceID);
+			//effectPtr = new I3DAudio(sourceID, useelement);
+			break;
+
+		case CONE:
+			effectPtr = new Cone(sourceID,useelement);
 			break;
 
 		default:
 			effectPtr = nullptr;
 			break;
 		}
-
 		return effectPtr;
-
-
 	}
 
 }

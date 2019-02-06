@@ -14,7 +14,6 @@ namespace htAudio {
 	//
 	AudioSpeaker::AudioSpeaker() 
 	{
-		BufferCommand = new SetBufCommand();
 		Successinit = true;
 	}
 
@@ -23,7 +22,6 @@ namespace htAudio {
 	//
 	AudioSpeaker::AudioSpeaker(string filename)
 	{
-		BufferCommand = new SetBufCommand();
 		SetAudioSorce(filename);
 		Successinit = true;
 	}
@@ -33,7 +31,6 @@ namespace htAudio {
 	//
 	AudioSpeaker::AudioSpeaker(int id)
 	{
-		BufferCommand = new SetBufCommand();
 		SetAudioSorce(id);
 		Successinit = true;
 	}
@@ -80,7 +77,7 @@ namespace htAudio {
 			return;			// フォーマット取得できていません。
 
 		ReadHeaderInfo();
-		
+		AddEffects();
 	}
 
 	/// <summary>
@@ -98,7 +95,7 @@ namespace htAudio {
 			return;			// フォーマット取得できていません。
 
 		ReadHeaderInfo();
-		
+		AddEffects();
 	}
 
 	/// <summary>
@@ -290,7 +287,16 @@ namespace htAudio {
 	/// <returns>成功しているかどうか</returns>
 	bool AudioSpeaker::AddEffects()
 	{
-		EffectManager::AddEffectToSpeaker(EffectSlot, SpeakerCue, Source);
+		// 読み込んだエフェクトを全て適応
+		for (auto itr : SpeakerCue.CueEffect)
+		{
+			AudioEffects* ptr = EffectCommand->Execute(Source, itr.UseEffect, itr.UseElement);
+			
+			if (ptr != nullptr)
+			{
+				EffectSlot.push_back(ptr);
+			}
+		}
 		return true;
 	}
 	

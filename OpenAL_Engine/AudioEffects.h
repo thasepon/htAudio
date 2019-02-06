@@ -1,5 +1,6 @@
 #pragma once
 #include"OpenAL/OpenAlCore/OpenALDevice.h"
+#include"EffectElementPram.h"
 
 namespace htAudio
 {
@@ -180,9 +181,16 @@ namespace htAudio
 
 		void Update() {}
 
+		void SetEffectParametr(EffectElementPram* pram) { EffectPram = pram; }
+		std::string GetEffectPramName() { return EffectPramName; }
+
+
 	protected:
 		ALuint EffectSlot;		// エフェクトスロット
 		ALuint Effect;			// エフェクト
+		EffectElementPram* EffectPram;	// エフェクトの数値を変更するためのクラス
+		std::string EffectPramName;		// エフェクトの対象を取得
+
 
 	};
 

@@ -8,8 +8,8 @@
 namespace htAudio
 {
 	// ================= «ƒOƒ[ƒoƒ‹ =================== //
-	std::string ExeDirectory;
-	const std::string DataPath = "../Data/";
+	static std::string ExeDirectory;
+	const static std::string DataPath = "../Data/";
 
 	// ================= «’è”Œ^ =================== //
 	#define USE_OGG_LIB

@@ -288,6 +288,7 @@
     <ClInclude Include="PlayOrder.h" />
     <ClInclude Include="ReverbEffects.h" />
     <ClInclude Include="SetBufCommand.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpeakerManager.h" />
     <ClInclude Include="StopCommand.h" />
     <ClInclude Include="StopOrder.h" />
@@ -328,6 +329,7 @@
     <ClCompile Include="PlayOrder.cpp" />
     <ClCompile Include="ReverbEffects.cpp" />
     <ClCompile Include="SetBufCommand.cpp" />
+    <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="SpeakerManager.cpp" />
     <ClCompile Include="StopCommand.cpp" />
     <ClCompile Include="StopOrder.cpp" />

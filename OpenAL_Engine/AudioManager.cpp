@@ -6,12 +6,18 @@
 
 namespace htAudio {
 
+	static thread UpdateThread;						// 非同期更新用
+
 	/// <summary>
 	/// AudioMgrの作成と更新スレッドの開始
 	/// </summary>
 	AudioManager::AudioManager()
 	{
 		Updateflag = true;
+
+		ResourcePtr = new AudioReSource();
+		EffectElementMgrPtr = new EffectManager();
+		SpeakerMgrPtr = new SpeakerManager();
 
 		// Updateのスレッド化
 		UpdateThread = std::thread(&AudioManager::ThreadUpdate , this);
@@ -24,6 +30,12 @@ namespace htAudio {
 	{
 		ClearAudioOrder();
 		SpeakerMgrPtr->AllDeleteSpeaker();
+
+
+		delete ResourcePtr;
+		delete EffectElementMgrPtr;
+		delete SpeakerMgrPtr;
+
 	}
 
 	
@@ -68,6 +80,9 @@ namespace htAudio {
 	//
 	void AudioManager::ClearAudioOrder()
 	{
+		if (OrderList.empty())
+			return;
+
 		//全オーダーの削除
 		for (auto var : OrderList)
 		{
@@ -83,6 +98,9 @@ namespace htAudio {
 	/// </summary>
 	void AudioManager::ExecOrderCmd()
 	{
+		if (OrderList.empty())
+			return;
+
 		// 全オーダーの起動
 		for (auto var : OrderList)
 		{
@@ -94,4 +112,20 @@ namespace htAudio {
 			}
 		}
 	}
+
+	AudioReSource* AudioManager::GeteAudioResoucePtr()
+	{ 
+		return ResourcePtr; 
+	}
+
+	EffectManager* AudioManager::GetEffectElementPtr()
+	{ 
+		return EffectElementMgrPtr; 
+	}
+
+	SpeakerManager* AudioManager::GetSpeakerManagerPtr()
+	{ 
+		return SpeakerMgrPtr; 
+	}
+
 }

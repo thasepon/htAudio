@@ -18,6 +18,9 @@ namespace htAudio
 
 	void SpeakerManager::SpeakerUpdate()
 	{
+		if (SpeakerList.empty())
+			return;
+
 		for (auto itr : SpeakerList)
 		{
 			itr->Update();
@@ -26,6 +29,8 @@ namespace htAudio
 
 	void SpeakerManager::RemoveSpeaker(AudioSpeaker* speakerptr)
 	{
+		if (SpeakerList.empty())
+			return;
 		for (auto itr : SpeakerList)
 		{
 			if (itr == speakerptr)
@@ -40,6 +45,8 @@ namespace htAudio
 
 	void SpeakerManager::AllDeleteSpeaker()
 	{
+		if (SpeakerList.empty())
+			return;
 		for (auto itr : SpeakerList)
 		{
 			delete itr;
@@ -50,6 +57,8 @@ namespace htAudio
 
 	void SpeakerManager::ControlVolume(VOLUMETYPE type, double value)
 	{
+		if (SpeakerList.empty())
+			return;
 		VolumeArray[type] = value;
 
 		for (auto itr : SpeakerList)

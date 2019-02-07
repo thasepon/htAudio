@@ -1,9 +1,12 @@
 #include"htAudioDll.h"
 
+using namespace htAudio;
+
 #include"OpenAL/AudioSpeaker/AudioSpeaker.h"
 #include"OpenAL\OpenAlCore\OpenALDevice.h"
 #include"OpenAL/AudioSpeaker/AudioSpeaker.h"
 
+#include"Singleton.h"
 #include"PlayOrder.h"
 #include"StopOrder.h"
 #include"PauseOrder.h"
@@ -12,9 +15,6 @@
 #include<uchar.h>
 #include<codecvt>
 #include<string>
-
-namespace htAudio
-{
 
 	// ================= ã@î\ä÷êî ======================= //
 
@@ -35,8 +35,14 @@ namespace htAudio
 		return std::string(dest.begin(), dest.end());
 	}
 
+	void DeleteInstance()
+	{
+		SingletonFinalizer::finalize();
+	}
+
 	// ================================= Device ================================= //
 
+	/*
 	OpenALDevice* htaCreateDevice()
 	{
 		return new OpenALDevice();
@@ -51,8 +57,16 @@ namespace htAudio
 
 		delete Instance;
 	}
+	*/
+
+	void htaCreateDevice(OpenALDevice* ptr)
+	{
+		*ptr = Singleton<OpenALDevice>::get_Instance();
+	}
 
 	// =============================== AudioManager ================================= //
+	
+	/*
 	AudioManager* htaCreateManager()
 	{
 		return new AudioManager();
@@ -72,6 +86,18 @@ namespace htAudio
 
 		delete instance;
 	}
+	*/
+
+	void htaCreateManager(AudioManager* ptr)
+	{
+		*ptr = Singleton<AudioManager>::get_Instance();
+	}
+
+	void ExecOrder()
+	{
+		Singleton<AudioManager>::get_Instance().ExecOrderCmd();
+	}
+
 	// =================================== LIstener ===================================== //
 
 	/// <summary>
@@ -207,75 +233,75 @@ namespace htAudio
 		speakerPtr->SetMaterial(name);
 	}
 
-	bool  PlayI(AudioManager* ptr, int speakerId)
+	bool  PlayI(int speakerId)
 	{
-		PlayOrder::SetPlayOrder(ptr, speakerId);
+		PlayOrder::SetPlayOrder(speakerId);
 		return true;
 	}
 
-	bool PlayIL(AudioManager* ptr, int speakerId, int laytency)
+	bool PlayIL(int speakerId, int laytency)
 	{
-		PlayOrder::SetPlayOrder(ptr, speakerId, laytency);
+		PlayOrder::SetPlayOrder(speakerId, laytency);
 		return true;
 	}
 
-	bool  PlayP(AudioManager* ptr, AudioSpeaker* speakerPtr)
+	bool  PlayP(AudioSpeaker* speakerPtr)
 	{
-		PlayOrder::SetPlayOrder(ptr, speakerPtr->GetSpeakerNumb());
+		PlayOrder::SetPlayOrder(speakerPtr->GetSpeakerNumb());
 		return true;
 	}
 
-	bool PlayPL(AudioManager* ptr, AudioSpeaker* speakerPtr, int laytency)
+	bool PlayPL(AudioSpeaker* speakerPtr, int laytency)
 	{
-		PlayOrder::SetPlayOrder(ptr, speakerPtr->GetSpeakerNumb(), laytency);
+		PlayOrder::SetPlayOrder(speakerPtr->GetSpeakerNumb(), laytency);
 		return true;
 	}
 
-	bool  StopI(AudioManager* ptr, int speakerId)
+	bool  StopI(int speakerId)
 	{
-		StopOrder::SetStopOrder(ptr, speakerId);
+		StopOrder::SetStopOrder(speakerId);
 		return true;
 	}
 
-	bool  StopIL(AudioManager* ptr, int speakerId, int laytency)
+	bool  StopIL(int speakerId, int laytency)
 	{
-		StopOrder::SetStopOrder(ptr, speakerId, laytency);
+		StopOrder::SetStopOrder(speakerId, laytency);
 		return true;
 	}
 
-	bool  StopP(AudioManager* ptr, AudioSpeaker* speakerPtr)
+	bool  StopP(AudioSpeaker* speakerPtr)
 	{
-		StopOrder::SetStopOrder(ptr, speakerPtr->GetSpeakerNumb());
+		StopOrder::SetStopOrder(speakerPtr->GetSpeakerNumb());
 		return true;
 	}
 
-	bool  StopPL(AudioManager* ptr, AudioSpeaker* speakerPtr, int laytency)
+	bool  StopPL(AudioSpeaker* speakerPtr, int laytency)
 	{
-		PauseOrder::SetPauseOrder(ptr, speakerPtr->GetSpeakerNumb(), laytency);
+		PauseOrder::SetPauseOrder(speakerPtr->GetSpeakerNumb(), laytency);
 		return true;
 	}
 
-	bool  PauseI(AudioManager* ptr, int speakerId)
+	bool  PauseI(int speakerId)
 	{
-		PauseOrder::SetPauseOrder(ptr, speakerId);
+		PauseOrder::SetPauseOrder(speakerId);
 		return true;
 	}
 
-	bool  PauseIL(AudioManager* ptr, int speakerId, int laytency)
+	bool  PauseIL(int speakerId, int laytency)
 	{
-		PauseOrder::SetPauseOrder(ptr, speakerId, laytency);
+		PauseOrder::SetPauseOrder(speakerId, laytency);
 		return true;
 	}
 
-	bool  PauseP(AudioManager* ptr, AudioSpeaker* speakerPtr)
+	bool  PauseP(AudioSpeaker* speakerPtr)
 	{
-		PauseOrder::SetPauseOrder(ptr, speakerPtr->GetSpeakerNumb());
+		PauseOrder::SetPauseOrder(speakerPtr->GetSpeakerNumb());
 		return true;
 	}
 
-	bool  PausePL(AudioManager* ptr, AudioSpeaker* speakerPtr, int laytency)
+	bool  PausePL(AudioSpeaker* speakerPtr, int laytency)
 	{
-		PauseOrder::SetPauseOrder(ptr, speakerPtr->GetSpeakerNumb(), laytency);
+		PauseOrder::SetPauseOrder(speakerPtr->GetSpeakerNumb(), laytency);
 		return true;
 	}
 
@@ -287,5 +313,3 @@ namespace htAudio
 		ExeDirectory = wide_to_multi_capi(wstr);
 	}
 	
-
-}

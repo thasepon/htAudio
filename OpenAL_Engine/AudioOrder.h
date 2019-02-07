@@ -1,15 +1,13 @@
 #pragma once
 
-class AudioManager;
-
 namespace htAudio
 {
 	class AudioOrder
 	{
 	public:
 		~AudioOrder();
-		void SetOrder(AudioManager* ptr, int source) {};
-		void SetOrder(AudioManager* ptr, int source, int latency) {};
+		void SetOrder(int source) {};
+		void SetOrder(int source, int latency) {};
 
 	private:
 	};

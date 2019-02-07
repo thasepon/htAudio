@@ -162,7 +162,6 @@ namespace htAudio {
 	bool AudioFormatData::LoadEffectData(CHORUS_INFO& info, std::string effectelementpath)
 	{
 
-		std::string Path;	// ファイルパス設定
 		std::string Path = CreateEffectDataPath(effectelementpath);
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン

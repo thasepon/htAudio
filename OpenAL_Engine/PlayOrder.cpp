@@ -1,6 +1,7 @@
 #include "PlayOrder.h"
 #include"AudioData.h"
 #include"AudioManager.h"
+#include"Singleton.h"
 
 namespace htAudio
 {
@@ -9,16 +10,16 @@ namespace htAudio
 
 	}
 
-	void PlayOrder::SetPlayOrder(AudioManager* ptr, uint16_t source)
+	void PlayOrder::SetPlayOrder(uint16_t source)
 	{
 		OrderFormat fmt = { source , 0};
-		ptr->SetAudioOrder(ORDERTYPE::PLAY,fmt);
+		Singleton<AudioManager>::get_Instance().SetAudioOrder(ORDERTYPE::PLAY,fmt);
 	}
 
-	void PlayOrder::SetPlayOrder(AudioManager* ptr, uint16_t source, double latency)
+	void PlayOrder::SetPlayOrder(uint16_t source, double latency)
 	{
 		OrderFormat fmt = { source , latency };
-		ptr->SetAudioOrder(ORDERTYPE::PLAY, fmt);
+		Singleton<AudioManager>::get_Instance().SetAudioOrder(ORDERTYPE::PLAY, fmt);
 	}
 
 

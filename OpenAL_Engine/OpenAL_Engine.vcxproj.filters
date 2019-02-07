@@ -145,6 +145,9 @@
     <Filter Include="Manager\EffectElementManager">
       <UniqueIdentifier>{4bf1ef4b-3493-45e1-8448-d04ea1b3816a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Singleton">
+      <UniqueIdentifier>{5af6a0ff-a7e2-498a-9659-68e6791fb5e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="htAudioDll.h">
@@ -267,6 +270,9 @@
     <ClInclude Include="EffectManager.h">
       <Filter>Manager\EffectElementManager</Filter>
     </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="htAudioDll.cpp">
@@ -382,6 +388,9 @@
     </ClCompile>
     <ClCompile Include="EffectManager.cpp">
       <Filter>Manager\EffectElementManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Singleton</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

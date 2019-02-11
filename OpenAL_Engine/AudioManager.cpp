@@ -20,7 +20,7 @@ namespace htAudio {
 		SpeakerMgrPtr = new SpeakerManager();
 
 		// Update‚ÌƒXƒŒƒbƒh‰»
-		UpdateThread = std::thread(&AudioManager::ThreadUpdate , this);
+		//UpdateThread = std::thread(&AudioManager::ThreadUpdate , this);
 	}
 
 	/// <summary>
@@ -28,9 +28,11 @@ namespace htAudio {
 	/// </summary>
 	AudioManager::~AudioManager()
 	{
+		Updateflag = false;
+		//UpdateThread.join();
+
 		ClearAudioOrder();
 		SpeakerMgrPtr->AllDeleteSpeaker();
-
 
 		delete ResourcePtr;
 		delete EffectElementMgrPtr;
@@ -44,6 +46,7 @@ namespace htAudio {
 	/// </summary>
 	void AudioManager::ThreadUpdate()
 	{
+		//  
 		while (Updateflag)
 		{
 			SpeakerMgrPtr->SpeakerUpdate();
@@ -113,7 +116,7 @@ namespace htAudio {
 		}
 	}
 
-	AudioReSource* AudioManager::GeteAudioResoucePtr()
+	AudioReSource* AudioManager::GetAudioResoucePtr()
 	{ 
 		return ResourcePtr; 
 	}

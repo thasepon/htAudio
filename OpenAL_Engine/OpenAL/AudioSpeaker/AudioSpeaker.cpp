@@ -40,6 +40,9 @@ namespace htAudio {
 	//
 	AudioSpeaker::~AudioSpeaker()
 	{
+		if (SoundDatas.empty() == true)
+			return;
+
 		// バッファの数を特定
 		if (SoundDatas[NowUsedNumb].StreamType == false)
 		{
@@ -178,6 +181,9 @@ namespace htAudio {
 	/// <returns></returns>
 	bool AudioSpeaker::Update()
 	{
+		if (SoundDatas.empty())
+			return false;
+
 		// バッファの更新
 		if (SoundDatas[NowUsedNumb].StreamType == false)
 		{

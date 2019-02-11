@@ -12,13 +12,13 @@ namespace htAudio
 	void StopOrder::SetStopOrder( uint16_t source)
 	{
 		OrderFormat fmt = { source , 0 };
-		Singleton<AudioManager>::get_Instance().SetAudioOrder(ORDERTYPE::STOP, fmt);
+		Singleton<AudioManager>::get_Instance()->SetAudioOrder(ORDERTYPE::STOP, fmt);
 	}
 
 	void StopOrder::SetStopOrder( uint16_t source, double latency)
 	{
 		OrderFormat fmt = { source , latency };
-		Singleton<AudioManager>::get_Instance().SetAudioOrder(ORDERTYPE::STOP, fmt);
+		Singleton<AudioManager>::get_Instance()->SetAudioOrder(ORDERTYPE::STOP, fmt);
 	}
 
 }

@@ -18,10 +18,10 @@ namespace htAudio
 	{
 	public:
 
-		static T& get_Instance()
+		static T* get_Instance()
 		{
 			std::call_once(initflag, Create);
-			return *instance;
+			return instance;
 		}
 
 	private:

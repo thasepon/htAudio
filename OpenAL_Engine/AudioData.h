@@ -9,7 +9,7 @@ namespace htAudio
 {
 	// ================= «ƒOƒ[ƒoƒ‹ =================== //
 	static std::string ExeDirectory;
-	const static std::string DataPath = "../Data/";
+	const static std::string DataPath = "/Data/";
 
 	// ================= «’è”Œ^ =================== //
 	#define USE_OGG_LIB

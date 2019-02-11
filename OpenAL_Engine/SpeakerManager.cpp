@@ -9,6 +9,7 @@ namespace htAudio
 
 	SpeakerManager::~SpeakerManager()
 	{
+		AllDeleteSpeaker();
 	}
 
 	void SpeakerManager::AddSpeaker(AudioSpeaker* speakerptr)
@@ -31,13 +32,14 @@ namespace htAudio
 	{
 		if (SpeakerList.empty())
 			return;
-		for (auto itr : SpeakerList)
+
+		for (auto itr = SpeakerList.begin();itr == SpeakerList.end();itr++)
 		{
-			if (itr == speakerptr)
+			if (*itr == speakerptr)
 			{
-				delete itr;
-				itr = nullptr;
-				SpeakerList.remove(itr);
+				SpeakerList.erase(itr);
+				delete speakerptr;
+				speakerptr = nullptr;
 				break;
 			}
 		}
@@ -47,18 +49,22 @@ namespace htAudio
 	{
 		if (SpeakerList.empty())
 			return;
-		for (auto itr : SpeakerList)
+
+		for (auto itr = SpeakerList.begin(); itr == SpeakerList.end(); itr++)
 		{
-			delete itr;
-			itr = nullptr;
-			SpeakerList.remove(itr);
+			SpeakerList.erase(itr);
+			delete *itr;
+			*itr = nullptr;
 		}
+
+		SpeakerList.clear();
 	}
 
 	void SpeakerManager::ControlVolume(VOLUMETYPE type, double value)
 	{
 		if (SpeakerList.empty())
 			return;
+
 		VolumeArray[type] = value;
 
 		for (auto itr : SpeakerList)

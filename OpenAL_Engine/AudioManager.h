@@ -30,7 +30,7 @@ namespace htAudio {
 		void ExecOrderCmd();								// コマンドの消化
 		void ClearAudioOrder();								// セットされたオーディオデータの削除
 
-		AudioReSource* GeteAudioResoucePtr();
+		AudioReSource* GetAudioResoucePtr();
 		EffectManager* GetEffectElementPtr();
 		SpeakerManager* GetSpeakerManagerPtr();
 
@@ -42,7 +42,6 @@ namespace htAudio {
 		AudioReSource* ResourcePtr;			// Preloadでの使いまわし用のリソースptr
 		EffectManager* EffectElementMgrPtr;	// エフェクトエレメントを保持するためのポインタ
 		SpeakerManager* SpeakerMgrPtr;		// スピーカーマネージャーポインタ
-
 
 		bool Updateflag;							// 非同期更新フラグ
 

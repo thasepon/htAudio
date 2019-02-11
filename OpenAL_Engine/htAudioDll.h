@@ -17,17 +17,12 @@ extern "C" {
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeleteInstance();
 
 	// デバイス
-	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaCreateDevice(OpenALDevice* ptr);
-	//UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaDeleteDevice(OpenALDevice* Instance);
-
+	UNITY_INTERFACE_EXPORT OpenALDevice* UNITY_INTERFACE_API htaCreateDevice();
+	
 	// マネージャー
-	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaCreateManager(AudioManager* ptr);
-	
-	//UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API ExecOrder(AudioManager* Instance);
+	UNITY_INTERFACE_EXPORT AudioManager* UNITY_INTERFACE_API htaCreateManager();
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API ExecOrder();
-	
-	//UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaDeleteManager(AudioManager* Instance);
-	
+
 	// Listenerの機能
 	UNITY_INTERFACE_EXPORT AudioListener* UNITY_INTERFACE_API htaListenerCreate();
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaListenerDelete(AudioListener* Instance);
@@ -39,11 +34,11 @@ extern "C" {
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaListenerOrientationArray(AudioListener* Instance, double AtOrient[6]);
 
 	// Speaker関係
-	UNITY_INTERFACE_EXPORT AudioSpeaker* UNITY_INTERFACE_API htaSpeakerCreate(AudioManager* mgtPtr);
-	UNITY_INTERFACE_EXPORT AudioSpeaker* UNITY_INTERFACE_API htaSpeakerCreateI(AudioManager* mgtPtr, uint16_t id);
-	UNITY_INTERFACE_EXPORT AudioSpeaker* UNITY_INTERFACE_API htaSpeakerCreateN(AudioManager* mgtPtr, wchar_t* soundname);
+	UNITY_INTERFACE_EXPORT AudioSpeaker* UNITY_INTERFACE_API htaSpeakerCreate();
+	UNITY_INTERFACE_EXPORT AudioSpeaker* UNITY_INTERFACE_API htaSpeakerCreateI(uint16_t id);
+	UNITY_INTERFACE_EXPORT AudioSpeaker* UNITY_INTERFACE_API htaSpeakerCreateN(wchar_t* soundname);
 	
-	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaSpeakerDelete(AudioManager* mgtPtr, AudioSpeaker* speakerPtr);
+	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaSpeakerDelete(AudioSpeaker* speakerPtr);
 	
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaSetAudioSourceI(AudioSpeaker* speakerPtr, uint16_t id);
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaSetAudioSourceN(AudioSpeaker* speakerPtr, wchar_t* soundname);

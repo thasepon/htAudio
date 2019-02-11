@@ -41,9 +41,7 @@ using namespace htAudio;
 	}
 
 	// ================================= Device ================================= //
-
-	/*
-	OpenALDevice* htaCreateDevice()
+	/*OpenALDevice* htaCreateDevice()
 	{
 		return new OpenALDevice();
 	}
@@ -56,18 +54,19 @@ using namespace htAudio;
 		}
 
 		delete Instance;
-	}
-	*/
+		Instance = nullptr;
+	}*/
+	
 
-	void htaCreateDevice(OpenALDevice* ptr)
+	OpenALDevice* htaCreateDevice()
 	{
-		*ptr = Singleton<OpenALDevice>::get_Instance();
+		return Singleton<OpenALDevice>::get_Instance();
 	}
 
 	// =============================== AudioManager ================================= //
 	
-	/*
-	AudioManager* htaCreateManager()
+	
+	/*AudioManager* htaCreateManager()
 	{
 		return new AudioManager();
 	}
@@ -85,17 +84,21 @@ using namespace htAudio;
 		}
 
 		delete instance;
-	}
-	*/
+		instance = nullptr;
+	}*/
+	
 
-	void htaCreateManager(AudioManager* ptr)
+	AudioManager* htaCreateManager()
 	{
-		*ptr = Singleton<AudioManager>::get_Instance();
+		return Singleton<AudioManager>::get_Instance();
 	}
 
 	void ExecOrder()
 	{
-		Singleton<AudioManager>::get_Instance().ExecOrderCmd();
+		if (Singleton<AudioManager>::get_Instance() == nullptr)
+			return;
+
+		Singleton<AudioManager>::get_Instance()->ExecOrderCmd();
 	}
 
 	// =================================== LIstener ===================================== //
@@ -161,11 +164,11 @@ using namespace htAudio;
 	/// </summary>
 	/// <param name="mgtPtr"></param>
 	/// <returns></returns>
-	AudioSpeaker* htaSpeakerCreate(AudioManager* mgtPtr)
+	AudioSpeaker* htaSpeakerCreate()
 	{
 		AudioSpeaker* _speakerPtr = new AudioSpeaker();
 		uint16_t _id = _speakerPtr->GetSpeakerNumb();
-		mgtPtr->GetSpeakerManagerPtr()->AddSpeaker(_speakerPtr);
+		Singleton<AudioManager>::get_Instance()->GetSpeakerManagerPtr()->AddSpeaker(_speakerPtr);
 		return _speakerPtr;
 	}
 
@@ -175,15 +178,14 @@ using namespace htAudio;
 	/// <param name="mgtPtr">AudioMagrのポインタを作成</param>
 	/// <param name="soundname">Cueネーム</param>
 	/// <returns>作成したSpeakerPointer</returns>
-	AudioSpeaker* htaSpeakerCreateN(AudioManager* mgtPtr, wchar_t* soundname)
+	AudioSpeaker* htaSpeakerCreateN(wchar_t* soundname)
 	{
 		std::string path, name, mat;
 
 		name = wide_to_multi_capi(soundname);
-
 		AudioSpeaker* _speakerPtr = new AudioSpeaker(name);
 		uint16_t _id = _speakerPtr->GetSpeakerNumb();
-		mgtPtr->GetSpeakerManagerPtr()->AddSpeaker( _speakerPtr);
+		Singleton<AudioManager>::get_Instance()->GetSpeakerManagerPtr()->AddSpeaker( _speakerPtr);
 
 		return _speakerPtr;
 	}
@@ -194,11 +196,11 @@ using namespace htAudio;
 	/// <param name="mgtPtr">AudioMagrのポインタを作成</param>
 	/// <param name="id">Cueネーム</param>
 	/// <returns>作成したSpeakerPointer</returns>
-	AudioSpeaker* htaSpeakerCreateI(AudioManager* mgtPtr, uint16_t id)
+	AudioSpeaker* htaSpeakerCreateI(uint16_t id)
 	{
 		AudioSpeaker* _speakerPtr = new AudioSpeaker(id);
 		uint16_t _id = _speakerPtr->GetSpeakerNumb();
-		mgtPtr->GetSpeakerManagerPtr()->AddSpeaker( _speakerPtr);
+		Singleton<AudioManager>::get_Instance()->GetSpeakerManagerPtr()->AddSpeaker( _speakerPtr);
 
 		return _speakerPtr;
 	}
@@ -208,9 +210,12 @@ using namespace htAudio;
 	/// </summary>
 	/// <param name="mgtPtr"></param>
 	/// <param name="Numb"></param>
-	void  htaSpeakerDelete(AudioManager* mgtPtr, AudioSpeaker* speakerptr)
+	void  htaSpeakerDelete(AudioSpeaker* speakerptr)
 	{
-		mgtPtr->GetSpeakerManagerPtr()->RemoveSpeaker(speakerptr);
+		if (speakerptr == nullptr)
+			return;
+
+		Singleton<AudioManager>::get_Instance()->GetSpeakerManagerPtr()->RemoveSpeaker(speakerptr);
 		speakerptr = nullptr;
 	}
 

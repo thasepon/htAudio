@@ -15,12 +15,15 @@ namespace htAudio {
 	{
 	}
 
-	std::vector<GropuInfo> AudioGroup::GetGropulist()
+	std::map<std::string, GropuInfo> AudioGroup::GetGropulist()
 	{
 		if (!AudioGropulist.empty())
 		{
 			AudioGropulist.clear();
 		}
+
+		return AudioGropulist;
+
 	}
 
 	void AudioGroup::CreateGropu(std::string name)

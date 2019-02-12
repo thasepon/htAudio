@@ -23,7 +23,7 @@ namespace htAudio {
 		AudioGroup();
 		~AudioGroup();
 
-		std::vector<GropuInfo> GetGropulist();
+		std::map<std::string, GropuInfo> GetGropulist();
 
 		void CreateGropu(std::string name);
 		void DeleteGropu(std::string name);

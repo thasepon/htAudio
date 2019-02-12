@@ -46,7 +46,7 @@ namespace htAudio
 		// === 関数 === //
 		void Init();						// 共通初期化処理
 		void DecodeAudioHeader();			// 指定したAudio情報からヘッダー情報を取得
-		void DecodeAudioBuffer();			// 指定したAudio情報からバッファを獲得
+		void DecodeAudioStreamBuffer();			// 指定したAudio情報からバッファを獲得
 		void ReadHeaderInfo();				// ヘッダー情報の読み込み
 		bool AddEffects();					// エフェクトの適応と設定
 
@@ -71,10 +71,13 @@ namespace htAudio
 		ALuint UpdateBufQue;					// インキューデキューするバッファの選択
 		array<ALuint,2> Buffers;				// バッファの設定
 
-		unique_ptr<SetBufCommand> BufferCommand;	// バッファ設定用コマンド
-		unique_ptr<AddEffectCommand> EffectCommand;	// エフェクトコマンド
+		SetBufCommand* BufferCommand;	// バッファ設定用コマンド
+		AddEffectCommand* EffectCommand;	// エフェクトコマンド
 
 		std::vector<AudioEffects*> EffectSlot;	// スピーカー適応するエフェクトスロット
+
+		uint16_t StreamBufSize;				// バッファサイズ
+
 	};
 
 }

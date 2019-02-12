@@ -19,8 +19,8 @@ namespace htAudio
 	public:
 		~AudioDecoder();	// デストラクタ
 
-		static bool LoadRIFFFormat(AUDIOFILEFORMAT& headerfmt,SoundType audiodata);		// ファイルフォーマットの取得		
-		static bool AudioBufferDecoder(void* buf, AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt);	// ファイルのバッファーを取得
+		static bool LoadRIFFFormat(AUDIOFILEFORMAT& headerfmt,SoundType audiodata,std::string filepath);		// ファイルフォーマットの取得		
+		static bool AudioBufferDecoder(void* buf, AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath);	// ファイルのバッファーを取得
 
 	private:
 		AudioDecoder();		// コンストラクタ
@@ -28,10 +28,10 @@ namespace htAudio
 		static bool RIFFDecoderOgg(std::string filename, AUDIOFILEFORMAT& format);
 		static bool RIFFDecoderWave(std::string filename, AUDIOFILEFORMAT& format);
 
-		static bool BufferDecoderOgg(AudioData& audiodata, SoundType type, void* buf);	// オーディオバッファーの取得(.wav)
-		static bool BufferDecoderWav(AUDIOFILEFORMAT& Format, SoundType type, AudioData& audiodata, void* buf); // オーディオバッファーの取得(.ogg)
+		static bool BufferDecoderOgg(AudioData& audiodata, std::string filename,bool loopflag, void* buf);	// オーディオバッファーの取得(.wav)
+		static bool BufferDecoderWav(AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf); // オーディオバッファーの取得(.ogg)
 
-		static bool Mono16WavDecoder(AUDIOFILEFORMAT& Format, SoundType type, AudioData& audiodata, void* buf);
+		static unsigned long Mono16WavDecoder(AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf);
 		// 必要になったら実装します。
 		//static bool Streo16WavDecoder(AUDIOFILEFORMAT& Format, AudioData& audiodata, void* buf);
 

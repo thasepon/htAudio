@@ -9,6 +9,10 @@
 
 namespace htAudio {
 	
+
+	static std::string ExeDirectory;
+	static std::string DataPath;
+
 	AudioFormatData::AudioFormatData()
 	{
 	}
@@ -56,6 +60,7 @@ namespace htAudio {
 				cue.CueName = obj["name"].get < std::string >();
 				cue.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
 				cue.Loopflag = obj["loopflag"].get<bool>();
+				cue.Filepath = CreateAudioDataPath();
 
 				picojson::array& effectarray = obj["effects"].get<picojson::array>();
 				for (auto effectitr : effectarray)
@@ -127,6 +132,7 @@ namespace htAudio {
 				cue.CueName = obj["name"].get < std::string >();
 				cue.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
 				cue.Loopflag = obj["loopflag"].get<bool>();
+				cue.Filepath = CreateAudioDataPath();
 
 				picojson::array& effectarray = obj["effects"].get<picojson::array>();
 				for (auto effectitr : effectarray)
@@ -189,7 +195,7 @@ namespace htAudio {
 			{
 				picojson::object varobj; // êFÅXÇ»Ç‡ÇÃÇèëÇ≠ÇÃÇ∑ÇÈÇÊÇ§
 				picojson::object obj = cueitr.second.get<picojson::object>();
-				
+
 				info.CorrectionValue = obj["correctionvalue"].get<double>();
 				
 				varobj = obj["waverotm"].get<picojson::object>();
@@ -618,7 +624,7 @@ namespace htAudio {
 				info.MaxDecayHFRatio = varobj["MAX"].get<double>();
 				info.MinDecayHFRatio = varobj["MIN"].get<double>();
 
-				varobj = obj["reflecriongain"].get<picojson::object>();
+				varobj = obj["reflectiongain"].get<picojson::object>();
 				info.MaxReflectionsGain = varobj["MAX"].get<double>();
 				info.MinReflectionsGain = varobj["MIN"].get<double>();
 
@@ -787,6 +793,12 @@ namespace htAudio {
 
 	}
 
+	void AudioFormatData::SetAudioPath(std::string path)
+	{
+		ExeDirectory = path;
+		DataPath = "/Data/";
+	}
+
 	std::string AudioFormatData::CreateFormatDataPath()
 	{
 		return ExeDirectory + DataPath + "json/htAudioInfo.json";
@@ -795,6 +807,11 @@ namespace htAudio {
 	std::string AudioFormatData::CreateEffectDataPath(std::string dataname)
 	{
 		return ExeDirectory + DataPath + "json/" + dataname +".json";
+	}
+
+	std::string AudioFormatData::CreateAudioDataPath()
+	{
+		return ExeDirectory + DataPath + "Audio/";
 	}
 
 }

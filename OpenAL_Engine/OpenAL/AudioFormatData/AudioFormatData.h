@@ -37,8 +37,12 @@ namespace htAudio
 
 		static bool LoadEffefctPramData(std::list<EffectElementPram*> pram);
 
+		static void SetAudioPath(std::string path);
+
 	private:
+
 		static std::string CreateFormatDataPath();
 		static std::string CreateEffectDataPath(std::string dataname);
+		static std::string CreateAudioDataPath();
 	};
 }

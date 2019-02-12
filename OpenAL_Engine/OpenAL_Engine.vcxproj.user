@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommand>J:\Unity\2018.2.6f1\Editor\Unity.exe</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments>-projectPath J:\UnityProj\RDProj</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommand>C:\Program Files\Unity\Hub\Editor\2018.3.4f1\Editor\Unity.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>-projectPath F:\htAudioEditor</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -11,8 +11,8 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|x64'">
-    <LocalDebuggerCommand>J:\Unity\2018.2.6f1\Editor\Unity.exe</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments>-projectPath J:\UnityProj\RDProj</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommand>C:\Program Files\Unity\Hub\Editor\2018.3.4f1\Editor\Unity.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>-projectPath F:\htAudioEditor</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

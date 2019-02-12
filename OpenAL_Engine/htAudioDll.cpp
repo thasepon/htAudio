@@ -5,6 +5,7 @@ using namespace htAudio;
 #include"OpenAL/AudioSpeaker/AudioSpeaker.h"
 #include"OpenAL\OpenAlCore\OpenALDevice.h"
 #include"OpenAL/AudioSpeaker/AudioSpeaker.h"
+#include"OpenAL/AudioFormatData/AudioFormatData.h"
 
 #include"Singleton.h"
 #include"PlayOrder.h"
@@ -95,9 +96,6 @@ using namespace htAudio;
 
 	void ExecOrder()
 	{
-		if (Singleton<AudioManager>::get_Instance() == nullptr)
-			return;
-
 		Singleton<AudioManager>::get_Instance()->ExecOrderCmd();
 	}
 
@@ -167,7 +165,6 @@ using namespace htAudio;
 	AudioSpeaker* htaSpeakerCreate()
 	{
 		AudioSpeaker* _speakerPtr = new AudioSpeaker();
-		uint16_t _id = _speakerPtr->GetSpeakerNumb();
 		Singleton<AudioManager>::get_Instance()->GetSpeakerManagerPtr()->AddSpeaker(_speakerPtr);
 		return _speakerPtr;
 	}
@@ -184,7 +181,6 @@ using namespace htAudio;
 
 		name = wide_to_multi_capi(soundname);
 		AudioSpeaker* _speakerPtr = new AudioSpeaker(name);
-		uint16_t _id = _speakerPtr->GetSpeakerNumb();
 		Singleton<AudioManager>::get_Instance()->GetSpeakerManagerPtr()->AddSpeaker( _speakerPtr);
 
 		return _speakerPtr;
@@ -199,7 +195,6 @@ using namespace htAudio;
 	AudioSpeaker* htaSpeakerCreateI(uint16_t id)
 	{
 		AudioSpeaker* _speakerPtr = new AudioSpeaker(id);
-		uint16_t _id = _speakerPtr->GetSpeakerNumb();
 		Singleton<AudioManager>::get_Instance()->GetSpeakerManagerPtr()->AddSpeaker( _speakerPtr);
 
 		return _speakerPtr;
@@ -315,6 +310,6 @@ using namespace htAudio;
 	void SetExeDirectory(wchar_t* soundname)
 	{
 		wstring wstr = soundname;
-		ExeDirectory = wide_to_multi_capi(wstr);
+		AudioFormatData::SetAudioPath(wide_to_multi_capi(wstr));
 	}
 	

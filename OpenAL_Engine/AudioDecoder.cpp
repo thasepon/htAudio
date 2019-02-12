@@ -15,16 +15,16 @@ namespace htAudio
 	/// <summary>
 	/// Ogg,wavファイルのヘッダー部分の読み込み
 	/// </summary>
-	bool AudioDecoder::LoadRIFFFormat(AUDIOFILEFORMAT& headerfmt, SoundType audiodata)
+	bool AudioDecoder::LoadRIFFFormat(AUDIOFILEFORMAT& headerfmt, SoundType audiodata, std::string filepath)
 	{
 
 		if (audiodata.RIFFType == RIFF_WAV)
 		{
-			return RIFFDecoderWave(audiodata.AudioName, headerfmt);
+			return RIFFDecoderWave(filepath + audiodata.AudioName+".wav", headerfmt);
 		}
 		else if (audiodata.RIFFType == RIFF_OGG)
 		{
-			return RIFFDecoderOgg(audiodata.AudioName, headerfmt);
+			return RIFFDecoderOgg(filepath + audiodata.AudioName+".ogg", headerfmt);
 		}
 
 		// 処理なし
@@ -52,6 +52,7 @@ namespace htAudio
 		format.Fmt.BlockSize = vi->channels * 2;
 		format.Fmt.BitsPerSample = 16;
 		format.Fmt.BytesPerSec = (vi->rate) * (vi->channels * 2);
+		
 		// 未使用
 		format.DataChunkSample = 0;
 
@@ -64,34 +65,37 @@ namespace htAudio
 	bool AudioDecoder::RIFFDecoderWave(std::string filename, AUDIOFILEFORMAT& format)
 	{
 		FILE* fp;
+
 		fopen_s(&fp, filename.c_str(), "rb");
 
 		if (fp == NULL)
 			return false;
 
-		// RIFFチャンクを読み込み
-		fread(format.Riff.RIFFID,1,4,fp);
-		fread(&format.Riff.FileSize,4,1,fp);
-		fread(format.Riff.WaveFormatType,1,4,fp);
+		// RIFFチャンクの読み込み
+		fread(format.Riff.ChunkID, 1, 4, fp);
+		fread(&format.Riff.ChunkSize, 4, 1, fp);
+		fread(format.Riff.FormatType, 1, 4, fp);
 
-		// FMTチャンクを読み込み
-		fread(format.Fmt.FmtID,1,4,fp);
-		fread(&format.Fmt.ChunkSize,1,4,fp);
-		fread(&format.Fmt.FormatType,2,1,fp);
-		fread(&format.Fmt.Channels,2,1,fp);
-		fread(&format.Fmt.SamplesPerSec,4,1,fp);
-		fread(&format.Fmt.BytesPerSec,4,1,fp);
-		fread(&format.Fmt.BlockSize,4,1,fp);
-		fread(&format.Fmt.BitsPerSample,2,1,fp);
+		// fmtチャンクの読み込み
+		fread(format.Fmt.ChunkID, 1, 4, fp);
+		fread(&format.Fmt.ChunkSize, 4, 1, fp);
+		fread(&format.Fmt.FormatType, 2, 1, fp);
+		fread(&format.Fmt.Channels, 2, 1, fp);
+		fread(&format.Fmt.SamplesPerSec, 4, 1, fp);
+		fread(&format.Fmt.BytesPerSec, 4, 1, fp);
+		fread(&format.Fmt.BlockSize, 2, 1, fp);
+		fread(&format.Fmt.BitsPerSample, 2, 1, fp);
 
-		// Dataチャンクの読み込み
-		fread(format.Data.DataID,1,4,fp);
-		fread(&format.Data.DataChunkSize,4,1,fp);
+		// Dataチャンクの読み込み(ただしDataを除く)
+		fread(format.Data.ChunkID, 1, 4, fp);
+		fread(&format.Data.ChunkSize, 4, 1, fp);
 
-		// データチャンクの開始位置
-		format.FirstSampleOffSet = (long)(format.Riff.FileSize - format.Data.DataChunkSize);
+		// 音データまでの移動量(特殊情報は考えない)
+		format.FirstSampleOffSet = 57;
 
 		fclose(fp);
+
+		format.HasGotWaveFormat = true;
 
 		return true;
 
@@ -100,16 +104,16 @@ namespace htAudio
 	/// <summary>
 	/// オーディオバッファー読み込み用の窓口関数
 	/// </summary>
-	bool AudioDecoder::AudioBufferDecoder(void* buf,AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt)
+	bool AudioDecoder::AudioBufferDecoder(void* buf,AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath)
 	{
 		// 拡張子の判断
 		if (type.RIFFType == RIFF_WAV)
 		{
-			return BufferDecoderWav(headerfmt, type,audiodata, buf);
+			return BufferDecoderWav(headerfmt, filepath + type.AudioName + ".wav", type.Loopflag , audiodata, buf);
 		}
 		else if (type.RIFFType == RIFF_OGG)
 		{
-			return BufferDecoderOgg(audiodata, type, buf);
+			return BufferDecoderOgg(audiodata, filepath + type.AudioName + ".ogg", type.Loopflag, buf);
 		}
 
 		// 処理なし
@@ -120,15 +124,15 @@ namespace htAudio
 	/// バッファーの読み込み(.wav)
 	/// </summary>
 	/// <param name="buf"></param>
-	bool AudioDecoder::BufferDecoderOgg(AudioData& audiodata, SoundType type, void* buf)
+	bool AudioDecoder::BufferDecoderOgg(AudioData& audiodata, std::string filename, bool loopflag, void* buf)
 	{
 		unsigned long requestsize = audiodata.ReadBufSize;
 		int bitstream = 0;
 		int readsize = 0;
 		UINT comsize = 0;
 		OggVorbis_File Ovf;
-
-		if (ov_fopen(type.AudioName.c_str(), &Ovf))
+		
+		if (ov_fopen(filename.c_str(), &Ovf))
 		{
 			// Oggファイルオープンの失敗
 			return false;
@@ -143,7 +147,7 @@ namespace htAudio
 			if (readsize == 0)
 			{
 				// ループ処理がある場合は読み込み位置を先頭に戻す。
-				if (type.Loopflag == true)
+				if (loopflag == true)
 				{
 					ov_time_seek(&Ovf,0.0);
 					audiodata.TotalreadBufSize = 0;
@@ -173,7 +177,6 @@ namespace htAudio
 		// 現在の読み込み量を加算
 		audiodata.TotalreadBufSize += comsize;
 		
-
 		return true;
 	}
 
@@ -181,13 +184,19 @@ namespace htAudio
 	/// バッファーの読み込み(.wav)
 	/// </summary>
 	/// <param name="buf"></param>
-	bool AudioDecoder::BufferDecoderWav(AUDIOFILEFORMAT& Format, SoundType type, AudioData& audiodata, void* buf)
+	bool AudioDecoder::BufferDecoderWav(AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
-		if (Format.Fmt.Channels == 1)
+		if (Format.Fmt.Channels == 2)
 		{
-			Mono16WavDecoder(Format,type,audiodata,buf);
+			unsigned long readsample = Mono16WavDecoder(Format, filename, loopflag,audiodata,buf);
+
+			if (readsample > 0)
+			{
+				audiodata.NextFirstSample += readsample;
+				return true;
+			}
 		}
-		else if (Format.Fmt.Channels == 2)
+		else
 		{
 			return false;
 			// 現在は無し
@@ -202,28 +211,37 @@ namespace htAudio
 	/// <param name="audiodata"></param>
 	/// <param name="buf"></param>
 	/// <returns></returns>
-	bool AudioDecoder::Mono16WavDecoder(AUDIOFILEFORMAT& Format, SoundType type, AudioData& audiodata, void* buf)
+	unsigned long AudioDecoder::Mono16WavDecoder(AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
 		// ファイルポインタ
 		FILE* fp;
 
 		// ファイルのオープン
-		fopen_s(&fp, type.AudioName.c_str(),"rb");
+		fopen_s(&fp, filename.c_str(),"rb");
 
 		if (!buf)
-			return false;
+			return 0;
 
 		if (!fp)
-			return false;
+			return 0;
 
-		if (audiodata.NextFirstSample >= Format.DataChunkSample)
-			return false;
+		if (!Format.HasGotWaveFormat)
+			return 0;
 
+		if (audiodata.NextFirstSample >= audiodata.DataChunkSample)
+		{
+			audiodata.NextFirstSample = 0;
+		}
+		else
+		{
+			return false;
+		}
+			
 		size_t actualSamples;
 
-		if ((audiodata.NextFirstSample + audiodata.ReadBufSize) > Format.Data.DataChunkSize)
+		if ((audiodata.NextFirstSample + audiodata.ReadBufSize) > Format.Data.ChunkSize)
 		{
-			actualSamples = Format.DataChunkSample - audiodata.NextFirstSample;
+			actualSamples = audiodata.DataChunkSample - audiodata.NextFirstSample;
 		}
 		else
 		{
@@ -240,8 +258,7 @@ namespace htAudio
 
 		while (readSample < actualSamples)
 		{
-			ret = fread(reinterpret_cast<uint16_t*>(buf) + readSample * Format.Fmt.BlockSize,
-				Format.Fmt.BlockSize, actualSamples - readSample, fp);
+			ret = fread(reinterpret_cast<uint16_t*>(buf) + readSample * Format.Fmt.BlockSize,Format.Fmt.BlockSize, actualSamples - readSample, fp);
 
 			if (ret == 0)
 				break;
@@ -253,6 +270,14 @@ namespace htAudio
 
 		audiodata.BufferSample = ret * Format.Fmt.BlockSize;
 
+		if (readSample == 0)
+		{
+			if (audiodata.NextFirstSample >= audiodata.DataChunkSample && loopflag == true)
+			{
+				// バッファ読み込み終了
+				audiodata.NextFirstSample = 0;
+			}
+		}
 
 		return readSample;
 	}
@@ -325,4 +350,14 @@ namespace htAudio
 		return readSamples;
 	}*/
 
+	//std::size_t CLoadWave::PreloadBuffer()
+	//{
+	//	size_t first = 0;
+	//	size_t last = m_SoundResouce.DataChunkSize;
+	//	PrimaryMixed = std::vector<std::size_t>(last);
+	//	//PrimaryMixed = new std::size_t[last];
+	//	std::size_t readSample = ReadDataRaw((long)first, (long)last, &(PrimaryMixed[0]));
+	//	m_SoundResouce.BufferSample = m_SoundResouce.DataChunkSize;
+	//	return readSample;
+	//}
 }

@@ -8,8 +8,6 @@
 namespace htAudio
 {
 	// ================= ↓グローバル =================== //
-	static std::string ExeDirectory;
-	const static std::string DataPath = "/Data/";
 
 	// ================= ↓定数型 =================== //
 	#define USE_OGG_LIB
@@ -74,23 +72,29 @@ namespace htAudio
 		double Latency;
 	};
 
+	struct DataChunk
+	{
+		unsigned char ChunkID[4];	// fmtチャンク
+		unsigned long ChunkSize;	// データバッファサイズ
+	};
+
 	struct RIFFChunk
 	{
-		unsigned char RIFFID[4];
-		unsigned short FileSize;
-		unsigned char WaveFormatType[4];
+		unsigned char ChunkID[4];
+		unsigned short ChunkSize;
+		unsigned char FormatType[4];
 	};
 
 	struct FormatChunk
 	{
-		unsigned char FmtID[4];			// fmtチャンク
+		unsigned char ChunkID[4];			// fmtチャンク
 		unsigned long ChunkSize;		// fmtチャンクのバイト数
 		unsigned short FormatType;		// PCMの種類
 		unsigned short Channels;		// チャンネル数
 		unsigned long SamplesPerSec;	// サンプリングレート
 		unsigned long BytesPerSec;		// データ転送速度
-		unsigned short  BlockSize;		// ブロックサイズ
-		unsigned short  BitsPerSample;	// サンプルあたりのビット数
+		unsigned short BlockSize;		// ブロックサイズ
+		unsigned short BitsPerSample;	// サンプルあたりのビット数
 	};
 
 	// リスナーコーンのステータス用
@@ -99,13 +103,6 @@ namespace htAudio
 		double ConeOuterGain;	// コーンの外部ゲイン数値
 		double InnerAngle;		// 内部の角度
 		double OuterAngle;		// 外部の角度
-	};
-
-	struct DataChunk
-	{
-		unsigned char DataID[4];	// fmtチャンク
-		unsigned long DataChunkSize;	// データバッファサイズ
-		unsigned long BufData;
 	};
 
 	struct EffectState
@@ -120,7 +117,6 @@ namespace htAudio
 		FormatChunk Fmt;
 		DataChunk Data;
 		long FirstSampleOffSet; // Bufferの開始位置
-		unsigned long DataChunkSample; // サンプリング情報
 		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
 	};
 
@@ -158,6 +154,7 @@ namespace htAudio
 		unsigned long NextFirstSample = { 0 };
 		unsigned long SubmitTimes = { 0 };	// どのバッファを使用するかの判定
 		unsigned long BufferSample = { 0 };
+		long DataChunkSample; // サンプリング情報
 	};
 
 	

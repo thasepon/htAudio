@@ -216,6 +216,13 @@ namespace htAudio
 		// ファイルポインタ
 		FILE* fp;
 
+		long actualSamples = 0;
+		long readSample = 0;
+		long ret = 0;
+
+		long first;	// 読み込み開始位置
+		long end;	// 読み込み終了位置
+		
 		// ファイルのオープン
 		fopen_s(&fp, filename.c_str(),"rb");
 
@@ -228,37 +235,25 @@ namespace htAudio
 		if (!Format.HasGotWaveFormat)
 			return 0;
 
-		if (audiodata.NextFirstSample >= audiodata.DataChunkSample)
+		if (first >  audiodata.DataChunkSample); 
+			return 0;
+
+
+		if (first + end > audiodata.DataChunkSample)
 		{
-			audiodata.NextFirstSample = 0;
+			actualSamples = audiodata.DataChunkSample - first;
 		}
 		else
 		{
-			return false;
+			actualSamples = end;
 		}
-			
-		size_t actualSamples;
-
-		if ((audiodata.NextFirstSample + audiodata.ReadBufSize) > Format.Data.ChunkSize)
-		{
-			actualSamples = audiodata.DataChunkSample - audiodata.NextFirstSample;
-		}
-		else
-		{
-			actualSamples = audiodata.ReadBufSize;
-		}
-
-		if (fseek(fp, Format.FirstSampleOffSet + audiodata.NextFirstSample*Format.Fmt.BlockSize, SEEK_SET) != 0)
-		{
-			return false;
-		}
-
-		unsigned long readSample = 0;
-		unsigned long ret = 0;
-
+		
 		while (readSample < actualSamples)
 		{
-			ret = fread(reinterpret_cast<uint16_t*>(buf) + readSample * Format.Fmt.BlockSize,Format.Fmt.BlockSize, actualSamples - readSample, fp);
+			ret = fread(reinterpret_cast<uint16_t*>(buf) + readSample * Format.Fmt.BlockSize,
+				Format.Fmt.BlockSize,
+				actualSamples - readSample,
+				fp);
 
 			if (ret == 0)
 				break;
@@ -275,6 +270,7 @@ namespace htAudio
 			if (audiodata.NextFirstSample >= audiodata.DataChunkSample && loopflag == true)
 			{
 				// バッファ読み込み終了
+				// ループ用に読み込み位置を初期化
 				audiodata.NextFirstSample = 0;
 			}
 		}

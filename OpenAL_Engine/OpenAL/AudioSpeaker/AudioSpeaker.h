@@ -77,7 +77,6 @@ namespace htAudio
 		std::vector<AudioEffects*> EffectSlot;	// スピーカー適応するエフェクトスロット
 
 		uint16_t StreamBufSize;				// バッファサイズ
-
 	};
 
 }

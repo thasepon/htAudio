@@ -13,21 +13,21 @@
         "id" : 0 ,
         "name" : "TestBGM1",
         "cue" : "Test1",
-        "material" : null,
+        "material" : "",
         "loadtype" : 0,
         "riff" : 0,
         "defaultvolume" : 100,
         "maxvolume" : 100
       },
       {
-        "id" : 1 ,
-        "name" : "TestBGM2",
-        "cue" : "Test1",
-        "material" : null,
-        "loadtype" : 0,
-        "riff" : 0,
-        "defaultvolume" : 70,
-        "maxvolume" : 80
+        "id": 1,
+        "name": "TestBGM1",
+        "cue": "Test1",
+        "material": "Sand",
+        "loadtype": 0,
+        "riff": 0,
+        "defaultvolume": 70,
+        "maxvolume": 80
       }
     ]
   },
@@ -38,14 +38,14 @@
     "loopflag" : false,
     "soundinfo" :[
       {
-        "id" : 0 ,
-        "name" : "TestSE1",
-        "cue" : "Test2",
-        "material" : null,
-        "loadtype" : 1,
-        "riff" : 0,
-        "defaultvolume" : 100,
-        "maxvolume" : 100
+        "id": 0,
+        "name": "TestSE1",
+        "cue": "Test2",
+        "material": "",
+        "loadtype": 1,
+        "riff": 0,
+        "defaultvolume": 100,
+        "maxvolume": 100
       },
       {
         "id" : 1 ,

@@ -54,8 +54,11 @@ namespace htAudio {
 	//
 	AudioSpeaker::~AudioSpeaker()
 	{
-		delete BufferCommand;
-		delete EffectCommand;
+		if(BufferCommand != nullptr)
+			delete BufferCommand;
+		
+		if (EffectCommand != nullptr)
+			delete EffectCommand;
 
 		if (SoundDatas.empty() == true)
 			return;
@@ -254,6 +257,7 @@ namespace htAudio {
 	void AudioSpeaker::DecodeAudioHeader()
 	{
 		AudioDecoder::LoadRIFFFormat(HeaderFormat, SoundDatas[NowUsedNumb], SpeakerCue.Filepath);
+		SpeakerData.DataChunkSample = HeaderFormat.Data.ChunkSize / HeaderFormat.Fmt.BlockSize;
 	}
 
 	/// <summary>
@@ -269,19 +273,19 @@ namespace htAudio {
 
 			if (readSuccessflag == true)
 			{
-				SpeakerData.SubmitTimes = 1;
 				// バッファのセット
 				BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &PrimaryMixed, HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+				SpeakerData.SubmitTimes = 1;
 			}
 		}
-		else if (SpeakerData.SubmitTimes == 0)
+		else if (SpeakerData.SubmitTimes == 1)
 		{
 			readSuccessflag = AudioDecoder::AudioBufferDecoder(&SecondMixed, SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
 
 			if (readSuccessflag == true)
 			{
-				SpeakerData.SubmitTimes = 0;// バッファのセット
 				BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &SecondMixed, HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+				SpeakerData.SubmitTimes = 0;// バッファのセット
 			}
 		}
 	}

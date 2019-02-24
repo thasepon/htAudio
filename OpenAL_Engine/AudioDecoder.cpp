@@ -52,9 +52,6 @@ namespace htAudio
 		format.Fmt.BlockSize = vi->channels * 2;
 		format.Fmt.BitsPerSample = 16;
 		format.Fmt.BytesPerSec = (vi->rate) * (vi->channels * 2);
-		
-		// 未使用
-		format.DataChunkSample = 0;
 
 		return true;
 #endif
@@ -96,7 +93,7 @@ namespace htAudio
 		fclose(fp);
 
 		format.HasGotWaveFormat = true;
-
+		
 		return true;
 
 	}
@@ -184,7 +181,7 @@ namespace htAudio
 	/// バッファーの読み込み(.wav)
 	/// </summary>
 	/// <param name="buf"></param>
-	bool AudioDecoder::BufferDecoderWav(AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	bool AudioDecoder::BufferDecoderWav(const AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
 		if (Format.Fmt.Channels == 2)
 		{
@@ -211,7 +208,7 @@ namespace htAudio
 	/// <param name="audiodata"></param>
 	/// <param name="buf"></param>
 	/// <returns></returns>
-	unsigned long AudioDecoder::Mono16WavDecoder(AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	unsigned long AudioDecoder::Mono16WavDecoder(const AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
 		// ファイルポインタ
 		FILE* fp;
@@ -220,8 +217,8 @@ namespace htAudio
 		long readSample = 0;
 		long ret = 0;
 
-		long first;	// 読み込み開始位置
-		long end;	// 読み込み終了位置
+		long first = audiodata.NextFirstSample;	// 読み込み開始位置
+		long readsize = audiodata.ReadBufSize;	// 読み込み終了位置
 		
 		// ファイルのオープン
 		fopen_s(&fp, filename.c_str(),"rb");
@@ -235,17 +232,13 @@ namespace htAudio
 		if (!Format.HasGotWaveFormat)
 			return 0;
 
-		if (first >  audiodata.DataChunkSample); 
-			return 0;
-
-
-		if (first + end > audiodata.DataChunkSample)
+		if (first + readsize > audiodata.DataChunkSample)
 		{
 			actualSamples = audiodata.DataChunkSample - first;
 		}
 		else
 		{
-			actualSamples = end;
+			actualSamples = readsize;
 		}
 		
 		while (readSample < actualSamples)
@@ -265,13 +258,15 @@ namespace htAudio
 
 		audiodata.BufferSample = ret * Format.Fmt.BlockSize;
 
+		audiodata.NextFirstSample += readSample;
+
 		if (readSample == 0)
 		{
-			if (audiodata.NextFirstSample >= audiodata.DataChunkSample && loopflag == true)
+			if (loopflag == true)
 			{
 				// バッファ読み込み終了
 				// ループ用に読み込み位置を初期化
-				audiodata.NextFirstSample = 0;
+				audiodata.NextFirstSample = 57;
 			}
 		}
 

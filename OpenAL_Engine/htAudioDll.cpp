@@ -61,7 +61,20 @@ using namespace htAudio;
 
 	OpenALDevice* htaCreateDevice()
 	{
-		return Singleton<OpenALDevice>::get_Instance();
+		Singleton<OpenALDevice>::get_Instance();
+
+		bool flah = Singleton<OpenALDevice>::get_Instance()->GetCreateDeviceFlag();
+
+		if (flah == true)
+		{
+			return Singleton<OpenALDevice>::get_Instance();
+		}
+		else
+		{
+			return nullptr;
+		}
+
+
 	}
 
 	// =============================== AudioManager ================================= //

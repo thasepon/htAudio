@@ -52,6 +52,7 @@ namespace htAudio
 		format.Fmt.BlockSize = vi->channels * 2;
 		format.Fmt.BitsPerSample = 16;
 		format.Fmt.BytesPerSec = (vi->rate) * (vi->channels * 2);
+		format.HasGotWaveFormat = true;
 
 		return true;
 #endif
@@ -65,8 +66,11 @@ namespace htAudio
 
 		fopen_s(&fp, filename.c_str(), "rb");
 
-		if (fp == NULL)
+		// オープン失敗
+		if (!fp)
+		{
 			return false;
+		}
 
 		// RIFFチャンクの読み込み
 		fread(format.Riff.ChunkID, 1, 4, fp);
@@ -103,18 +107,20 @@ namespace htAudio
 	/// </summary>
 	bool AudioDecoder::AudioBufferDecoder(void* buf,AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath)
 	{
+		bool loadflag = false;
+
 		// 拡張子の判断
 		if (type.RIFFType == RIFF_WAV)
 		{
-			return BufferDecoderWav(headerfmt, filepath + type.AudioName + ".wav", type.Loopflag , audiodata, buf);
+			loadflag = BufferDecoderWav(headerfmt, filepath + type.AudioName + ".wav", type.Loopflag , audiodata, buf);
 		}
 		else if (type.RIFFType == RIFF_OGG)
 		{
-			return BufferDecoderOgg(audiodata, filepath + type.AudioName + ".ogg", type.Loopflag, buf);
+			loadflag = BufferDecoderOgg(audiodata, filepath + type.AudioName + ".ogg", type.Loopflag, buf);
 		}
 
 		// 処理なし
-		return false;
+		return loadflag;
 	}
 
 	/// <summary>
@@ -181,11 +187,12 @@ namespace htAudio
 	/// バッファーの読み込み(.wav)
 	/// </summary>
 	/// <param name="buf"></param>
-	bool AudioDecoder::BufferDecoderWav(const AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	bool AudioDecoder::BufferDecoderWav(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
 		if (Format.Fmt.Channels == 2)
 		{
-			unsigned long readsample = Mono16WavDecoder(Format, filename, loopflag,audiodata,buf);
+			unsigned long readsample = 0;
+			readsample = Mono16WavDecoder(Format, filename, loopflag, audiodata, buf);
 
 			if (readsample > 0)
 			{
@@ -208,7 +215,7 @@ namespace htAudio
 	/// <param name="audiodata"></param>
 	/// <param name="buf"></param>
 	/// <returns></returns>
-	unsigned long AudioDecoder::Mono16WavDecoder(const AUDIOFILEFORMAT& Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	unsigned long AudioDecoder::Mono16WavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
 		// ファイルポインタ
 		FILE* fp;
@@ -220,19 +227,22 @@ namespace htAudio
 		long first = audiodata.NextFirstSample;	// 読み込み開始位置
 		long readsize = audiodata.ReadBufSize;	// 読み込み終了位置
 		
-		// ファイルのオープン
-		fopen_s(&fp, filename.c_str(),"rb");
-
 		if (!buf)
-			return 0;
-
-		if (!fp)
 			return 0;
 
 		if (!Format.HasGotWaveFormat)
 			return 0;
 
-		if (first + readsize > audiodata.DataChunkSample)
+		// ファイルのオープン
+		fopen_s(&fp, filename.c_str(), "rb");
+
+		if (!fp)
+		{
+			return 0;
+		}
+
+
+		if ((first + readsize) > audiodata.DataChunkSample)
 		{
 			actualSamples = audiodata.DataChunkSample - first;
 		}
@@ -260,9 +270,10 @@ namespace htAudio
 
 		audiodata.NextFirstSample += readSample;
 
+
 		if (readSample == 0)
 		{
-			if (loopflag == true)
+			if (loopflag >= 0)
 			{
 				// バッファ読み込み終了
 				// ループ用に読み込み位置を初期化

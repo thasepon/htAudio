@@ -5,6 +5,13 @@ namespace htAudio {
 
 	AudioListener::AudioListener()
 	{
+		ALfloat listenerPos[] = { 0.0, 0.0, 0.0 };
+		ALfloat listenerVel[] = { 0.0, 0.0, 0.0 };
+		ALfloat listenerOri[] = { 0.0, 0.0, -1.0, 0.0, 1.0, 0.0 };
+
+		alListenerfv(AL_POSITION, listenerPos);
+		alListenerfv(AL_VELOCITY, listenerVel);
+		alListenerfv(AL_ORIENTATION, listenerOri);
 	}
 
 	AudioListener::AudioListener(double* Pos, double* Vec, double* Orient)

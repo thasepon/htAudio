@@ -5,6 +5,7 @@
 #include"AudioReSource.h"
 #include"EffectManager.h"
 #include"SpeakerManager.h"
+#include"AudioDecoder.h"
 
 #include<memory>
 #include<map>

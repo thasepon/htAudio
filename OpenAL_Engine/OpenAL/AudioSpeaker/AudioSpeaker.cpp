@@ -3,7 +3,6 @@
 #include"../AudioFormatData/AudioFormatData.h"
 #include"../../AudioDecoder.h"
 #include"../../EffectManager.h"
-
 #include <algorithm>
 #include<iterator>
 
@@ -15,10 +14,14 @@ namespace htAudio {
 	AudioSpeaker::AudioSpeaker() 
 	{
 		StreamBufSize = 4096;
-		BufferCommand = new SetBufCommand();
-		EffectCommand = new AddEffectCommand();
+		/*BufferCommand = new SetBufCommand();
+		EffectCommand = new AddEffectCommand();*/
 		
+		BufferCommand.reset(new SetBufCommand());
+		EffectCommand.reset(new AddEffectCommand());
+
  		Successinit = true;
+		HeaderFormat.HasGotWaveFormat = false;
 	}
 
 	//
@@ -28,11 +31,16 @@ namespace htAudio {
 	{
 		StreamBufSize = 4096;
 
-		BufferCommand = new SetBufCommand();
-		EffectCommand = new AddEffectCommand();
+		/*BufferCommand = new SetBufCommand();
+		EffectCommand = new AddEffectCommand();*/
+
+		BufferCommand.reset(new SetBufCommand());
+		EffectCommand.reset(new AddEffectCommand());
+
+		Successinit = true;
+		HeaderFormat.HasGotWaveFormat = false;
 
 		SetAudioSorce(filename);
-		Successinit = true;
 	}
 
 	//
@@ -42,11 +50,13 @@ namespace htAudio {
 	{
 		StreamBufSize = 4096;
 
-		BufferCommand = new SetBufCommand();
-		EffectCommand = new AddEffectCommand();
+		BufferCommand.reset(new SetBufCommand());
+		EffectCommand.reset(new AddEffectCommand());
+
+		Successinit = true;
+		HeaderFormat.HasGotWaveFormat = false;
 
 		SetAudioSorce(id);
-		Successinit = true;
 	}
 	
 	//
@@ -54,12 +64,6 @@ namespace htAudio {
 	//
 	AudioSpeaker::~AudioSpeaker()
 	{
-		if(BufferCommand != nullptr)
-			delete BufferCommand;
-		
-		if (EffectCommand != nullptr)
-			delete EffectCommand;
-
 		if (SoundDatas.empty() == true)
 			return;
 
@@ -176,6 +180,7 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::Init()
 	{
+
 		if (SoundDatas[NowUsedNumb].StreamType == PRE_LOAD)
 		{
 			// Preloadタイプ読み込み
@@ -188,13 +193,14 @@ namespace htAudio {
 			// Streamloadタイプ読み込み
 			// 登録バッファは二つ
 			alGenBuffers(2, &Buffers[0]);
+
 			alGenSources(1, &Source);
-			alSourceQueueBuffers(Source, 2, &Buffers[0]);
 			SpeakerData.ReadBufSize = StreamBufSize;
 		}
 
 		// 3d属性の付与
 		alSourcei(Source,AL_SOURCE_RELATIVE,AL_TRUE);
+		
 		DecodeAudioStreamBuffer();
 
 	}
@@ -206,7 +212,7 @@ namespace htAudio {
 	/// <returns></returns>
 	bool AudioSpeaker::Update()
 	{
-		if (SoundDatas.empty())
+		if (HeaderFormat.HasGotWaveFormat == false)
 			return false;
 
 		// バッファの更新
@@ -223,24 +229,8 @@ namespace htAudio {
 		}
 		else if (SoundDatas[NowUsedNumb].StreamType == STREAM_LOAD)
 		{
-			int State = 0;
-
-			// 再生終了バッファの確認
-			alGetSourcei(Source, AL_BUFFERS_PROCESSED, &State);
-
-			// 再生終了バッファが存在する場合
-			if (State > 0)
-			{
-				// バッファのアップデート
-				UpdateBufQue = 0;
-				// バッファのデキュー
-				alSourceUnqueueBuffers(Source, 1, &UpdateBufQue);
-				// バッファの更新
-				DecodeAudioStreamBuffer();
-				// バッファのインキュー
-				alSourceQueueBuffers(Source, 1, &UpdateBufQue);
-			}
-
+			// バッファの更新
+			DecodeAudioStreamBuffer();
 		}
 
 		// エフェクトの更新
@@ -257,7 +247,24 @@ namespace htAudio {
 	void AudioSpeaker::DecodeAudioHeader()
 	{
 		AudioDecoder::LoadRIFFFormat(HeaderFormat, SoundDatas[NowUsedNumb], SpeakerCue.Filepath);
+
 		SpeakerData.DataChunkSample = HeaderFormat.Data.ChunkSize / HeaderFormat.Fmt.BlockSize;
+		SpeakerData.BufferSample = 0;
+		SpeakerData.NextFirstSample = 0;
+		SpeakerData.PlayTime = 0;
+		SpeakerData.ReadBufSize = 0;
+		SpeakerData.SubmitTimes = 0;
+		SpeakerData.TotalreadBufSize = 0;
+
+		if (SoundDatas[NowUsedNumb].StreamType == AudioLoadType::PRE_LOAD)
+		{
+			PrimaryMixed = std::vector<std::size_t>(HeaderFormat.Data.ChunkSize);
+			SecondMixed = std::vector<std::size_t>(0);
+		}
+		else {
+			PrimaryMixed = std::vector<std::size_t>(StreamBufSize);
+			SecondMixed = std::vector<std::size_t>(StreamBufSize);
+		}
 	}
 
 	/// <summary>
@@ -267,25 +274,49 @@ namespace htAudio {
 	{
 		bool readSuccessflag = false; 
 
-		if (SpeakerData.SubmitTimes == 0)
-		{
-			readSuccessflag = AudioDecoder::AudioBufferDecoder(&PrimaryMixed, SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+		int State = 0;
 
-			if (readSuccessflag == true)
+		// 再生終了バッファの確認
+		alGetSourcei(Source, AL_BUFFERS_PROCESSED, &State);
+
+		// 再生終了バッファが存在する場合
+		if (State > 0)
+		{
+			if (SpeakerData.SubmitTimes == 0)
 			{
-				// バッファのセット
-				BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &PrimaryMixed, HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
-				SpeakerData.SubmitTimes = 1;
+				readSuccessflag = AudioDecoder::AudioBufferDecoder(&PrimaryMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+
+				if (readSuccessflag == true)
+				{
+					// バッファのアップデート
+					UpdateBufQue = 0;
+					// バッファのデキュー
+					alSourceUnqueueBuffers(Source, 1, &UpdateBufQue);
+					// バッファの設定
+					BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &PrimaryMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+					// バッファのインキュー
+					alSourceQueueBuffers(Source, 1, &UpdateBufQue);
+					//バッファの移動
+					SpeakerData.SubmitTimes = 1;
+				}
 			}
-		}
-		else if (SpeakerData.SubmitTimes == 1)
-		{
-			readSuccessflag = AudioDecoder::AudioBufferDecoder(&SecondMixed, SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
-
-			if (readSuccessflag == true)
+			else if (SpeakerData.SubmitTimes == 1)
 			{
-				BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &SecondMixed, HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
-				SpeakerData.SubmitTimes = 0;// バッファのセット
+				readSuccessflag = AudioDecoder::AudioBufferDecoder(&SecondMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+
+				if (readSuccessflag == true)
+				{
+					// バッファのアップデート
+					UpdateBufQue = 0;
+					// バッファのデキュー
+					alSourceUnqueueBuffers(Source, 1, &UpdateBufQue);
+					// バッファの設定
+					BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &SecondMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+					// バッファのインキュー
+					alSourceQueueBuffers(Source, 1, &UpdateBufQue);
+					// バッファの移動
+					SpeakerData.SubmitTimes = 0;
+				}
 			}
 		}
 	}

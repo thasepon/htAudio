@@ -7,7 +7,12 @@ namespace htAudio
 	SetBufCommand::~SetBufCommand()
 	{
 	}
-
+	
+	bool SetBufCommand::Execute(int bufNumb, int channel, void* bufdata, int fq, int bufsize)
+	{ 
+		return SetDataBuffer(bufNumb, channel, bufdata, fq, bufsize); 
+	}
+	
 	bool SetBufCommand::SetDataBuffer(int bufNumb, int channel, void* bufdata, int fq, int bufsize) 
 	{
 		// バッファ番号の設定

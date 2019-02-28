@@ -63,16 +63,16 @@ namespace htAudio
 		std::vector<SoundType> SoundDatas;		// XMLから得た情報(複数のデータがあります)
 		AudioCue SpeakerCue;					// XMLから得た情報(単一データ)
 
-		std::vector<char> PrimaryMixed;			// バッファ保存[1]
-		std::vector<char> SecondMixed;			// バッファ保存[2](Preloadの場合は未使用)
+		std::vector<std::size_t> PrimaryMixed;			// バッファ保存[1]
+		std::vector<std::size_t> SecondMixed;			// バッファ保存[2](Preloadの場合は未使用)
 		std::string UseMaterialAtt;				// 現在のマテリアル情報
 
 		ALuint Source;							// Sourceの設定
 		ALuint UpdateBufQue;					// インキューデキューするバッファの選択
 		array<ALuint,2> Buffers;				// バッファの設定
 
-		SetBufCommand* BufferCommand;	// バッファ設定用コマンド
-		AddEffectCommand* EffectCommand;	// エフェクトコマンド
+		std::shared_ptr <SetBufCommand> BufferCommand;	// バッファ設定用コマンド
+		std::shared_ptr <AddEffectCommand> EffectCommand;	// エフェクトコマンド
 
 		std::vector<AudioEffects*> EffectSlot;	// スピーカー適応するエフェクトスロット
 

@@ -68,7 +68,6 @@ namespace htAudio
 
 		while (true)
 		{
-
 			if (fseek(fp, offset, SEEK_SET) != 0)
 				break;
 

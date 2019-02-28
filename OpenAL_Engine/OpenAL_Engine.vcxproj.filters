@@ -70,9 +70,6 @@
     <Filter Include="IOStream">
       <UniqueIdentifier>{7eb5ab9d-d808-406f-88df-b86a456826f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AudioListener">
-      <UniqueIdentifier>{46c9bb20-f482-421f-99a6-195af5910a69}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AudioSpeaker">
       <UniqueIdentifier>{b3def917-b2db-4fff-ba62-b8b373d956ab}</UniqueIdentifier>
     </Filter>
@@ -147,6 +144,9 @@
     </Filter>
     <Filter Include="Singleton">
       <UniqueIdentifier>{5af6a0ff-a7e2-498a-9659-68e6791fb5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AudioListener">
+      <UniqueIdentifier>{46c9bb20-f482-421f-99a6-195af5910a69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

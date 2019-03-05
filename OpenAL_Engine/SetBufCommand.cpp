@@ -10,7 +10,11 @@ namespace htAudio
 	
 	bool SetBufCommand::Execute(int bufNumb, int channel, void* bufdata, int fq, int bufsize)
 	{ 
-		return SetDataBuffer(bufNumb, channel, bufdata, fq, bufsize); 
+		bool flag = false;
+
+		flag = SetDataBuffer(bufNumb, channel, bufdata, fq, bufsize);
+
+		return  flag;
 	}
 	
 	bool SetBufCommand::SetDataBuffer(int bufNumb, int channel, void* bufdata, int fq, int bufsize) 
@@ -32,7 +36,7 @@ namespace htAudio
 		{
 			format = AL_FORMAT_MONO16;
 		}
-		else
+		else if (channel == 2)
 		{
 			format = AL_FORMAT_STEREO16;
 		}

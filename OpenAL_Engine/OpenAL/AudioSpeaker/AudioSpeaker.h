@@ -68,7 +68,7 @@ namespace htAudio
 		std::string UseMaterialAtt;				// 現在のマテリアル情報
 
 		ALuint Source;							// Sourceの設定
-		ALuint UpdateBufQue;					// インキューデキューするバッファの選択
+		//ALuint UpdateBufQue;					// インキューデキューするバッファの選択
 		array<ALuint,2> Buffers;				// バッファの設定
 
 		std::shared_ptr <SetBufCommand> BufferCommand;	// バッファ設定用コマンド
@@ -77,6 +77,9 @@ namespace htAudio
 		std::vector<AudioEffects*> EffectSlot;	// スピーカー適応するエフェクトスロット
 
 		uint16_t StreamBufSize;				// バッファサイズ
+
+		bool bufsetflag = false;
+
 	};
 
 }

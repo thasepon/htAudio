@@ -20,7 +20,12 @@ namespace htAudio {
 		if (TimeCtrlCmd() == false)
 			return false;
 
-		return Play(OrderFmt.SourceID); 
+		//Play(OrderFmt.SourceID);
+
+		ALuint _source = (ALuint)OrderFmt.SourceID;
+		alSourcePlay(_source);
+
+		return true;
 	}
 
 	/// <summary>

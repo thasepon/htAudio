@@ -17,7 +17,7 @@ extern "C" {
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeleteInstance();
 
 	// デバイス
-	UNITY_INTERFACE_EXPORT OpenALDevice* UNITY_INTERFACE_API htaCreateDevice();
+	//UNITY_INTERFACE_EXPORT OpenALDevice* UNITY_INTERFACE_API htaCreateDevice();
 	
 	// マネージャー
 	UNITY_INTERFACE_EXPORT AudioManager* UNITY_INTERFACE_API htaCreateManager();

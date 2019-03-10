@@ -41,6 +41,7 @@ namespace htAudio
 		if (ov_fopen(filename.c_str(), &Ovf))
 		{
 			// Oggファイルオープンの失敗
+			printf("ヘッダー情報の読み取りに失敗しました");
 			return false;
 		}
 
@@ -69,27 +70,55 @@ namespace htAudio
 		// オープン失敗
 		if (!fp)
 		{
+			printf("ヘッダー情報の読み取りに失敗しました");
 			return false;
 		}
 
-		// RIFFチャンクの読み込み
-		fread(format.Riff.ChunkID, 1, 4, fp);
-		fread(&format.Riff.ChunkSize, 4, 1, fp);
-		fread(format.Riff.FormatType, 1, 4, fp);
+		long offset = 0;
 
-		// fmtチャンクの読み込み
-		fread(format.Fmt.ChunkID, 1, 4, fp);
-		fread(&format.Fmt.ChunkSize, 4, 1, fp);
-		fread(&format.Fmt.FormatType, 2, 1, fp);
-		fread(&format.Fmt.Channels, 2, 1, fp);
-		fread(&format.Fmt.SamplesPerSec, 4, 1, fp);
-		fread(&format.Fmt.BytesPerSec, 4, 1, fp);
-		fread(&format.Fmt.BlockSize, 2, 1, fp);
-		fread(&format.Fmt.BitsPerSample, 2, 1, fp);
+		while (true)
+		{
+			char chunksignature[4] = { 0 };
+			std::size_t readChar = 0;
+			std::size_t readSize = 0;
+			uint32_t chunksize = 0;
 
-		// Dataチャンクの読み込み(ただしDataを除く)
-		fread(format.Data.ChunkID, 1, 4, fp);
-		fread(&format.Data.ChunkSize, 4, 1, fp);
+			if (fread(chunksignature, 4, 1, fp) == 0)
+			{
+				break;
+			}
+
+			offset += 4;
+
+			if (strncmp(chunksignature, "RIFF ", 4) == 0)
+			{
+				// RIFFチャンクの読み込み
+				strcpy(format.Riff.ChunkID, chunksignature);
+				offset += fread(&format.Riff.ChunkSize, 4, 1, fp);
+				offset += fread(format.Riff.FormatType, 4, 1, fp);
+			}
+
+			if (strncmp(chunksignature, "fmt ", 4) == 0)
+			{
+				// fmtチャンクの読み込み
+				strcpy(format.Fmt.ChunkID, chunksignature);
+				offset += fread(&format.Fmt.ChunkSize, 4, 1, fp);
+				offset += fread(&format.Fmt.FormatType, 2, 1, fp);
+				offset += fread(&format.Fmt.Channels, 2, 1, fp);
+				offset += fread(&format.Fmt.SamplesPerSec, 4, 1, fp);
+				offset += fread(&format.Fmt.BytesPerSec, 4, 1, fp);
+				offset += fread(&format.Fmt.BlockSize, 2, 1, fp);
+				offset += fread(&format.Fmt.BitsPerSample, 2, 1, fp);
+			}
+
+			if (strncmp(chunksignature, "data", 4) == 0)
+			{
+				// Dataチャンクの読み込み(ただしDataを除く)
+				strcpy(format.Data.ChunkID, chunksignature);
+				offset += fread(&format.Data.ChunkSize, 4, 1, fp);
+			}
+
+		}
 
 		// 音データまでの移動量(特殊情報は考えない)
 		format.FirstSampleOffSet = 57;
@@ -138,6 +167,7 @@ namespace htAudio
 		if (ov_fopen(filename.c_str(), &Ovf))
 		{
 			// Oggファイルオープンの失敗
+			printf("サウンドファイルの読み取りに失敗しました");
 			return false;
 		}
 
@@ -238,6 +268,7 @@ namespace htAudio
 
 		if (!fp)
 		{
+			printf("サウンドファイルの読み取りに失敗しました");
 			return 0;
 		}
 
@@ -253,10 +284,12 @@ namespace htAudio
 		
 		while (readSample < actualSamples)
 		{
-			ret = fread(reinterpret_cast<uint16_t*>(buf) + readSample * Format.Fmt.BlockSize,
+			ret = fread(
+				reinterpret_cast<uint16_t*>(buf) + readSample * Format.Fmt.BlockSize,
 				Format.Fmt.BlockSize,
 				actualSamples - readSample,
-				fp);
+				fp
+			);
 
 			if (ret == 0)
 				break;

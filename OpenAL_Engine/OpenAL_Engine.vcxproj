@@ -104,8 +104,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\DLL\include;$(LibraryPath);$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\DLL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\DLL\include;$(LibraryPath);C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\DLL\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -115,8 +115,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)\DLL\include;$(LibraryPath);$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\DLL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\DLL\include;$(LibraryPath);C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\DLL\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -268,6 +268,7 @@
     <ClInclude Include="ChronoTimer.h" />
     <ClInclude Include="Cone.h" />
     <ClInclude Include="CreateSourceCommand.h" />
+    <ClInclude Include="DebugConsole.h" />
     <ClInclude Include="Definclude.h" />
     <ClInclude Include="DistortionEffect.h" />
     <ClInclude Include="EchoEffect.h" />
@@ -295,6 +296,7 @@
     <ClInclude Include="StopCommand.h" />
     <ClInclude Include="StopOrder.h" />
     <ClInclude Include="WahEffect.h" />
+    <ClInclude Include="XAudio2Device.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddEffectCommand.cpp" />
@@ -310,6 +312,7 @@
     <ClCompile Include="ChronoTimer.cpp" />
     <ClCompile Include="Cone.cpp" />
     <ClCompile Include="CreateSourceCommand.cpp" />
+    <ClCompile Include="DebugConsole.cpp" />
     <ClCompile Include="DistortionEffect.cpp" />
     <ClCompile Include="EchoEffect.cpp" />
     <ClCompile Include="EffectManager.cpp" />
@@ -336,6 +339,7 @@
     <ClCompile Include="StopCommand.cpp" />
     <ClCompile Include="StopOrder.cpp" />
     <ClCompile Include="WahEffect.cpp" />
+    <ClCompile Include="XAudio2Device.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

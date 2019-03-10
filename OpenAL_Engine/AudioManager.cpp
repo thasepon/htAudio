@@ -6,7 +6,7 @@
 
 namespace htAudio {
 
-	static thread UpdateThread;						// 非同期更新用
+	
 
 	/// <summary>
 	/// AudioMgrの作成と更新スレッドの開始
@@ -18,6 +18,9 @@ namespace htAudio {
 		ResourcePtr = new AudioReSource();
 		EffectElementMgrPtr = new EffectManager();
 		SpeakerMgrPtr = new SpeakerManager();
+
+		DConsolePtr.reset(new DebugConsole());
+		
 		// Updateのスレッド化
 		UpdateThread = std::thread(&AudioManager::ThreadUpdate , this);
 	}
@@ -50,6 +53,7 @@ namespace htAudio {
 		{
 			SpeakerMgrPtr->SpeakerUpdate();
 		}
+
 	}
 
 	//

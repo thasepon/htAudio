@@ -20,10 +20,7 @@ namespace htAudio {
 		if (TimeCtrlCmd() == false)
 			return false;
 
-		//Play(OrderFmt.SourceID);
-
-		ALuint _source = (ALuint)OrderFmt.SourceID;
-		alSourcePlay(_source);
+		Play(OrderFmt.SourceID);
 
 		return true;
 	}
@@ -35,8 +32,17 @@ namespace htAudio {
 	/// <returns></returns>
 	bool PlayCommand::Play(int source)
 	{
+		if (alIsSource(source) == false)
+		{
+			printf("%d ソースが有効ではありません。\n", source);
+			return false;
+		}
+
 		ALuint _source = (ALuint)source;
 		alSourcePlay(_source);
+
+		printf("%d を再生します。\n", source);
+
 		return true;
 	}
 

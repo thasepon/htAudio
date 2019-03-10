@@ -19,9 +19,6 @@
     <Filter Include="Effect">
       <UniqueIdentifier>{a3d9b680-e63a-4c82-a828-e2e24185ef80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OpenAL">
-      <UniqueIdentifier>{bc3760fe-3d08-4a0b-84dc-2201660accd6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Effect\Base">
       <UniqueIdentifier>{e8f3f16a-a97b-4145-80b9-b17401d8d3a0}</UniqueIdentifier>
     </Filter>
@@ -148,13 +145,25 @@
     <Filter Include="AudioListener">
       <UniqueIdentifier>{46c9bb20-f482-421f-99a6-195af5910a69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{d3ded1df-4152-42bb-866e-927d15d5cdca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\OpenAL">
+      <UniqueIdentifier>{bc3760fe-3d08-4a0b-84dc-2201660accd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\XAudio2">
+      <UniqueIdentifier>{5a0b821f-015b-487d-b38f-45038c800fb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{39344673-9f7f-4994-98cd-4ebe10ebcdc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="htAudioDll.h">
       <Filter>htAudioDll</Filter>
     </ClInclude>
     <ClInclude Include="OpenAL\OpenAlCore\OpenALDevice.h">
-      <Filter>OpenAL</Filter>
+      <Filter>Device\OpenAL</Filter>
     </ClInclude>
     <ClInclude Include="AudioEffects.h">
       <Filter>Effect\Base</Filter>
@@ -273,13 +282,19 @@
     <ClInclude Include="Singleton.h">
       <Filter>Singleton</Filter>
     </ClInclude>
+    <ClInclude Include="XAudio2Device.h">
+      <Filter>Device\XAudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugConsole.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="htAudioDll.cpp">
       <Filter>htAudioDll</Filter>
     </ClCompile>
     <ClCompile Include="OpenAL\OpenAlCore\OpenALDevice.cpp">
-      <Filter>OpenAL</Filter>
+      <Filter>Device\OpenAL</Filter>
     </ClCompile>
     <ClCompile Include="AudioEffects.cpp">
       <Filter>Effect\Base</Filter>
@@ -391,6 +406,12 @@
     </ClCompile>
     <ClCompile Include="Singleton.cpp">
       <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="XAudio2Device.cpp">
+      <Filter>Device\XAudio2</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugConsole.cpp">
+      <Filter>Debug</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

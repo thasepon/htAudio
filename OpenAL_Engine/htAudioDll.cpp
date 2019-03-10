@@ -59,7 +59,7 @@ using namespace htAudio;
 	}*/
 	
 
-	OpenALDevice* htaCreateDevice()
+	/*OpenALDevice* htaCreateDevice()
 	{
 		Singleton<OpenALDevice>::get_Instance();
 
@@ -75,7 +75,7 @@ using namespace htAudio;
 		}
 
 
-	}
+	}*/
 
 	// =============================== AudioManager ================================= //
 	
@@ -104,6 +104,7 @@ using namespace htAudio;
 
 	AudioManager* htaCreateManager()
 	{
+		Singleton<OpenALDevice>::get_Instance();
 		return Singleton<AudioManager>::get_Instance();
 	}
 

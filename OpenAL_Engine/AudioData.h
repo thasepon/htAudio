@@ -74,20 +74,20 @@ namespace htAudio
 
 	struct DataChunk
 	{
-		unsigned char ChunkID[4];	// fmtチャンク
+		char ChunkID[4];	// fmtチャンク
 		unsigned long ChunkSize;	// データバッファサイズ
 	};
 
 	struct RIFFChunk
 	{
-		unsigned char ChunkID[4];
+		char ChunkID[4];
 		unsigned short ChunkSize;
 		unsigned char FormatType[4];
 	};
 
 	struct FormatChunk
 	{
-		unsigned char ChunkID[4];			// fmtチャンク
+		char ChunkID[4];			// fmtチャンク
 		unsigned long ChunkSize;		// fmtチャンクのバイト数
 		unsigned short FormatType;		// PCMの種類
 		unsigned short Channels;		// チャンネル数

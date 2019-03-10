@@ -186,8 +186,8 @@ namespace htAudio {
 		}else{
 			// Streamloadタイプ読み込み
 			// 登録バッファは二つ
-			alGenBuffers(2, &Buffers[0]);
 			alGenSources(1, &Source);
+			alGenBuffers(2, &Buffers[0]);
 			SpeakerData.ReadBufSize = StreamBufSize;
 			bufsetflag = BufferCommand->Execute(Buffers[0], HeaderFormat.Fmt.Channels, &PrimaryMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
 			bufsetflag = BufferCommand->Execute(Buffers[1], HeaderFormat.Fmt.Channels, &SecondMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
@@ -196,15 +196,21 @@ namespace htAudio {
 			readSuccessflag = AudioDecoder::AudioBufferDecoder(&PrimaryMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
 			if (readSuccessflag == true)
 			{
-				BufferCommand->Execute(Buffers[0], HeaderFormat.Fmt.Channels, &PrimaryMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
-				//バッファの移動
+				// バッファのアップデート
+				ALuint UpdateBufQue = 0;
+				// バッファのデキュー
+				alSourceUnqueueBuffers(Source, 1, &UpdateBufQue);
+				// バッファの設定
+				BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &PrimaryMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+				// バッファのインキュー
+				alSourceQueueBuffers(Source, 1, &UpdateBufQue);
+				// バッファの移動
 				SpeakerData.SubmitTimes = 1;
 			}
 		}
 
 		// 3d属性の付与
-		alSourcei(Source,AL_SOURCE_RELATIVE,AL_FALSE);
-
+		alSourcei(Source,AL_SOURCE_RELATIVE,AL_TRUE);
 	}
 
 	/// <summary>
@@ -217,11 +223,12 @@ namespace htAudio {
 		if (HeaderFormat.HasGotWaveFormat == false)
 			return false;
 
+		int State = 0;
+		alGetSourcei(Source, AL_SOURCE_STATE, &State);
+
 		// バッファの更新
 		if (SoundDatas[NowUsedNumb].StreamType == PRE_LOAD)
 		{
-			int State = 0;
-
 			alGetSourcei(Source, AL_SOURCE_STATE, &State);
 			
 			if (State != AL_PLAYING && SpeakerCue.Loopflag == 1)
@@ -235,11 +242,14 @@ namespace htAudio {
 			DecodeAudioStreamBuffer();
 		}
 
-		// エフェクトの更新
-		for(auto itr : EffectSlot) {
-			itr->Update();
-		};
-		
+		if (!EffectSlot.empty())
+		{
+			// エフェクトの更新
+			for (auto itr : EffectSlot) {
+				itr->Update();
+			};
+		}
+
 		return true;
 	}
 
@@ -260,12 +270,12 @@ namespace htAudio {
 
 		if (SoundDatas[NowUsedNumb].StreamType == AudioLoadType::PRE_LOAD)
 		{
-			PrimaryMixed = std::vector<std::size_t>(HeaderFormat.Data.ChunkSize);
+			PrimaryMixed = std::vector<std::size_t>(HeaderFormat.Data.ChunkSize * 2);
 			SecondMixed = std::vector<std::size_t>(0);
 		}
 		else {
-			PrimaryMixed = std::vector<std::size_t>(StreamBufSize);
-			SecondMixed = std::vector<std::size_t>(StreamBufSize);
+			PrimaryMixed = std::vector<std::size_t>(StreamBufSize*2);
+			SecondMixed = std::vector<std::size_t>(StreamBufSize * 2);
 		}
 	}
 
@@ -276,7 +286,7 @@ namespace htAudio {
 	{
 		bool readSuccessflag = false; 
 
-		int State = 0;
+		ALint State = 0;
 
 		// 再生終了バッファの確認
 		alGetSourcei(Source, AL_BUFFERS_PROCESSED, &State);
@@ -284,40 +294,45 @@ namespace htAudio {
 		// 再生終了バッファが存在する場合
 		if (State > 0)
 		{
+			printf("%d\n", SpeakerData.NextFirstSample);
+
 			if (SpeakerData.SubmitTimes == 0)
 			{
+				PrimaryMixed.clear();
+				PrimaryMixed = std::vector<std::size_t>(StreamBufSize * 2);
 				readSuccessflag = AudioDecoder::AudioBufferDecoder(&PrimaryMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
 
 				if (readSuccessflag == true)
 				{
 					// バッファのアップデート
-					//UpdateBufQue = 0;
+					ALuint UpdateBufQue = 0;
 					// バッファのデキュー
-					//alSourceUnqueueBuffers(Source, 1, &UpdateBufQue);
+					alSourceUnqueueBuffers(Source, 1, &UpdateBufQue);
 					// バッファの設定
-					//BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &PrimaryMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+					BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &PrimaryMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
 					// バッファのインキュー
-					//alSourceQueueBuffers(Source, 1, &UpdateBufQue);
-					BufferCommand->Execute(Buffers[0], HeaderFormat.Fmt.Channels, &SecondMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
-					//バッファの移動
+					alSourceQueueBuffers(Source, 1, &UpdateBufQue);
+					// バッファの移動
 					SpeakerData.SubmitTimes = 1;
+					
 				}
 			}
 			else if (SpeakerData.SubmitTimes == 1)
 			{
+				SecondMixed.clear();
+				SecondMixed = std::vector<std::size_t>(StreamBufSize * 2);
 				readSuccessflag = AudioDecoder::AudioBufferDecoder(&SecondMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
 
 				if (readSuccessflag == true)
 				{
 					// バッファのアップデート
-					//UpdateBufQue = 0;
+					ALuint UpdateBufQue = 0;
 					// バッファのデキュー
-					//alSourceUnqueueBuffers(Source, 1, &UpdateBufQue);
+					alSourceUnqueueBuffers(Source, 1, &UpdateBufQue);
 					// バッファの設定
-					//BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &SecondMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+					BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &SecondMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
 					// バッファのインキュー
-					//alSourceQueueBuffers(Source, 1, &UpdateBufQue);
-					BufferCommand->Execute(Buffers[1], HeaderFormat.Fmt.Channels, &SecondMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+					alSourceQueueBuffers(Source, 1, &UpdateBufQue);
 					// バッファの移動
 					SpeakerData.SubmitTimes = 0;
 				}

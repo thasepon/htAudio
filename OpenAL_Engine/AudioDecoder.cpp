@@ -219,8 +219,22 @@ namespace htAudio
 	/// <param name="buf"></param>
 	bool AudioDecoder::BufferDecoderWav(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
+		// 8bitは考えません
+		if (!buf)
+		{
+			printf("バッファのサイズの確保不足");
+			return 0;
+		}
+
+		if (!Format.HasGotWaveFormat)
+		{
+			printf("初期化に終了していません");
+			return 0;
+		}
+
 		if (Format.Fmt.Channels == 2)
 		{
+			// Stereo16bit
 			unsigned long readsample = 0;
 			readsample = Mono16WavDecoder(Format, filename, loopflag, audiodata, buf);
 
@@ -230,39 +244,38 @@ namespace htAudio
 				return true;
 			}
 		}
-		else
+		else if (Format.Fmt.Channels == 1)
 		{
+			// Mono16bit
+			unsigned long readsample = 0;
+			readsample = Stereo16WavDecoder(Format, filename, loopflag, audiodata, buf);
+
+			if (readsample > 0)
+			{
+				audiodata.NextFirstSample += readsample;
+				return true;
+			}
+
 			return false;
-			// 現在は無し
 		}
 
 		return false;
 	}
 
 	/// <summary>
-	/// 16bitモノラルで作られているwavファイルの読み込み
+	/// wavファイルの読み込み
 	/// </summary>
 	/// <param name="audiodata"></param>
 	/// <param name="buf"></param>
 	/// <returns></returns>
 	unsigned long AudioDecoder::Mono16WavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
-		// ファイルポインタ
-		FILE* fp;
 
-		long actualSamples = 0;
-		long readSample = 0;
-		long ret = 0;
-
+		FILE* fp = nullptr;						// ファイルポインタ
+		long readSample = 0;					// 今回の読み込み量
 		long first = audiodata.NextFirstSample;	// 読み込み開始位置
-		long readsize = audiodata.ReadBufSize;	// 読み込み終了位置
+		long readsize = audiodata.ReadBufSize;	// 読み込みサイズ
 		
-		if (!buf)
-			return 0;
-
-		if (!Format.HasGotWaveFormat)
-			return 0;
-
 		// ファイルのオープン
 		fopen_s(&fp, filename.c_str(), "rb");
 
@@ -273,37 +286,12 @@ namespace htAudio
 		}
 
 
-		if ((first + readsize) > audiodata.DataChunkSample)
-		{
-			actualSamples = audiodata.DataChunkSample - first;
-		}
-		else
-		{
-			actualSamples = readsize;
-		}
-		
-		while (readSample < actualSamples)
-		{
-			ret = fread(
-				reinterpret_cast<uint16_t*>(buf) + readSample * Format.Fmt.BlockSize,
-				Format.Fmt.BlockSize,
-				actualSamples - readSample,
-				fp
-			);
-
-			if (ret == 0)
-				break;
-
-			readSample += ret;
-		}
 
 		fclose(fp);
 
-		audiodata.BufferSample = ret * Format.Fmt.BlockSize;
+		// 終了処理
 
-		audiodata.NextFirstSample += readSample;
-
-
+		// ループ処理
 		if (readSample == 0)
 		{
 			if (loopflag >= 0)
@@ -317,82 +305,44 @@ namespace htAudio
 		return readSample;
 	}
 
-	//====================================
-	//	Data部分の取得
-	//	ステレオ読み込みだけど使う予定がないのでこれで
-	//	以前の状態を変更かけないでコピーしてきた
-	//====================================
-	/*std::size_t Streo16WavDecoder(long first, long end, float* left, float* right)
+	unsigned long AudioDecoder::Stereo16WavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
-		FILE* fp;
+		FILE* fp = nullptr;						// ファイルポインタ
+		long readSample = 0;					// 今回の読み込み量
+		long first = audiodata.NextFirstSample;	// 読み込み開始位置
+		long readsize = audiodata.ReadBufSize;	// 読み込みサイズ
 
-		fopen_s(&fp, m_SoundResouce.PresetSoundName.c_str(), "rb");
+		// ファイルのオープン
+		fopen_s(&fp, filename.c_str(), "rb");
 
 		if (!fp)
-			return 0;
-
-		if (!m_SoundResouce.HasGotWaveFormat)
-			return 0;
-
-		if (first >= m_SoundResouce.DataChunkSample)
-			return 0;
-
-		std::size_t actualSamples = first + end > m_SoundResouce.DataChunkSample ? m_SoundResouce.DataChunkSample - first : end;
-
-		if (fseek(fp, m_SoundResouce.firstSampleOffSet + first * m_SoundResouce.Format.nBlockAlign, SEEK_SET) != 0)
-			return 0;
-
-		std::size_t readSamples = 0;
-
-		for (; readSamples < actualSamples; ++readSamples)
 		{
-			// 1 サンプル読み込み
-			uint32_t data[2];
-			std::size_t ret = fread(data, m_SoundResouce.Format.nBlockAlign, 1, fp);	// Warning: 3 チャンネル以上が来るとバッファオーバーラン
-			if (ret == 0) break;
-
-			
-			// 16bit signed: -32768...0...32767
-			
-			int16_t * data_s16 = reinterpret_cast<int16_t *>(data);
-			if (m_SoundResouce.Format.nChannels == 1)
-			{
-				float l = (data_s16[0] < 0) ? static_cast<float>(data_s16[0]) / 32768.0f :
-					static_cast<float>(data_s16[0]) / 32767.0f;
-				left[readSamples] = l;
-				if (right) right[readSamples] = l;
-			}
-			else
-			{
-				float l = (data_s16[0] < 0) ? static_cast<float>(data_s16[0]) / 32768.0f :
-					static_cast<float>(data_s16[0]) / 32767.0f;
-				float r = (data_s16[1] < 0) ? static_cast<float>(data_s16[1]) / 32768.0f :
-					static_cast<float>(data_s16[1]) / 32767.0f;
-				if (right)
-				{
-					left[readSamples] = l;
-					right[readSamples] = r;
-				}
-				else
-				{
-					left[readSamples] = (l + r) * 0.5f;
-				}
-			}
-			
-			break;
-			
+			printf("サウンドファイルの読み取りに失敗しました");
+			return 0;
 		}
-		return readSamples;
-	}*/
 
-	//std::size_t CLoadWave::PreloadBuffer()
-	//{
-	//	size_t first = 0;
-	//	size_t last = m_SoundResouce.DataChunkSize;
-	//	PrimaryMixed = std::vector<std::size_t>(last);
-	//	//PrimaryMixed = new std::size_t[last];
-	//	std::size_t readSample = ReadDataRaw((long)first, (long)last, &(PrimaryMixed[0]));
-	//	m_SoundResouce.BufferSample = m_SoundResouce.DataChunkSize;
-	//	return readSample;
-	//}
+
+
+		fclose(fp);
+
+		// 終了処理
+
+		// ループ処理
+		if (readSample == 0)
+		{
+			if (loopflag >= 0)
+			{
+				// バッファ読み込み終了
+				// ループ用に読み込み位置を初期化
+				audiodata.NextFirstSample = 57;
+			}
+		}
+
+		return readSample;
+	}
+	
+	unsigned long AudioDecoder::PreloadBuffer(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	{
+		
+	}
 }

@@ -286,6 +286,13 @@ namespace htAudio
 		}
 
 
+		// フォーマット	１バイト目	２バイト目	３バイト目	４バイト目
+		// 16ビット　モノラル	右チャンネル
+		while (readSample < readsize)
+		{
+
+		}
+
 
 		fclose(fp);
 
@@ -298,7 +305,6 @@ namespace htAudio
 			{
 				// バッファ読み込み終了
 				// ループ用に読み込み位置を初期化
-				audiodata.NextFirstSample = 57;
 			}
 		}
 
@@ -321,12 +327,18 @@ namespace htAudio
 			return 0;
 		}
 
+		// フォーマット	１バイト目	２バイト目	３バイト目	４バイト目
+		// 16ビット　ステレオ	右チャンネ			左チャンネル
+		while (readSample < readsize)
+		{
 
+		}
 
-		fclose(fp);
 
 		// 終了処理
+		fclose(fp);
 
+		
 		// ループ処理
 		if (readSample == 0)
 		{
@@ -334,7 +346,6 @@ namespace htAudio
 			{
 				// バッファ読み込み終了
 				// ループ用に読み込み位置を初期化
-				audiodata.NextFirstSample = 57;
 			}
 		}
 

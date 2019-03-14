@@ -232,33 +232,16 @@ namespace htAudio
 			return 0;
 		}
 
-		if (Format.Fmt.Channels == 2)
+		// Stereo16bit
+		unsigned long readsample = 0;
+		readsample = StreamWavDecoder(Format, filename, loopflag, audiodata, buf);
+
+		if (readsample > 0)
 		{
-			// Stereo16bit
-			unsigned long readsample = 0;
-			readsample = Mono16WavDecoder(Format, filename, loopflag, audiodata, buf);
-
-			if (readsample > 0)
-			{
-				audiodata.NextFirstSample += readsample;
-				return true;
-			}
+			audiodata.NextFirstSample += readsample;
+			return true;
 		}
-		else if (Format.Fmt.Channels == 1)
-		{
-			// Mono16bit
-			unsigned long readsample = 0;
-			readsample = Stereo16WavDecoder(Format, filename, loopflag, audiodata, buf);
-
-			if (readsample > 0)
-			{
-				audiodata.NextFirstSample += readsample;
-				return true;
-			}
-
-			return false;
-		}
-
+		
 		return false;
 	}
 
@@ -268,13 +251,14 @@ namespace htAudio
 	/// <param name="audiodata"></param>
 	/// <param name="buf"></param>
 	/// <returns></returns>
-	unsigned long AudioDecoder::Mono16WavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	unsigned long AudioDecoder::StreamWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
 
 		FILE* fp = nullptr;						// ファイルポインタ
 		long readSample = 0;					// 今回の読み込み量
 		long first = audiodata.NextFirstSample;	// 読み込み開始位置
 		long readsize = audiodata.ReadBufSize;	// 読み込みサイズ
+		long samplesize = 0;
 		
 		// ファイルのオープン
 		fopen_s(&fp, filename.c_str(), "rb");
@@ -285,18 +269,39 @@ namespace htAudio
 			return 0;
 		}
 
-
 		// フォーマット	１バイト目	２バイト目	３バイト目	４バイト目
 		// 16ビット　モノラル	右チャンネル
 		while (readSample < readsize)
 		{
+			switch (Format.Fmt.Channels)
+			{
 
+			case 1:
+				fread(
+					reinterpret_cast<int16_t*>(buf) + readSample * Format.Fmt.BlockSize,
+					Format.Fmt.BlockSize,
+					readsize - readSample,
+					fp);
+				break;
+
+			case 2:
+				break;
+
+			default:
+				break;
+
+			}
+
+			// 読み込めなかった場合の処理
+			if (samplesize == 0)
+				break;
+
+			readSample += samplesize;
 		}
 
 
-		fclose(fp);
-
 		// 終了処理
+		fclose(fp);
 
 		// ループ処理
 		if (readSample == 0)
@@ -311,48 +316,7 @@ namespace htAudio
 		return readSample;
 	}
 
-	unsigned long AudioDecoder::Stereo16WavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
-	{
-		FILE* fp = nullptr;						// ファイルポインタ
-		long readSample = 0;					// 今回の読み込み量
-		long first = audiodata.NextFirstSample;	// 読み込み開始位置
-		long readsize = audiodata.ReadBufSize;	// 読み込みサイズ
-
-		// ファイルのオープン
-		fopen_s(&fp, filename.c_str(), "rb");
-
-		if (!fp)
-		{
-			printf("サウンドファイルの読み取りに失敗しました");
-			return 0;
-		}
-
-		// フォーマット	１バイト目	２バイト目	３バイト目	４バイト目
-		// 16ビット　ステレオ	右チャンネ			左チャンネル
-		while (readSample < readsize)
-		{
-
-		}
-
-
-		// 終了処理
-		fclose(fp);
-
-		
-		// ループ処理
-		if (readSample == 0)
-		{
-			if (loopflag >= 0)
-			{
-				// バッファ読み込み終了
-				// ループ用に読み込み位置を初期化
-			}
-		}
-
-		return readSample;
-	}
-	
-	unsigned long AudioDecoder::PreloadBuffer(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	unsigned long AudioDecoder::PreloadWavBuffer(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
 		
 	}

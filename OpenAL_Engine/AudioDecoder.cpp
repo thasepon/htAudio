@@ -269,36 +269,45 @@ namespace htAudio
 			return 0;
 		}
 
-		// フォーマット	１バイト目	２バイト目	３バイト目	４バイト目
-		// 16ビット　モノラル	右チャンネル
-		while (readSample < readsize)
+		
+		switch (Format.Fmt.Channels)
 		{
-			switch (Format.Fmt.Channels)
+		
+		// 16bit モノラル読み込み
+		case 1:
+			short data = 0;
+			std::vector<short> bufvec(audiodata.ReadBufSize + 1);
+			while (readSample < readsize)
 			{
-
-			case 1:
-				fread(
-					reinterpret_cast<int16_t*>(buf) + readSample * Format.Fmt.BlockSize,
-					Format.Fmt.BlockSize,
-					readsize - readSample,
-					fp);
-				break;
-
-			case 2:
-				break;
-
-			default:
-				break;
-
+				fread(buf, sizeof(data), 1, fp);
+				
+				// 読み込めなかった場合の処理
+				if (samplesize == 0)
+					break;
 			}
 
-			// 読み込めなかった場合の処理
-			if (samplesize == 0)
-				break;
+			break;
+		// 16bit ステレオ読み込み
+		case 2:				
+			long data = 0;
+			std::vector<long> bufvec(audiodata.ReadBufSize * 2 + 1);
+			while (readSample < readsize)
+			{
+				fread(buf, sizeof(data), 1, fp);
+				
+				// 読み込めなかった場合の処理
+				if (samplesize == 0)
+					break;
+			}
 
-			readSample += samplesize;
+			break;
+
+		default:
+			break;
+
 		}
 
+		readSample += samplesize;
 
 		// 終了処理
 		fclose(fp);
@@ -320,4 +329,15 @@ namespace htAudio
 	{
 		
 	}
+
+	void* AudioDecoder::Mono16bitDecoder()
+	{
+
+	}
+
+	void* AudioDecoder::Stereo16bitDecoder()
+	{
+
+	}
+
 }

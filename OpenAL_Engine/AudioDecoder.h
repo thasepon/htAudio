@@ -34,6 +34,8 @@ namespace htAudio
 		static unsigned long StreamWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf);
 		static unsigned long PreloadWavBuffer(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf);
 
+		static void* Mono16bitDecoder();
+		static void* Stereo16bitDecoder();
 
 	};
 

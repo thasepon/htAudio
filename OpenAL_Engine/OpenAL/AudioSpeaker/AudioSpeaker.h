@@ -28,8 +28,6 @@ namespace htAudio
 	{
 	public:
 		AudioSpeaker();								// スピーカーのみを生成
-		AudioSpeaker(string filename);				// 名前指定でソースを生成
-		AudioSpeaker(int id);						// ID指定でソースを生成
 		~AudioSpeaker();							// スピーカーの削除処理
 
 		void SetMaterial(string Name);				// マテリアルデータの設定
@@ -46,38 +44,39 @@ namespace htAudio
 		// === 関数 === //
 		void Init();						// 共通初期化処理
 		void DecodeAudioHeader();			// 指定したAudio情報からヘッダー情報を取得
-		void DecodeAudioStreamBuffer();			// 指定したAudio情報からバッファを獲得
+		void DecodeAudioStreamBuffer();		// 指定したAudio情報からバッファを獲得
+		void InitStreamBuffer();			// 指定Audioがstreamタイプだった場合の初期化準備
 		void ReadHeaderInfo();				// ヘッダー情報の読み込み
 		bool AddEffects();					// エフェクトの適応と設定
+		void UpdateStreamBuffer(std::vector<int16_t> buf);				// バッファ更新用関数
 
-		void Play();						// 再生処理 ※[外部呼出しの予定は現在無し:Not_Used]
-		void Stop();						// 停止処理 ※[外部呼出しの予定は現在無し:Not_Used]
-		void Pause();						// 一時停止処理 ※[外部呼出しの予定は現在無し:Not_Used]
-
-		// === 変数 === //
-		bool Successinit = false;				// 初期化成功フラグ
+		// === 変数 === //		
 		uint16_t NowUsedNumb;					// 現在使用しているSoundTypeの番号
 		
 		AudioData SpeakerData;					// Audioのデータ(使いまわしする予定)
 		AUDIOFILEFORMAT HeaderFormat;			// ヘッダー情報
-		std::vector<SoundType> SoundDatas;		// XMLから得た情報(複数のデータがあります)
-		AudioCue SpeakerCue;					// XMLから得た情報(単一データ)
+		std::vector<SoundType> SoundDatas;		// Jsonから得た情報(複数のデータがあります)
+		AudioCue SpeakerCue;					// Jsonから得た情報(単一データ)
+		uint16_t StreamBufSize;					// バッファサイズ
 
-		std::vector<std::size_t> PrimaryMixed;			// バッファ保存[1]
-		std::vector<std::size_t> SecondMixed;			// バッファ保存[2](Preloadの場合は未使用)
+		std::vector<int16_t> PrimaryMixed;		// バッファ保存[1]
+		std::vector<int16_t> SecondMixed;		// バッファ保存[2](Preloadの場合は未使用)
 		std::string UseMaterialAtt;				// 現在のマテリアル情報
+		
+		std::string CueName;					// 指定Cueの名前(CueIdだけでも可)
+		int CueId;								// 指定CueのId(CueNameだけでも可)
 
 		ALuint Source;							// Sourceの設定
-		array<ALuint,2> Buffers;				// バッファの設定
+		ALuint Buffers[2];				// バッファの設定
 
 		std::shared_ptr <SetBufCommand> BufferCommand;	// バッファ設定用コマンド
 		std::shared_ptr <AddEffectCommand> EffectCommand;	// エフェクトコマンド
 
 		std::vector<AudioEffects*> EffectSlot;	// スピーカー適応するエフェクトスロット
 
-		uint16_t StreamBufSize;				// バッファサイズ
+		
 
-		bool bufsetflag = false;
+		
 
 	};
 

@@ -21,7 +21,7 @@
       },
       {
         "id": 1,
-        "name": "TestBGM1",
+        "name": "TestBGM2",
         "cue": "Test1",
         "material": "Sand",
         "loadtype": 0,

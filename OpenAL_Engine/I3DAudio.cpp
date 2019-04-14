@@ -8,6 +8,7 @@ namespace htAudio {
 	{
 		Source = source;
 		Info = info;
+		alSourcei(Source, AL_SOURCE_RELATIVE, AL_TRUE);
 	}
 
 

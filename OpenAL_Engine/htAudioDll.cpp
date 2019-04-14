@@ -194,7 +194,10 @@ using namespace htAudio;
 		std::string path, name, mat;
 
 		name = wide_to_multi_capi(soundname);
-		AudioSpeaker* _speakerPtr = new AudioSpeaker(name);
+
+		AudioSpeaker* _speakerPtr = new AudioSpeaker();
+		_speakerPtr->SetAudioSorce(name);
+		
 		Singleton<AudioManager>::get_Instance()->GetSpeakerManagerPtr()->AddSpeaker( _speakerPtr);
 
 		return _speakerPtr;
@@ -208,7 +211,9 @@ using namespace htAudio;
 	/// <returns>ì¬‚µ‚½SpeakerPointer</returns>
 	AudioSpeaker* htaSpeakerCreateI(uint16_t id)
 	{
-		AudioSpeaker* _speakerPtr = new AudioSpeaker(id);
+		AudioSpeaker* _speakerPtr = new AudioSpeaker();
+		_speakerPtr->SetAudioSorce(id);
+
 		Singleton<AudioManager>::get_Instance()->GetSpeakerManagerPtr()->AddSpeaker( _speakerPtr);
 
 		return _speakerPtr;

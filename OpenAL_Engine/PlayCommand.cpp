@@ -17,9 +17,10 @@ namespace htAudio {
 
 	bool PlayCommand::Execute() 
 	{ 
+		
 		if (TimeCtrlCmd() == false)
 			return false;
-
+		
 		Play(OrderFmt.SourceID);
 
 		return true;

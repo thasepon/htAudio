@@ -52,6 +52,7 @@ namespace htAudio {
 		while (Updateflag)
 		{
 			SpeakerMgrPtr->SpeakerUpdate();
+			ExecOrderCmd();
 		}
 
 	}

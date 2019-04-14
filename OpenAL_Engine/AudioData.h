@@ -97,6 +97,15 @@ namespace htAudio
 		unsigned short BitsPerSample;	// サンプルあたりのビット数
 	};
 
+	// ファイルの情報
+	struct AUDIOFILEFORMAT {
+		RIFFChunk Riff;
+		FormatChunk Fmt;
+		DataChunk Data;
+		long FirstSampleOffSet; // Bufferの開始位置
+		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
+	};
+
 	// リスナーコーンのステータス用
 	struct ConeState
 	{
@@ -111,14 +120,6 @@ namespace htAudio
 		std::string UseElement;
 	};
 
-	// ファイルの情報
-	struct AUDIOFILEFORMAT{
-		RIFFChunk Riff;
-		FormatChunk Fmt;
-		DataChunk Data;
-		long FirstSampleOffSet; // Bufferの開始位置
-		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
-	};
 
 	// サウンドの初期値、設定情報
 	struct SoundType {

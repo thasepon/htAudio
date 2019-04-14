@@ -76,12 +76,11 @@ namespace htAudio
 
 		long offset = 0;
 
+		printf("%sを開きます\n", filename.c_str());
+
 		while (true)
 		{
 			char chunksignature[4] = { 0 };
-			std::size_t readChar = 0;
-			std::size_t readSize = 0;
-			uint32_t chunksize = 0;
 
 			if (fread(chunksignature, 4, 1, fp) == 0)
 			{
@@ -96,6 +95,12 @@ namespace htAudio
 				strcpy(format.Riff.ChunkID, chunksignature);
 				offset += fread(&format.Riff.ChunkSize, 4, 1, fp);
 				offset += fread(format.Riff.FormatType, 4, 1, fp);
+
+				printf("RIFF :: %s - %d - %s \n", 
+					format.Riff.ChunkID, 
+					format.Riff.ChunkSize, 
+					format.Riff.FormatType);
+
 			}
 
 			if (strncmp(chunksignature, "fmt ", 4) == 0)
@@ -109,6 +114,17 @@ namespace htAudio
 				offset += fread(&format.Fmt.BytesPerSec, 4, 1, fp);
 				offset += fread(&format.Fmt.BlockSize, 2, 1, fp);
 				offset += fread(&format.Fmt.BitsPerSample, 2, 1, fp);
+
+				printf("FMT :: %s - %d - %d - %d - %d - %d - %d - %d \n", 
+					format.Fmt.ChunkID, 
+					format.Fmt.ChunkSize, 
+					format.Fmt.FormatType,
+					format.Fmt.Channels,
+					format.Fmt.SamplesPerSec,
+					format.Fmt.BytesPerSec,
+					format.Fmt.BlockSize,
+					format.Fmt.BitsPerSample);
+
 			}
 
 			if (strncmp(chunksignature, "data", 4) == 0)
@@ -116,12 +132,21 @@ namespace htAudio
 				// Dataチャンクの読み込み(ただしDataを除く)
 				strcpy(format.Data.ChunkID, chunksignature);
 				offset += fread(&format.Data.ChunkSize, 4, 1, fp);
-			}
 
+				printf("Data :: %s - %d \n",
+					format.Data.ChunkID,
+					format.Data.ChunkSize);
+			}
+		}
+
+		if (format.Data.ChunkSize == 0)
+		{
+			memcpy(format.Data.ChunkID, "data", 4);
+			format.Data.ChunkSize = offset;
 		}
 
 		// 音データまでの移動量(特殊情報は考えない)
-		format.FirstSampleOffSet = 57;
+		format.FirstSampleOffSet = 48;
 
 		fclose(fp);
 
@@ -223,17 +248,18 @@ namespace htAudio
 		if (!buf)
 		{
 			printf("バッファのサイズの確保不足");
-			return 0;
+			return false;
 		}
 
 		if (!Format.HasGotWaveFormat)
 		{
 			printf("初期化に終了していません");
-			return 0;
+			return false;
 		}
 
 		// Stereo16bit
 		unsigned long readsample = 0;
+
 		readsample = StreamWavDecoder(Format, filename, loopflag, audiodata, buf);
 
 		if (readsample > 0)
@@ -242,6 +268,7 @@ namespace htAudio
 			return true;
 		}
 		
+		printf("サンプルの読み込みに失敗しました\n");
 		return false;
 	}
 
@@ -254,75 +281,35 @@ namespace htAudio
 	unsigned long AudioDecoder::StreamWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
 
-		FILE* fp = nullptr;						// ファイルポインタ
-		long readSample = 0;					// 今回の読み込み量
-		long first = audiodata.NextFirstSample;	// 読み込み開始位置
-		long readsize = audiodata.ReadBufSize;	// 読み込みサイズ
-		long samplesize = 0;
-		
+		FILE* fp = nullptr;			// ファイルポインタ
+		int readsize = 0;
 		// ファイルのオープン
 		fopen_s(&fp, filename.c_str(), "rb");
-
+		
 		if (!fp)
 		{
 			printf("サウンドファイルの読み取りに失敗しました");
 			return 0;
 		}
 
-		
-		switch (Format.Fmt.Channels)
-		{
-		
-		// 16bit モノラル読み込み
-		case 1:
-			short data = 0;
-			std::vector<short> bufvec(audiodata.ReadBufSize + 1);
-			while (readSample < readsize)
-			{
-				fread(buf, sizeof(data), 1, fp);
-				
-				// 読み込めなかった場合の処理
-				if (samplesize == 0)
-					break;
-			}
-
-			break;
-		// 16bit ステレオ読み込み
-		case 2:				
-			long data = 0;
-			std::vector<long> bufvec(audiodata.ReadBufSize * 2 + 1);
-			while (readSample < readsize)
-			{
-				fread(buf, sizeof(data), 1, fp);
-				
-				// 読み込めなかった場合の処理
-				if (samplesize == 0)
-					break;
-			}
-
-			break;
-
-		default:
-			break;
-
-		}
-
-		readSample += samplesize;
+		// PCM16bitの読み込み部分
+		PCM16bitDecoder(buf, readsize, Format, audiodata, fp);
 
 		// 終了処理
 		fclose(fp);
 
 		// ループ処理
-		if (readSample == 0)
+		if (readsize == 0)
 		{
 			if (loopflag >= 0)
 			{
 				// バッファ読み込み終了
 				// ループ用に読み込み位置を初期化
+				audiodata.NextFirstSample = Format.FirstSampleOffSet;
 			}
 		}
 
-		return readSample;
+		return readsize;
 	}
 
 	unsigned long AudioDecoder::PreloadWavBuffer(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
@@ -330,14 +317,38 @@ namespace htAudio
 		
 	}
 
-	void* AudioDecoder::Mono16bitDecoder()
+	void AudioDecoder::PCM16bitDecoder(void* buf, int& readsize, AUDIOFILEFORMAT fmt, AudioData& audiodata, FILE* fp)
 	{
 
+		long samplesize = 0;
+		long freadsize = 0;
+		int cnt = 0;
+
+		// バッファ読み込み量
+		fseek(fp, audiodata.NextFirstSample, SEEK_CUR);
+		
+		while (samplesize < audiodata.ReadBufSize)
+		{
+			freadsize = fread(
+				reinterpret_cast<int16_t*>(buf) + cnt,
+				fmt.Fmt.BlockSize / fmt.Fmt.Channels,
+				1,
+				fp);
+
+			// 読み込めなかった場合の処理
+			if (freadsize == 0)
+			{
+				readsize = samplesize;
+				break;
+			}
+
+			samplesize += freadsize;
+			freadsize = 0;
+			cnt++;
+
+		}
+		readsize = samplesize;
 	}
 
-	void* AudioDecoder::Stereo16bitDecoder()
-	{
-
-	}
 
 }

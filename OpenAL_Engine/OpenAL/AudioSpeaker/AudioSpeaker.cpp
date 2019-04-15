@@ -14,6 +14,7 @@ namespace htAudio {
 	AudioSpeaker::AudioSpeaker()
 	{
 		HeaderFormat.HasGotWaveFormat = false;
+		NowUsedNumb = 0;
 	}
 
 	/// <summary>
@@ -21,7 +22,7 @@ namespace htAudio {
 	/// </summary>
 	AudioSpeaker::~AudioSpeaker()
 	{
-		// バッファの数を特定
+		// バッファとソースの削除
 		if (SoundDatas[NowUsedNumb].StreamType == false)
 		{
 			if(Buffers[0] != 0)
@@ -37,6 +38,10 @@ namespace htAudio {
 			if (Source != 0)
 				alDeleteSources(1, &Source);
 		}
+
+		SoundDatas.clear();
+		PrimaryMixed.clear();
+		SecondMixed.clear();
 	}
 
 	//
@@ -44,13 +49,21 @@ namespace htAudio {
 	//
 	void AudioSpeaker::SetMaterial(string Name)
 	{
+		// 現在のマテリアルと同じの場合は読み込みはしない
+		if (UseMaterialAtt == Name)
+		{
+			printf("同一マテリアルです\n");
+			return;
+		}
+
 		UseMaterialAtt = Name;
 
-		// 新しい情報の読み込み
 		HeaderFormat.HasGotWaveFormat = AudioFormatData::LoadAudioFormatData(SpeakerCue, SoundDatas, CueName);
 		
+		// ヘッダー取得に失敗
 		if (!HeaderFormat.HasGotWaveFormat)
 		{
+			printf("マテリアル変更後の情報を取得に失敗\n");
 			return;
 		}
 
@@ -66,11 +79,8 @@ namespace htAudio {
 	void AudioSpeaker::SetAudioSorce(string filename)
 	{
 		int cnt = 0;
-		HeaderFormat.HasGotWaveFormat = false;
 		StreamBufSize = 4096;
 		
-		CueName = filename;
-
 		if (BufferCommand == nullptr)
 		{
 			BufferCommand.reset(new SetBufCommand());
@@ -81,19 +91,30 @@ namespace htAudio {
 			EffectCommand.reset(new AddEffectCommand());
 		}
 
+		// 同じファイルのセットは弾く
+		if (CueName == filename)
+		{
+			printf("指定のファイルは既に読み込み済みです\n");
+			return;
+		}
+
+		CueName = filename;
+
+		HeaderFormat.HasGotWaveFormat = false;
+
 		// オーディオ情報を外部ファイルから取得
 		HeaderFormat.HasGotWaveFormat = AudioFormatData::LoadAudioFormatData(SpeakerCue,SoundDatas, CueName);
 
 		if (!HeaderFormat.HasGotWaveFormat)
 		{
-			return;			// フォーマット取得できていません。
+			printf("SetAudioSorceの設定に失敗しました\n");
+			return;
 		}
 
 		ReadHeaderInfo();
 
-		AddEffects();
-
-		Init();
+		//AddEffects();
+		//Init();
 	}
 
 	/// <summary>
@@ -129,9 +150,8 @@ namespace htAudio {
 
 		ReadHeaderInfo();
 
-		AddEffects();
-
-		Init();
+		//AddEffects();
+		//Init();
 	}
 
 	/// <summary>
@@ -140,6 +160,11 @@ namespace htAudio {
 	/// <param name="volume"></param>
 	void AudioSpeaker::SetVolume(double volume)
 	{
+		if (volume < 0)
+		{
+			volume = 0;
+		}
+
 		SpeakerCue.Volume = SoundDatas[NowUsedNumb].MaxVolume * volume;
 	}
 
@@ -249,6 +274,7 @@ namespace htAudio {
 	{
 		//ファイルから実際の情報を取得
 		bool formatloadflag = false;
+
 		formatloadflag = AudioDecoder::LoadRIFFFormat(HeaderFormat, SoundDatas[NowUsedNumb], SpeakerCue.Filepath);
 
 		// 構造体の初期化設定
@@ -276,10 +302,7 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::DecodeAudioStreamBuffer()
 	{
-		bool readSuccessflag = false;
 		ALint State = 0;
-
-		// 再生終了バッファの確認
 		alGetSourcei(Source, AL_BUFFERS_PROCESSED, &State);
 
 		// 再生終了バッファが存在する場合
@@ -321,6 +344,11 @@ namespace htAudio {
 	/// <returns>成功しているかどうか</returns>
 	bool AudioSpeaker::AddEffects()
 	{
+		if (SpeakerCue.CueEffect.size() == 0)
+		{
+			return;
+		}
+
 		// 読み込んだエフェクトを全て適応
 		for (auto itr : SpeakerCue.CueEffect)
 		{
@@ -378,12 +406,12 @@ namespace htAudio {
 	{
 		bool readSuccessflag = false;
 		
-		buf.clear();
-		buf = std::vector<int16_t>(StreamBufSize);
-		readSuccessflag = AudioDecoder::AudioBufferDecoder(&buf[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
-
 		if (readSuccessflag == true)
 		{
+			buf.clear();
+			buf = std::vector<int16_t>(StreamBufSize);
+			readSuccessflag = AudioDecoder::AudioBufferDecoder(&buf[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+
 			// バッファのアップデート
 			ALuint UpdateBufQue = 0;
 			// バッファのデキュー

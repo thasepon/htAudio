@@ -13,8 +13,19 @@ namespace htAudio {
 	//
 	AudioSpeaker::AudioSpeaker()
 	{
+		// 変数の初期化
 		HeaderFormat.HasGotWaveFormat = false;
 		NowUsedNumb = 0;
+		Source = 0;
+		SpeakerData.BufferSample = 0;
+		SpeakerData.NextFirstSample = 0;
+		SpeakerData.PlayTime = 0;
+		SpeakerData.ReadBufSize = 0;
+		SpeakerData.SubmitTimes = 0;
+		SpeakerData.TotalreadBufSize = 0;
+		SpeakerData.DataChunkSample = 0;
+		SpeakerData.NextFirstSample = 0;
+
 	}
 
 	/// <summary>
@@ -112,9 +123,8 @@ namespace htAudio {
 		}
 
 		ReadHeaderInfo();
-
-		//AddEffects();
-		//Init();
+		AddEffects();
+		Init();
 	}
 
 	/// <summary>
@@ -149,9 +159,8 @@ namespace htAudio {
 		}
 
 		ReadHeaderInfo();
-
-		//AddEffects();
-		//Init();
+		AddEffects();
+		Init();
 	}
 
 	/// <summary>
@@ -212,6 +221,11 @@ namespace htAudio {
 	/// </summary>
 	void AudioSpeaker::Init()
 	{
+		if (SoundDatas.size() <= 0)
+		{
+			return;
+		}
+
 		if (SoundDatas[NowUsedNumb].StreamType == PRE_LOAD)
 		{
 			// Preloadタイプ読み込み
@@ -221,7 +235,6 @@ namespace htAudio {
 			SpeakerData.ReadBufSize = HeaderFormat.Data.ChunkSize;
 			// TODO プリロードから取得する処理
 		}else{
-			// Streamloadタイプ読み込み
 			InitStreamBuffer();
 		}
 	}
@@ -276,14 +289,6 @@ namespace htAudio {
 		bool formatloadflag = false;
 
 		formatloadflag = AudioDecoder::LoadRIFFFormat(HeaderFormat, SoundDatas[NowUsedNumb], SpeakerCue.Filepath);
-
-		// 構造体の初期化設定
-		SpeakerData.BufferSample = 0;
-		SpeakerData.NextFirstSample = 0;
-		SpeakerData.PlayTime = 0;
-		SpeakerData.ReadBufSize = 0;
-		SpeakerData.SubmitTimes = 0;
-		SpeakerData.TotalreadBufSize = 0;
 
 		// フォーマットに合わせたもの
 		if (formatloadflag == true)
@@ -346,7 +351,7 @@ namespace htAudio {
 	{
 		if (SpeakerCue.CueEffect.size() == 0)
 		{
-			return;
+			return false;
 		}
 
 		// 読み込んだエフェクトを全て適応
@@ -370,15 +375,20 @@ namespace htAudio {
 		SpeakerData.ReadBufSize = StreamBufSize;
 
 		// ソースを作成していない場合作成する
-		if (Source == 0)
+		if (Source <= 0)
 		{
 			alGenSources(1, &Source);
 		}
 
 		// バッファが存在しない場合作成する
-		if (Buffers[0] == 0)
+		if (Buffers[0] <= 0)
 		{
 			alGenBuffers(2, Buffers);
+		}
+
+		if (SoundDatas.size() <= 0)
+		{
+			return;
 		}
 
 		// Primaryバッファの作成
@@ -405,13 +415,13 @@ namespace htAudio {
 	void AudioSpeaker::UpdateStreamBuffer(std::vector<int16_t> buf)
 	{
 		bool readSuccessflag = false;
-		
+
+		buf.clear();
+		buf = std::vector<int16_t>(StreamBufSize);
+		readSuccessflag = AudioDecoder::AudioBufferDecoder(&buf[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+
 		if (readSuccessflag == true)
 		{
-			buf.clear();
-			buf = std::vector<int16_t>(StreamBufSize);
-			readSuccessflag = AudioDecoder::AudioBufferDecoder(&buf[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
-
 			// バッファのアップデート
 			ALuint UpdateBufQue = 0;
 			// バッファのデキュー
@@ -422,6 +432,10 @@ namespace htAudio {
 			alSourceQueueBuffers(Source, 1, &UpdateBufQue);
 			// バッファの移動
 			SpeakerData.SubmitTimes = !SpeakerData.SubmitTimes;
+		}
+		else {
+			printf("UpdateStreamBufferに失敗しました\n");
+
 		}
 	}
 

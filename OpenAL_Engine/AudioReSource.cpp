@@ -5,6 +5,7 @@ namespace htAudio
 
 	AudioReSource::AudioReSource()
 	{
+
 	}
 
 	AudioReSource::~AudioReSource()
@@ -18,16 +19,6 @@ namespace htAudio
 	}
 
 	void AudioReSource::PreLoad(int Id)
-	{
-
-	}
-
-	void AudioReSource::StreamLoad(std::string)
-	{
-
-	}
-
-	void AudioReSource::StreamLoad(int Id)
 	{
 
 	}

@@ -238,6 +238,104 @@ namespace htAudio
 		return true;
 	}
 
+	unsigned long AudioDecoder::StreamOggDecoder(AudioData& audiodata, std::string filename, bool loopflag, void* buf)
+	{
+		unsigned long requestsize = audiodata.ReadBufSize;
+		int bitstream = 0;
+		int readsize = 0;
+		UINT comsize = 0;
+		OggVorbis_File Ovf;
+
+		if (ov_fopen(filename.c_str(), &Ovf))
+		{
+			// Oggファイルオープンの失敗
+			printf("サウンドファイルの読み取りに失敗しました");
+			return false;
+		}
+
+		// 読みこみ部分
+		while (1)
+		{
+			readsize = ov_read(&Ovf, (char*)((char*)buf + comsize), requestsize, 0, 2, 1, &bitstream);
+
+			// 末端まで読み込み終了
+			if (readsize == 0)
+			{
+				// ループ処理がある場合は読み込み位置を先頭に戻す。
+				if (loopflag == true)
+				{
+					ov_time_seek(&Ovf, 0.0);
+					audiodata.TotalreadBufSize = 0;
+				}
+				else
+				{
+					// 動作無し
+					break;
+				}
+			}
+			// 今回読みこんだ量を保存
+			comsize += readsize;
+
+			// 指定量のバッファを取得出来たら終了
+			if (comsize >= requestsize)
+			{
+				break;
+			}
+
+			// 一定に達していない場合は残りの分をRequestする
+			if ((requestsize - comsize) > 0)
+			{
+				requestsize -= comsize;
+			}
+
+		}
+		// 現在の読み込み量を加算
+		audiodata.TotalreadBufSize += comsize;
+	}
+
+	unsigned long AudioDecoder::PreloadOggDecoder(AudioData& audiodata, std::string filename, bool loopflag, void* buf)
+	{
+		unsigned long requestsize = audiodata.ReadBufSize;
+		int bitstream = 0;
+		int readsize = 0;
+		UINT comsize = 0;
+		OggVorbis_File Ovf;
+
+		if (ov_fopen(filename.c_str(), &Ovf))
+		{
+			// Oggファイルオープンの失敗
+			printf("サウンドファイルの読み取りに失敗しました");
+			return false;
+		}
+
+		// 読みこみ部分
+		while (1)
+		{
+			readsize = ov_read(&Ovf, (char*)((char*)buf + comsize), requestsize, 0, 2, 1, &bitstream);
+
+			// 末端まで読み込み終了
+			if (readsize == 0)
+			{
+				// ループ処理がある場合は読み込み位置を先頭に戻す。
+				if (loopflag == true)
+				{
+					ov_time_seek(&Ovf, 0.0);
+					audiodata.TotalreadBufSize = 0;
+				}
+				else
+				{
+					// 動作無し
+					break;
+				}
+			}
+			// 今回読みこんだ量を保存
+			comsize += readsize;
+
+		}
+		// 現在の読み込み量を加算
+		audiodata.TotalreadBufSize += comsize;
+	}
+
 	/// <summary>
 	/// バッファーの読み込み(.wav)
 	/// </summary>
@@ -292,8 +390,35 @@ namespace htAudio
 			return 0;
 		}
 
-		// PCM16bitの読み込み部分
-		PCM16bitDecoder(buf, readsize, Format, audiodata, fp);
+		long samplesize = 0;
+		long freadsize = 0;
+		int cnt = 0;
+
+		// バッファ読み込み量
+		fseek(fp, audiodata.NextFirstSample, SEEK_CUR);
+
+		while (samplesize < audiodata.ReadBufSize)
+		{
+			freadsize = fread(
+				reinterpret_cast<int16_t*>(buf) + cnt,
+				Format.Fmt.BlockSize / Format.Fmt.Channels,
+				1,
+				fp);
+
+			// 読み込めなかった場合の処理
+			if (freadsize == 0)
+			{
+				readsize = samplesize;
+				break;
+			}
+
+			samplesize += freadsize;
+			freadsize = 0;
+			cnt++;
+
+		}
+		readsize = samplesize;
+		
 
 		// 終了処理
 		fclose(fp);
@@ -312,13 +437,18 @@ namespace htAudio
 		return readsize;
 	}
 
-	unsigned long AudioDecoder::PreloadWavBuffer(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	unsigned long AudioDecoder::PreloadWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
 	{
-		
-	}
+		FILE* fp = nullptr;			// ファイルポインタ
+		int readsize = 0;
+		// ファイルのオープン
+		fopen_s(&fp, filename.c_str(), "rb");
 
-	void AudioDecoder::PCM16bitDecoder(void* buf, int& readsize, AUDIOFILEFORMAT fmt, AudioData& audiodata, FILE* fp)
-	{
+		if (!fp)
+		{
+			printf("サウンドファイルの読み取りに失敗しました");
+			return 0;
+		}
 
 		long samplesize = 0;
 		long freadsize = 0;
@@ -326,17 +456,18 @@ namespace htAudio
 
 		// バッファ読み込み量
 		fseek(fp, audiodata.NextFirstSample, SEEK_CUR);
-		
-		while (samplesize < audiodata.ReadBufSize)
+
+		// 読み込み終了まで読み込み
+		while (1)
 		{
 			freadsize = fread(
 				reinterpret_cast<int16_t*>(buf) + cnt,
-				fmt.Fmt.BlockSize / fmt.Fmt.Channels,
+				Format.Fmt.BlockSize / Format.Fmt.Channels,
 				1,
 				fp);
 
 			// 読み込めなかった場合の処理
-			if (freadsize == 0)
+			if (freadsize <= 0)
 			{
 				readsize = samplesize;
 				break;
@@ -348,6 +479,23 @@ namespace htAudio
 
 		}
 		readsize = samplesize;
+
+
+		// 終了処理
+		fclose(fp);
+
+		// ループ処理
+		if (readsize == 0)
+		{
+			if (loopflag >= 0)
+			{
+				// バッファ読み込み終了
+				// ループ用に読み込み位置を初期化
+				audiodata.NextFirstSample = Format.FirstSampleOffSet;
+			}
+		}
+
+		return readsize;
 	}
 
 

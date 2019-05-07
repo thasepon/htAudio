@@ -127,7 +127,6 @@ namespace htAudio
 		std::string AudioName;		// オーディオファイルの名前
 		std::string Cue;			// Cueの名前
 		std::string MaterialObj;	// 属しているマテリアル
-		AudioLoadType StreamType;	// ストリーミングタイプ
 		RIFFType RIFFType;			// ファイル拡張子の種類
 		double DefaultVolume;		// デフォルト音量
 		double MaxVolume;			// 最大音量
@@ -144,6 +143,7 @@ namespace htAudio
 		double Volume;						// ボリューム
 		VOLUMETYPE VolType;					// ボリュームのタイプ
 		bool Loopflag;						// ループフラグ
+		AudioLoadType StreamType;			// ストリーミングタイプ
 		std::vector<EffectState> CueEffect;	// Cueに適応させるエフェクトの一覧
 	};
 

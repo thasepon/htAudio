@@ -74,10 +74,6 @@ namespace htAudio
 
 		std::vector<AudioEffects*> EffectSlot;	// スピーカー適応するエフェクトスロット
 
-		
-
-		
-
 	};
 
 }

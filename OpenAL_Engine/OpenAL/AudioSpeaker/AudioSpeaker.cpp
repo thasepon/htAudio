@@ -34,7 +34,7 @@ namespace htAudio {
 	AudioSpeaker::~AudioSpeaker()
 	{
 		// バッファとソースの削除
-		if (SoundDatas[NowUsedNumb].StreamType == false)
+		if (SpeakerCue.StreamType == false)
 		{
 			if(Buffers[0] != 0)
 				alDeleteBuffers(1, &Buffers[0]);
@@ -226,7 +226,7 @@ namespace htAudio {
 			return;
 		}
 
-		if (SoundDatas[NowUsedNumb].StreamType == PRE_LOAD)
+		if (SpeakerCue.StreamType == PRE_LOAD)
 		{
 			// Preloadタイプ読み込み
 			alGenBuffers(1, &Buffers[0]);
@@ -253,7 +253,7 @@ namespace htAudio {
 		alGetSourcei(Source, AL_SOURCE_STATE, &State);
 
 		// バッファの更新
-		if (SoundDatas[NowUsedNumb].StreamType == PRE_LOAD)
+		if (SpeakerCue.StreamType == PRE_LOAD)
 		{
 			alGetSourcei(Source, AL_SOURCE_STATE, &State);
 			
@@ -262,7 +262,7 @@ namespace htAudio {
 				alSourcei(Source, AL_LOOPING, true);
 			}
 		}
-		else if (SoundDatas[NowUsedNumb].StreamType == STREAM_LOAD)
+		else if (SpeakerCue.StreamType == STREAM_LOAD)
 		{
 			// バッファの更新
 			DecodeAudioStreamBuffer();

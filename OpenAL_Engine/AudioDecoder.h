@@ -31,13 +31,14 @@ namespace htAudio
 
 		// Data部分のデコーダー
 		static bool BufferDecoderOgg(AudioData& audiodata, std::string filename,bool loopflag, void* buf);	// オーディオバッファーの取得(.wav)
+		static unsigned long StreamOggDecoder(AudioData& audiodata, std::string filename, bool loopflag, void* buf);
+		static unsigned long PreloadOggDecoder(AudioData& audiodata, std::string filename, bool loopflag, void* buf);
+
 		static bool BufferDecoderWav(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf); // オーディオバッファーの取得(.ogg)
-
 		static unsigned long StreamWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf);
-		static unsigned long PreloadWavBuffer(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf);
+		static unsigned long PreloadWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf);
 
-		static void PCM16bitDecoder(void* buf,int& readsize, AUDIOFILEFORMAT fmt, AudioData& audiodata, FILE* fp);
-		
+
 	};
 
 }

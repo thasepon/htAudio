@@ -61,6 +61,7 @@ namespace htAudio {
 				cue.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
 				cue.Loopflag = obj["loopflag"].get<bool>();
 				cue.Filepath = CreateAudioDataPath();
+				cue.StreamType = (AudioLoadType)((int)obj["loadtype"].get<double>());
 
 				picojson::array& effectarray = obj["effects"].get<picojson::array>();
 				for (auto effectitr : effectarray)
@@ -80,7 +81,6 @@ namespace htAudio {
 					Format.AudioName = itrobj["name"].get<std::string>();
 					Format.Cue = itrobj["cue"].get<std::string>();
 					Format.MaterialObj = itrobj["material"].get<std::string>();
-					Format.StreamType = (AudioLoadType)((int)itrobj["loadtype"].get<double>());
 					Format.RIFFType = (RIFFType)((int)itrobj["riff"].get<double>());
 					Format.DefaultVolume = itrobj["defaultvolume"].get<double>();
 					Format.MaxVolume = itrobj["maxvolume"].get<double>();
@@ -133,6 +133,7 @@ namespace htAudio {
 				cue.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
 				cue.Loopflag = obj["loopflag"].get<bool>();
 				cue.Filepath = CreateAudioDataPath();
+				cue.StreamType = (AudioLoadType)((int)obj["loadtype"].get<double>());
 
 				picojson::array& effectarray = obj["effects"].get<picojson::array>();
 				for (auto effectitr : effectarray)
@@ -152,7 +153,6 @@ namespace htAudio {
 					Format.AudioName = itrobj["name"].get<std::string>();
 					Format.Cue = itrobj["cue"].get<std::string>();
 					Format.MaterialObj = itrobj["material"].get<std::string>();
-					Format.StreamType = (AudioLoadType)((int)itrobj["loadtype"].get<double>());
 					Format.RIFFType = (RIFFType)((int)itrobj["riff"].get<double>());
 					Format.DefaultVolume = itrobj["defaultvolume"].get<double>();
 					Format.MaxVolume = itrobj["maxvolume"].get<double>();

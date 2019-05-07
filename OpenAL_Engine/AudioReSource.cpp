@@ -2,23 +2,49 @@
 
 namespace htAudio
 {
-
+	/// <summary>
+	/// コンストラクタでAudioバッファの読み込み
+	/// </summary>
 	AudioReSource::AudioReSource()
 	{
-
+		ReadPreLoadAudio();
 	}
 
 	AudioReSource::~AudioReSource()
 	{
+		if (AudioresourceMap.size() <= 0)
+			return;
+
+		for (auto buf : AudioresourceMap)
+		{
+			delete buf.DataBuffer;
+		}
+		AudioresourceMap.clear();
 
 	}
 
-	void AudioReSource::PreLoad(std::string)
+	/// <summary>
+	/// 最初にPreload設定の音声を読み込む
+	/// </summary>
+	void AudioReSource::ReadPreLoadAudio()
 	{
 
 	}
 
-	void AudioReSource::PreLoad(int Id)
+	/// <summary>
+	/// 読み込んだbufferを取得する関数
+	/// </summary>
+	/// <param name=""></param>
+	void AudioReSource::GetAudioBuffer(std::string)
+	{
+
+	}
+	
+	/// <summary>
+	/// 読み込んだbufferを取得する関数
+	/// </summary>
+	/// <param name="Id"></param>
+	void AudioReSource::GetAudioBuffer(int Id)
 	{
 
 	}

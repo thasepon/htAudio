@@ -21,7 +21,8 @@ namespace htAudio
 
 		static bool LoadAudioFormatData(AudioCue& cue,std::vector<SoundType>& types, std::string Soundname);
 		static bool LoadAudioFormatData(AudioCue& cue,std::vector<SoundType>& types, int id);
-		
+		static void LoadAudioPreloadFormatData();
+
 		// 各種エフェクトのデータを呼び込
 		// エフェクトの分だけオーバーライドしないとダメな気がする
 		static bool LoadEffectData(CHORUS_INFO& info,std::string effectelementpath);
@@ -38,7 +39,7 @@ namespace htAudio
 		static bool LoadEffefctPramData(std::list<EffectElementPram*> pram);
 
 		static void SetAudioPath(std::string path);
-
+		
 	private:
 
 		static std::string CreateFormatDataPath();

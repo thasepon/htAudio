@@ -21,7 +21,7 @@ namespace htAudio
 
 		static bool LoadAudioFormatData(AudioCue& cue,std::vector<SoundType>& types, std::string Soundname);
 		static bool LoadAudioFormatData(AudioCue& cue,std::vector<SoundType>& types, int id);
-		static void LoadAudioPreloadFormatData();
+		static void LoadAudioPreloadFormatData(std::vector<ResourceData>& preloadFiles);
 
 		// 各種エフェクトのデータを呼び込
 		// エフェクトの分だけオーバーライドしないとダメな気がする

@@ -15,10 +15,6 @@ namespace htAudio
 		if (AudioresourceMap.size() <= 0)
 			return;
 
-		for (auto buf : AudioresourceMap)
-		{
-			delete buf.DataBuffer;
-		}
 		AudioresourceMap.clear();
 
 	}
@@ -54,6 +50,7 @@ namespace htAudio
 	/// </summary>
 	void AudioReSource::ReleaseResource()
 	{
+
 	}
 
 }

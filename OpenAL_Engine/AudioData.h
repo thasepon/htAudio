@@ -158,6 +158,13 @@ namespace htAudio
 		long DataChunkSample; // サンプリング情報
 	};
 
-	
+	// （ひとまず）Preload用の構造体
+	struct ResourceData
+	{
+		AUDIOFILEFORMAT fmt;
+		SoundType soundType;
+		AudioCue cueData;
+		AudioData data;
+	};
 
 }

@@ -6,13 +6,6 @@
 
 namespace htAudio
 {
-	// リソース使いまわしに必要なデータ
-	struct ResourceData
-	{
-		AUDIOFILEFORMAT fmt;
-		void* DataBuffer;
-	};
-
 	/// <summary>
 	/// wavやoggのオーディオの管理をするクラス
 	/// ここを経由してリソースを取得する

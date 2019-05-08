@@ -165,6 +165,15 @@ namespace htAudio {
 		return true;
 	}
 
+	/// <summary>
+	/// プリロード対象のファイル情報をすべて読み込むために生まれてきた関数
+	/// </summary>
+	/// <param name="preloadFiles"></param>
+	void AudioFormatData::LoadAudioPreloadFormatData(std::vector<ResourceData>& preloadFiles)
+	{
+
+	}
+
 	bool AudioFormatData::LoadEffectData(CHORUS_INFO& info, std::string effectelementpath)
 	{
 

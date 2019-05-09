@@ -169,8 +169,76 @@ namespace htAudio {
 	/// プリロード対象のファイル情報をすべて読み込むために生まれてきた関数
 	/// </summary>
 	/// <param name="preloadFiles"></param>
-	void AudioFormatData::LoadAudioPreloadFormatData(std::vector<ResourceData>& preloadFiles)
+	bool AudioFormatData::LoadAudioPreloadFormatData(std::vector<ResourceData>& preloadFiles)
 	{
+		// ファイルの取得
+		SoundType Format;
+		std::string Path = CreateFormatDataPath();
+
+		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
+
+		if (ifs.fail())
+		{
+			return false;
+		}
+
+		const std::string json((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+		ifs.close();
+
+		// jsonデータの解析
+		picojson::value Val;
+		const std::string err = picojson::parse(Val, json);
+		if (err.empty() == false)
+		{
+			return false;
+		}
+
+		// 指定データ群の抜き出しをします
+		picojson::object obj = Val.get<picojson::object>();
+		for (auto cueitr : obj)
+		{
+			// 同一名の物を検索
+			if (cueitr.first == Soundname)
+			{
+				picojson::object obj = cueitr.second.get<picojson::object>();
+
+				cue.CueID = (uint16_t)obj["id"].get<double>();
+				cue.CueName = obj["name"].get < std::string >();
+				cue.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
+				cue.Loopflag = obj["loopflag"].get<bool>();
+				cue.Filepath = CreateAudioDataPath();
+				cue.StreamType = (AudioLoadType)((int)obj["loadtype"].get<double>());
+
+				picojson::array& effectarray = obj["effects"].get<picojson::array>();
+				for (auto effectitr : effectarray)
+				{
+					EffectState state;
+					state.UseEffect = (EFFECTSNUM)((int)effectitr.get<picojson::object>()["effect"].get<double>());
+					state.UseElement = effectitr.get<picojson::object>()["element"].get<std::string>();
+					cue.CueEffect.push_back(state);
+				}
+
+				picojson::array& soundinfoarray = obj["soundinfo"].get<picojson::array>();
+				for (auto infoitr : soundinfoarray)
+				{
+					picojson::object itrobj = infoitr.get<picojson::object>();
+
+					Format.AudioID = (uint16_t)itrobj["id"].get<double>();
+					Format.AudioName = itrobj["name"].get<std::string>();
+					Format.Cue = itrobj["cue"].get<std::string>();
+					Format.MaterialObj = itrobj["material"].get<std::string>();
+					Format.RIFFType = (RIFFType)((int)itrobj["riff"].get<double>());
+					Format.DefaultVolume = itrobj["defaultvolume"].get<double>();
+					Format.MaxVolume = itrobj["maxvolume"].get<double>();
+
+					types.push_back(Format);
+				}
+
+				Format.CreateFlag = true;
+			}
+		}
+		return true;
+
 
 	}
 

@@ -15,7 +15,6 @@ namespace htAudio
 	public:
 		AudioReSource();
 		~AudioReSource();
-
 		void ReadPreLoadAudio();	// プリロードする音声を一気に読み込んで設定する
 		void GetAudioBuffer(std::string name);			// オーディオバッファを取得する
 		void GetAudioBuffer(int Id);			// オーディオバッファを取得する
@@ -24,7 +23,6 @@ namespace htAudio
 	private:
 		// 読みこんだファイルの保存用map
 		std::vector<ResourceData> AudioresourceMap;
-
 	};
 
 }

@@ -27,7 +27,7 @@ namespace htAudio {
 	{
 		
 		SoundType Format;
-		std::string Path = CreateFormatDataPath();
+		std::string Path = CreateFormatSDataPath();
 
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 		
@@ -99,7 +99,7 @@ namespace htAudio {
 	{
 		SoundType Format;
 
-		std::string Path = CreateFormatDataPath();
+		std::string Path = CreateFormatSDataPath();
 		
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
@@ -172,9 +172,7 @@ namespace htAudio {
 	bool AudioFormatData::LoadAudioPreloadFormatData(std::vector<ResourceData>& preloadFiles)
 	{
 		// ファイルの取得
-		SoundType Format;
-		std::string Path = CreateFormatDataPath();
-
+		std::string Path = CreateFormatPDataPath();
 		std::ifstream ifs(Path.c_str(), std::ios::in); // jsonファイルをオープン
 
 		if (ifs.fail())
@@ -197,49 +195,48 @@ namespace htAudio {
 		picojson::object obj = Val.get<picojson::object>();
 		for (auto cueitr : obj)
 		{
+			ResourceData _resourcedata;
 			// 同一名の物を検索
-			if (cueitr.first == Soundname)
+			picojson::object obj = cueitr.second.get<picojson::object>();
+
+			_resourcedata.cueData.CueID = (uint16_t)obj["id"].get<double>();
+			_resourcedata.cueData.CueName = obj["name"].get < std::string >();
+			_resourcedata.cueData.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
+			_resourcedata.cueData.Loopflag = obj["loopflag"].get<bool>();
+			_resourcedata.cueData.Filepath = CreateAudioDataPath();
+			_resourcedata.cueData.StreamType = (AudioLoadType)((int)obj["loadtype"].get<double>());
+
+			picojson::array& effectarray = obj["effects"].get<picojson::array>();
+			for (auto effectitr : effectarray)
 			{
-				picojson::object obj = cueitr.second.get<picojson::object>();
-
-				cue.CueID = (uint16_t)obj["id"].get<double>();
-				cue.CueName = obj["name"].get < std::string >();
-				cue.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
-				cue.Loopflag = obj["loopflag"].get<bool>();
-				cue.Filepath = CreateAudioDataPath();
-				cue.StreamType = (AudioLoadType)((int)obj["loadtype"].get<double>());
-
-				picojson::array& effectarray = obj["effects"].get<picojson::array>();
-				for (auto effectitr : effectarray)
-				{
-					EffectState state;
-					state.UseEffect = (EFFECTSNUM)((int)effectitr.get<picojson::object>()["effect"].get<double>());
-					state.UseElement = effectitr.get<picojson::object>()["element"].get<std::string>();
-					cue.CueEffect.push_back(state);
-				}
-
-				picojson::array& soundinfoarray = obj["soundinfo"].get<picojson::array>();
-				for (auto infoitr : soundinfoarray)
-				{
-					picojson::object itrobj = infoitr.get<picojson::object>();
-
-					Format.AudioID = (uint16_t)itrobj["id"].get<double>();
-					Format.AudioName = itrobj["name"].get<std::string>();
-					Format.Cue = itrobj["cue"].get<std::string>();
-					Format.MaterialObj = itrobj["material"].get<std::string>();
-					Format.RIFFType = (RIFFType)((int)itrobj["riff"].get<double>());
-					Format.DefaultVolume = itrobj["defaultvolume"].get<double>();
-					Format.MaxVolume = itrobj["maxvolume"].get<double>();
-
-					types.push_back(Format);
-				}
-
-				Format.CreateFlag = true;
+				EffectState state;
+				state.UseEffect = (EFFECTSNUM)((int)effectitr.get<picojson::object>()["effect"].get<double>());
+				state.UseElement = effectitr.get<picojson::object>()["element"].get<std::string>();
+				_resourcedata.cueData.CueEffect.push_back(state);
 			}
+
+			picojson::array& soundinfoarray = obj["soundinfo"].get<picojson::array>();
+			for (auto infoitr : soundinfoarray)
+			{
+				SoundType sT;
+				picojson::object itrobj = infoitr.get<picojson::object>();
+
+				sT.AudioID = (uint16_t)itrobj["id"].get<double>();
+				sT.AudioName = itrobj["name"].get<std::string>();
+				sT.Cue = itrobj["cue"].get<std::string>();
+				sT.MaterialObj = itrobj["material"].get<std::string>();
+				sT.RIFFType = (RIFFType)((int)itrobj["riff"].get<double>());
+				sT.DefaultVolume = itrobj["defaultvolume"].get<double>();
+				sT.MaxVolume = itrobj["maxvolume"].get<double>(); 
+				sT.CreateFlag = true;
+
+				// 取得した情報を取得
+				_resourcedata.soundType.push_back(sT);
+
+			}
+			preloadFiles.push_back(_resourcedata);
 		}
 		return true;
-
-
 	}
 
 	bool AudioFormatData::LoadEffectData(CHORUS_INFO& info, std::string effectelementpath)
@@ -876,9 +873,14 @@ namespace htAudio {
 		DataPath = "/Data/";
 	}
 
-	std::string AudioFormatData::CreateFormatDataPath()
+	std::string AudioFormatData::CreateFormatSDataPath()
 	{
-		return ExeDirectory + DataPath + "json/htAudioInfo.json";
+		return ExeDirectory + DataPath + "json/htAudioStreamInfo.json";
+	}
+
+	std::string AudioFormatData::CreateFormatPDataPath()
+	{
+		return ExeDirectory + DataPath + "json/htAudioPreloadInfo .json";
 	}
 
 	std::string AudioFormatData::CreateEffectDataPath(std::string dataname)

@@ -1,4 +1,5 @@
 #include "AudioReSource.h"
+#include"OpenAL/AudioFormatData/AudioFormatData.h"
 
 namespace htAudio
 {
@@ -24,7 +25,7 @@ namespace htAudio
 	/// </summary>
 	void AudioReSource::ReadPreLoadAudio()
 	{
-
+		AudioFormatData::LoadAudioPreloadFormatData(AudioresourceMap);
 	}
 
 	/// <summary>

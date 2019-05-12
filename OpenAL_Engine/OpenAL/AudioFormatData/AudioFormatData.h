@@ -42,7 +42,8 @@ namespace htAudio
 		
 	private:
 
-		static std::string CreateFormatDataPath();
+		static std::string CreateFormatSDataPath();
+		static std::string CreateFormatPDataPath();
 		static std::string CreateEffectDataPath(std::string dataname);
 		static std::string CreateAudioDataPath();
 	};

@@ -1,0 +1,39 @@
+{
+  "Test1": {
+    "id": 0,
+    "name": "Test1",
+    "volumetype": 1,
+    "loopflag": true,
+    "loadtype": 0,
+    "effects": [
+      {
+        "effect": 0,
+        "element": "State1"
+      },
+      {
+        "effect": 6,
+        "element": "State1"
+      }
+    ],
+    "soundinfo": [
+      {
+        "id": 0,
+        "name": "TestBGM2",
+        "cue": "Test1",
+        "material": "",
+        "riff": 0,
+        "defaultvolume": 100,
+        "maxvolume": 100
+      },
+      {
+        "id": 1,
+        "name": "TestBGM3",
+        "cue": "Test1",
+        "material": "Sand",
+        "riff": 0,
+        "defaultvolume": 70,
+        "maxvolume": 80
+      }
+    ]
+  }
+}

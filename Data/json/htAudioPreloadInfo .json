@@ -1,0 +1,29 @@
+{
+  "Test2": {
+    "id": 1,
+    "name": "Test2",
+    "volumetype": 2,
+    "loopflag": false,
+    "loadtype": 1,
+    "soundinfo": [
+      {
+        "id": 0,
+        "name": "TestSE1",
+        "cue": "Test2",
+        "material": "",
+        "riff": 0,
+        "defaultvolume": 100,
+        "maxvolume": 100
+      },
+      {
+        "id": 1,
+        "name": "TestSE2",
+        "cue": "Test2",
+        "material": "Sand",
+        "riff": 0,
+        "defaultvolume": 100,
+        "maxvolume": 100
+      }
+    ]
+  }
+}

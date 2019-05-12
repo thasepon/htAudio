@@ -162,7 +162,7 @@ namespace htAudio
 	struct ResourceData
 	{
 		AUDIOFILEFORMAT fmt;
-		SoundType soundType;
+		std::list<SoundType> soundType;
 		AudioCue cueData;
 		AudioData data;
 	};

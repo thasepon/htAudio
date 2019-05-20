@@ -13,10 +13,10 @@ namespace htAudio
 
 	AudioReSource::~AudioReSource()
 	{
-		if (AudioresourceMap.size() <= 0)
+		if (Audioresourcelist.size() <= 0)
 			return;
 
-		AudioresourceMap.clear();
+		Audioresourcelist.clear();
 
 	}
 
@@ -25,7 +25,15 @@ namespace htAudio
 	/// </summary>
 	void AudioReSource::ReadPreLoadAudio()
 	{
-		AudioFormatData::LoadAudioPreloadFormatData(AudioresourceMap);
+		// Preloadステートの取得
+		AudioFormatData::LoadAudioPreloadFormatData(Audioresourcelist);
+
+		// バッファの確保
+		for(ResourceData itr : Audioresourcelist)
+		{
+			AudioDecoder::AudioBufferDecoder(&itr.preloadBuf[0], itr.data, SoundDatas[NowUsedNumb], itr.fmt, SpeakerCue.Filepath);
+		}
+
 	}
 
 	/// <summary>
@@ -34,7 +42,6 @@ namespace htAudio
 	/// <param name=""></param>
 	void AudioReSource::GetAudioBuffer(std::string)
 	{
-
 	}
 	
 	/// <summary>
@@ -47,7 +54,7 @@ namespace htAudio
 	}
 
 	/// <summary>
-	/// 現在使用している
+	/// 現在のリソースを全削除
 	/// </summary>
 	void AudioReSource::ReleaseResource()
 	{

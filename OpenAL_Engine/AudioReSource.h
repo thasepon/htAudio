@@ -22,7 +22,10 @@ namespace htAudio
 		
 	private:
 		// 読みこんだファイルの保存用map
-		std::vector<ResourceData> AudioresourceMap;
+		std::vector<ResourceData> Audioresourcelist;
+		
+		std::vector<int16_t> preloadBuf;
+
 	};
 
 }

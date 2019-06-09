@@ -163,8 +163,8 @@ namespace htAudio
 	{
 		AUDIOFILEFORMAT fmt;
 		std::list<SoundType> soundType;
+		std::list<int16_t> PreloadBuffer;
 		AudioCue cueData;
 		AudioData data;
 	};
-
 }

@@ -29,9 +29,9 @@ namespace htAudio
 		{
 			for (SoundType type : itr.soundType)
 			{
-				int16_t* buffer;
+				int16_t* buffer = new int16_t();
 				AudioDecoder::AudioBufferDecoder(&buffer[0], itr.data, type, itr.fmt, itr.cueData.Filepath);
-				itr.PreloadBuffer.push_back(*buffer);
+				itr.PreloadBuffer.push_back(buffer);
 			}
 			
 		}

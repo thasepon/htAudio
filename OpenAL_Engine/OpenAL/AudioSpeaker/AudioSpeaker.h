@@ -50,24 +50,22 @@ namespace htAudio
 		bool AddEffects();					// エフェクトの適応と設定
 		void UpdateStreamBuffer(std::vector<int16_t> buf);				// バッファ更新用関数
 
-		// === 変数 === //		
-		uint16_t NowUsedNumb;					// 現在使用しているSoundTypeの番号
-		
+		// === 構造体宣言 === //
 		AudioData SpeakerData;					// Audioのデータ(使いまわしする予定)
 		AUDIOFILEFORMAT HeaderFormat;			// ヘッダー情報
-		std::vector<SoundType> SoundDatas;		// Jsonから得た情報(複数のデータがあります)
 		AudioCue SpeakerCue;					// Jsonから得た情報(単一データ)
-		uint16_t StreamBufSize;					// バッファサイズ
+		std::vector<SoundType> SoundDatas;		// Jsonから得た情報(複数のデータがあります)
+		AudioBuffer SpeakerBuffer;
 
-		std::vector<int16_t> PrimaryMixed;		// バッファ保存[1]
-		std::vector<int16_t> SecondMixed;		// バッファ保存[2](Preloadの場合は未使用)
+		// === 変数 === //
+		uint16_t NowUsedNumb;					// 現在使用しているSoundTypeの番号
+		uint16_t StreamBufSize;					// バッファサイズ
 		std::string UseMaterialAtt;				// 現在のマテリアル情報
-		
 		std::string CueName;					// 指定Cueの名前(CueIdだけでも可)
 		int CueId;								// 指定CueのId(CueNameだけでも可)
 
 		ALuint Source;							// Sourceの設定
-		ALuint Buffers[2];				// バッファの設定
+		ALuint Buffers[2];						// バッファの設定
 
 		std::shared_ptr <SetBufCommand> BufferCommand;	// バッファ設定用コマンド
 		std::shared_ptr <AddEffectCommand> EffectCommand;	// エフェクトコマンド

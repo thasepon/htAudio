@@ -47,6 +47,7 @@ namespace htAudio
 		MAX_EFFECTS,
 	};
 
+	// ソースへの命令
 	enum ORDERTYPE 
 	{
 		PLAY,
@@ -55,6 +56,7 @@ namespace htAudio
 		MAX_ORDER
 	};
 
+	// 音の種類
 	enum VOLUMETYPE
 	{
 		ALL,
@@ -120,7 +122,6 @@ namespace htAudio
 		std::string UseElement;
 	};
 
-
 	// サウンドの初期値、設定情報
 	struct SoundType {
 		int AudioID;				// Audioの情報
@@ -158,12 +159,19 @@ namespace htAudio
 		long DataChunkSample; // サンプリング情報
 	};
 
+	// バッファ用の構造体
+	struct AudioBuffer
+	{
+		std::vector<int16_t> PrimaryMixed;		// バッファ保存[1]
+		std::vector<int16_t> SecondMixed;		// バッファ保存[2](Preloadの場合は未使用)
+	};
+
 	// （ひとまず）Preload用の構造体
 	struct ResourceData
 	{
 		AUDIOFILEFORMAT fmt;
 		std::list<SoundType> soundType;
-		std::list<int16_t> PreloadBuffer;
+		std::list<int16_t*> PreloadBuffer;
 		AudioCue cueData;
 		AudioData data;
 	};

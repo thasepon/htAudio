@@ -25,7 +25,6 @@ namespace htAudio {
 		SpeakerData.TotalreadBufSize = 0;
 		SpeakerData.DataChunkSample = 0;
 		SpeakerData.NextFirstSample = 0;
-
 	}
 
 	/// <summary>
@@ -51,8 +50,8 @@ namespace htAudio {
 		}
 
 		SoundDatas.clear();
-		PrimaryMixed.clear();
-		SecondMixed.clear();
+		SpeakerBuffer.PrimaryMixed.clear();
+		SpeakerBuffer.SecondMixed.clear();
 	}
 
 	//
@@ -315,11 +314,11 @@ namespace htAudio {
 		{
 			if (SpeakerData.SubmitTimes == 0)
 			{
-				UpdateStreamBuffer(PrimaryMixed);
+				UpdateStreamBuffer(SpeakerBuffer.PrimaryMixed);
 			}
 			else if (SpeakerData.SubmitTimes == 1)
 			{
-				UpdateStreamBuffer(SecondMixed);
+				UpdateStreamBuffer(SpeakerBuffer.SecondMixed);
 			}
 		}
 	}
@@ -392,20 +391,20 @@ namespace htAudio {
 		}
 
 		// Primaryバッファの作成
-		PrimaryMixed.clear();
-		PrimaryMixed = std::vector<int16_t>(StreamBufSize);
-		AudioDecoder::AudioBufferDecoder(&PrimaryMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+		SpeakerBuffer.PrimaryMixed.clear();
+		SpeakerBuffer.PrimaryMixed = std::vector<int16_t>(StreamBufSize);
+		AudioDecoder::AudioBufferDecoder(&SpeakerBuffer.PrimaryMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
 		
 		// Secondバッファの作成
-		SecondMixed.clear();
-		SecondMixed = std::vector<int16_t>(StreamBufSize);	
-		AudioDecoder::AudioBufferDecoder(&SecondMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+		SpeakerBuffer.SecondMixed.clear();
+		SpeakerBuffer.SecondMixed = std::vector<int16_t>(StreamBufSize);	
+		AudioDecoder::AudioBufferDecoder(&SpeakerBuffer.SecondMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
 		
 		// 作成したバッファの設定
 		alSourceUnqueueBuffers(Source, 2, Buffers);
-		BufferCommand->Execute(Buffers[0], HeaderFormat.Fmt.Channels, &PrimaryMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+		BufferCommand->Execute(Buffers[0], HeaderFormat.Fmt.Channels, &SpeakerBuffer.PrimaryMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
 		alSourceQueueBuffers(Source, 1, &Buffers[0]);
-		BufferCommand->Execute(Buffers[1], HeaderFormat.Fmt.Channels, &SecondMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+		BufferCommand->Execute(Buffers[1], HeaderFormat.Fmt.Channels, &SpeakerBuffer.SecondMixed[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
 		alSourceQueueBuffers(Source, 1, &Buffers[1]);
 	}
 

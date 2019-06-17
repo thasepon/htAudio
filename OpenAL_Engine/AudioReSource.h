@@ -12,6 +12,16 @@ namespace htAudio
 	/// </summary>
 	class AudioReSource
 	{
+		// （ひとまず）Preload用の構造体
+		struct ResourceData
+		{
+			AUDIOFILEFORMAT fmt;
+			std::list<SoundType> soundType;
+			std::list<int16_t*> PreloadBuffer;
+			AudioCue cueData;
+			AudioData data;
+		};
+
 	public:
 		AudioReSource();
 		~AudioReSource();

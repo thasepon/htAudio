@@ -166,13 +166,4 @@ namespace htAudio
 		std::vector<int16_t> SecondMixed;		// バッファ保存[2](Preloadの場合は未使用)
 	};
 
-	// （ひとまず）Preload用の構造体
-	struct ResourceData
-	{
-		AUDIOFILEFORMAT fmt;
-		std::list<SoundType> soundType;
-		std::list<int16_t*> PreloadBuffer;
-		AudioCue cueData;
-		AudioData data;
-	};
 }

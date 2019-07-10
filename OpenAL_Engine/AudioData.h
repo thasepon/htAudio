@@ -105,7 +105,6 @@ namespace htAudio
 		FormatChunk Fmt;
 		DataChunk Data;
 		long FirstSampleOffSet; // Bufferの開始位置
-		bool HasGotWaveFormat;		// オーディオファイルの情報を取得出来ているかどうか
 	};
 
 	// リスナーコーンのステータス用
@@ -146,6 +145,7 @@ namespace htAudio
 		bool Loopflag;						// ループフラグ
 		AudioLoadType StreamType;			// ストリーミングタイプ
 		std::vector<EffectState> CueEffect;	// Cueに適応させるエフェクトの一覧
+		std::vector<SoundType> AudioInfo;	// 音源情報
 	};
 
 	// Speaker側の情報
@@ -156,7 +156,7 @@ namespace htAudio
 		unsigned long NextFirstSample = { 0 };
 		unsigned long SubmitTimes = { 0 };	// どのバッファを使用するかの判定
 		unsigned long BufferSample = { 0 };
-		long DataChunkSample; // サンプリング情報
+		long DataChunkSample;				// サンプリング情報
 	};
 
 	// バッファ用の構造体

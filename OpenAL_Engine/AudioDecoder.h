@@ -13,6 +13,7 @@ namespace htAudio
 {
 	/// <summary>
 	/// 16bitWav音源とOggのデコーダー
+	/// 機能関数なのでAllStaticにしてます、singletonでもいいのだけどアクセスが面倒になるのでとりあえずStatic
 	/// </summary>
 	class AudioDecoder
 	{
@@ -21,6 +22,7 @@ namespace htAudio
 
 		static bool LoadRIFFFormat(AUDIOFILEFORMAT& headerfmt,SoundType audiodata,std::string filepath);		// ファイルフォーマットの取得		
 		static bool AudioBufferDecoder(void* buf, AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath);	// ファイルのバッファーを取得
+		static bool AudioPreloadBufferDecoder(void* buf, SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath);
 
 	private:
 		AudioDecoder();		// コンストラクタ

@@ -14,7 +14,7 @@ namespace htAudio {
 	AudioSpeaker::AudioSpeaker()
 	{
 		// 変数の初期化
-		HeaderFormat.HasGotWaveFormat = false;
+		HasGotWaveFormat = false;
 		NowUsedNumb = 0;
 		Source = 0;
 		SpeakerData.BufferSample = 0;
@@ -54,28 +54,22 @@ namespace htAudio {
 		SpeakerBuffer.SecondMixed.clear();
 	}
 
-	//
-	//	現在対象にしているマテリアルの設定
-	//
-	void AudioSpeaker::SetMaterial(string Name)
+	/// <summary>
+	/// マテリアルの設定をする
+	/// </summary>
+	/// <param name="Name">設定するマテリアル名</param>
+	bool AudioSpeaker::SetMaterialName(string Name)
 	{
-		// 現在のマテリアルと同じの場合は読み込みはしない
+		// 現在のマテリアルと同じの場合は処理をしない
 		if (UseMaterialAtt == Name)
-		{
-			printf("同一マテリアルです\n");
-			return;
-		}
+			return false;
 
 		UseMaterialAtt = Name;
-
-		HeaderFormat.HasGotWaveFormat = AudioFormatData::LoadAudioFormatData(SpeakerCue, SoundDatas, CueName);
+		HasGotWaveFormat = AudioFormatData::LoadAudioFormatData(SpeakerCue, SoundDatas, CueName);
 		
 		// ヘッダー取得に失敗
-		if (!HeaderFormat.HasGotWaveFormat)
-		{
-			printf("マテリアル変更後の情報を取得に失敗\n");
+		if (!HasGotWaveFormat)
 			return;
-		}
 
 		ReadHeaderInfo();
 
@@ -110,16 +104,13 @@ namespace htAudio {
 
 		CueName = filename;
 
-		HeaderFormat.HasGotWaveFormat = false;
+		HasGotWaveFormat = false;
 
 		// オーディオ情報を外部ファイルから取得
-		HeaderFormat.HasGotWaveFormat = AudioFormatData::LoadAudioFormatData(SpeakerCue,SoundDatas, CueName);
+		HasGotWaveFormat = AudioFormatData::LoadAudioFormatData(SpeakerCue,SoundDatas, CueName);
 
-		if (!HeaderFormat.HasGotWaveFormat)
-		{
-			printf("SetAudioSorceの設定に失敗しました\n");
+		if (!HasGotWaveFormat)
 			return;
-		}
 
 		ReadHeaderInfo();
 		AddEffects();
@@ -134,7 +125,7 @@ namespace htAudio {
 	void AudioSpeaker::SetAudioSorce(int id)
 	{
 		int cnt = 0;
-		HeaderFormat.HasGotWaveFormat = false;
+		HasGotWaveFormat = false;
 		StreamBufSize = 4096;
 
 		CueId = id;
@@ -150,9 +141,9 @@ namespace htAudio {
 		}
 
 		// オーディオ情報を外部ファイルから取得
-		HeaderFormat.HasGotWaveFormat = AudioFormatData::LoadAudioFormatData(SpeakerCue, SoundDatas, CueName);
+		HasGotWaveFormat = AudioFormatData::LoadAudioFormatData(SpeakerCue, SoundDatas, CueName);
 
-		if (!HeaderFormat.HasGotWaveFormat)
+		if (!HasGotWaveFormat)
 		{
 			return;			// フォーマット取得できていません。
 		}
@@ -245,7 +236,7 @@ namespace htAudio {
 	/// <returns></returns>
 	bool AudioSpeaker::Update()
 	{
-		if (HeaderFormat.HasGotWaveFormat == false)
+		if (HasGotWaveFormat == false)
 			return false;
 
 		int State = 0;
@@ -434,7 +425,6 @@ namespace htAudio {
 		}
 		else {
 			printf("UpdateStreamBufferに失敗しました\n");
-
 		}
 	}
 

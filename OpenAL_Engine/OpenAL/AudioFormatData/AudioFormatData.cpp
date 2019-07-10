@@ -169,7 +169,7 @@ namespace htAudio {
 	/// プリロード対象のファイル情報をすべて読み込むために生まれてきた関数
 	/// </summary>
 	/// <param name="preloadFiles"></param>
-	bool AudioFormatData::LoadAudioPreloadFormatData(std::vector<ResourceData>& preloadFiles)
+	bool AudioFormatData::LoadAudioPreloadFormatData(std::vector<AudioCue>& preloadFiles)
 	{
 		// ファイルの取得
 		std::string Path = CreateFormatPDataPath();
@@ -195,16 +195,16 @@ namespace htAudio {
 		picojson::object obj = Val.get<picojson::object>();
 		for (auto cueitr : obj)
 		{
-			ResourceData _resourcedata;
+			AudioCue _resourcedata;
 			// 同一名の物を検索
 			picojson::object obj = cueitr.second.get<picojson::object>();
 
-			_resourcedata.cueData.CueID = (uint16_t)obj["id"].get<double>();
-			_resourcedata.cueData.CueName = obj["name"].get < std::string >();
-			_resourcedata.cueData.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
-			_resourcedata.cueData.Loopflag = obj["loopflag"].get<bool>();
-			_resourcedata.cueData.Filepath = CreateAudioDataPath();
-			_resourcedata.cueData.StreamType = (AudioLoadType)((int)obj["loadtype"].get<double>());
+			_resourcedata.CueID = (uint16_t)obj["id"].get<double>();
+			_resourcedata.CueName = obj["name"].get < std::string >();
+			_resourcedata.VolType = (VOLUMETYPE)((int)obj["volumetype"].get<double>());
+			_resourcedata.Loopflag = obj["loopflag"].get<bool>();
+			_resourcedata.Filepath = CreateAudioDataPath();
+			_resourcedata.StreamType = (AudioLoadType)((int)obj["loadtype"].get<double>());
 
 			picojson::array& effectarray = obj["effects"].get<picojson::array>();
 			for (auto effectitr : effectarray)
@@ -212,7 +212,7 @@ namespace htAudio {
 				EffectState state;
 				state.UseEffect = (EFFECTSNUM)((int)effectitr.get<picojson::object>()["effect"].get<double>());
 				state.UseElement = effectitr.get<picojson::object>()["element"].get<std::string>();
-				_resourcedata.cueData.CueEffect.push_back(state);
+				_resourcedata.CueEffect.push_back(state);
 			}
 
 			picojson::array& soundinfoarray = obj["soundinfo"].get<picojson::array>();
@@ -231,7 +231,7 @@ namespace htAudio {
 				sT.CreateFlag = true;
 
 				// 取得した情報を取得
-				_resourcedata.soundType.push_back(sT);
+				_resourcedata.AudioInfo.push_back(sT);
 
 			}
 			preloadFiles.push_back(_resourcedata);

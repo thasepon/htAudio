@@ -39,9 +39,9 @@ namespace htAudio {
 		SpeakerManager* GetSpeakerManagerPtr();
 
 	private:
-		void ThreadUpdate();							// スレッド更新
+		void ThreadUpdate();				// スレッド更新
 
-		list<AudioCommand*> OrderList;					// オーディオオーダー
+		list<AudioCommand*> OrderList;		// オーディオオーダー
 		
 		AudioReSource* ResourcePtr;			// Preloadでの使いまわし用のリソースptr
 		EffectManager* EffectElementMgrPtr;	// エフェクトエレメントを保持するためのポインタ

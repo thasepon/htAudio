@@ -53,7 +53,6 @@ namespace htAudio
 		format.Fmt.BlockSize = vi->channels * 2;
 		format.Fmt.BitsPerSample = 16;
 		format.Fmt.BytesPerSec = (vi->rate) * (vi->channels * 2);
-		format.HasGotWaveFormat = true;
 
 		return true;
 #endif
@@ -149,8 +148,6 @@ namespace htAudio
 		format.FirstSampleOffSet = 48;
 
 		fclose(fp);
-
-		format.HasGotWaveFormat = true;
 		
 		return true;
 
@@ -159,7 +156,11 @@ namespace htAudio
 	/// <summary>
 	/// オーディオバッファー読み込み用の窓口関数
 	/// </summary>
-	bool AudioDecoder::AudioBufferDecoder(void* buf,AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath)
+	bool AudioDecoder::AudioBufferDecoder(void* buf
+		,AudioData& audiodata
+		,SoundType type
+		, AUDIOFILEFORMAT headerfmt
+		, std::string filepath)
 	{
 		bool loadflag = false;
 
@@ -176,6 +177,31 @@ namespace htAudio
 		// 処理なし
 		return loadflag;
 	}
+
+	/// <summary>
+	/// Preloadのバッファ読み込み
+	/// (一部必要のない引数があったので作成)
+	/// </summary>
+	/// <param name="buf"></param>
+	/// <returns></returns>
+	bool AudioDecoder::AudioPreloadBufferDecoder(void* buf
+		, SoundType type
+		, AUDIOFILEFORMAT headerfmt
+		, std::string filepath)
+	{
+		bool loadflag = false;
+
+		// 拡張子の判断
+		if (type.RIFFType == RIFF_WAV)
+		{
+			PreloadWavDecoder(headerfmt, filepath + type.AudioName + ".wav", type.Loopflag,  buf);
+		}
+		else if (type.RIFFType == RIFF_OGG)
+		{
+			loadflag = PreloadOggDecoder( filepath + type.AudioName + ".wav", type.Loopflag, buf);
+		}
+	}
+
 
 	/// <summary>
 	/// バッファーの読み込み(.wav)
@@ -346,12 +372,6 @@ namespace htAudio
 		if (!buf)
 		{
 			printf("バッファのサイズの確保不足");
-			return false;
-		}
-
-		if (!Format.HasGotWaveFormat)
-		{
-			printf("初期化に終了していません");
 			return false;
 		}
 

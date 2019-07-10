@@ -1,5 +1,6 @@
 #include "AudioReSource.h"
 #include"OpenAL/AudioFormatData/AudioFormatData.h"
+#include <algorithm>
 
 namespace htAudio
 {
@@ -8,12 +9,14 @@ namespace htAudio
 	/// </summary>
 	AudioReSource::AudioReSource()
 	{
+		ReadCueFormatData();
 		ReadPreLoadAudio();
 	}
 
 	AudioReSource::~AudioReSource()
 	{
 		ReleaseResource();
+		ReleaseFormatData();
 	}
 
 	/// <summary>
@@ -22,18 +25,20 @@ namespace htAudio
 	void AudioReSource::ReadPreLoadAudio()
 	{
 		// Preloadステートの取得
-		AudioFormatData::LoadAudioPreloadFormatData(Audioresourcelist);
+		if (Audioresourcelist.empty())
+			return;
 
 		// 読み込んだ情報の分だけバッファの確保
-		for(ResourceData itr : Audioresourcelist)
+		for(AudioCue itr : Audioresourcelist)
 		{
-			for (SoundType type : itr.soundType)
+			for (SoundType type : itr.AudioInfo)
 			{
 				int16_t* buffer = new int16_t();
-				AudioDecoder::AudioBufferDecoder(&buffer[0], itr.data, type, itr.fmt, itr.cueData.Filepath);
-				itr.PreloadBuffer.push_back(buffer);
+				
+				AudioDecoder::AudioPreloadBufferDecoder(&buffer[0]);
+				
+				BufferMap.insert(std::make_pair(type.AudioID, buffer));
 			}
-			
 		}
 	}
 
@@ -41,57 +46,106 @@ namespace htAudio
 	/// 読み込んだbufferをクローン化して送る関数
 	/// </summary>
 	/// <param name=""></param>
-	void AudioReSource::GetAudioBuffer(std::string cuename, AUDIOFILEFORMAT* fmt, std::list<SoundType>* type, AudioCue* cue, AudioData* data, void* buf)
+	void AudioReSource::GetAudioBuffer(SoundType Target, void* buf)
 	{
-		for (ResourceData var : Audioresourcelist)
+		if (BufferMap.empty())
+			return;
+
+		for (auto var : BufferMap)
 		{
-			if (var.cueData.CueName == cuename)
+			if (var.first == Target.AudioID)
 			{
-				fmt = &var.fmt;
-				type = &var.soundType;
-				cue = &var.cueData;
-				data = &var.data;
-				buf = &var.PreloadBuffer;
+				// TODO: Bufferコピー
+				buf = &var.second;
+				break;
 			}
 		}
 	}
 	
 	/// <summary>
-	/// 読み込んだbufferをクローン化して送る関数
-	/// </summary>
-	/// <param name="Id"></param>
-	void AudioReSource::GetAudioBuffer(int Id, AUDIOFILEFORMAT* fmt, std::list<SoundType>* type, AudioCue* cue, AudioData* data, void* buf)
-	{
-		for (ResourceData var : Audioresourcelist)
-		{
-			if (var.cueData.CueID == Id)
-			{
-				fmt = &var.fmt;
-				type = &var.soundType;
-				cue = &var.cueData;
-				data = &var.data;
-				buf = &var.PreloadBuffer;
-			}
-		}
-	}
-
-	/// <summary>
 	/// 現在のリソースを全削除
 	/// </summary>
 	void AudioReSource::ReleaseResource()
 	{
-		if (Audioresourcelist.empty())
-		{
+		if (BufferMap.empty())
 			return;
-		}
 		
-		for (ResourceData var : Audioresourcelist)
+		for (auto bufmap : BufferMap)
 		{
-			var.PreloadBuffer.clear();
-			var.soundType.clear();
+			delete bufmap.second;
 		}
 
+		BufferMap.clear();
+	}
+
+	/// <summary>
+	/// Cueのフォーマットデータを一括で読み込み
+	/// </summary>
+	void AudioReSource::ReadCueFormatData()
+	{
+		AudioFormatData::LoadAudioPreloadFormatData(Audioresourcelist);
+	}
+
+	/// <summary>
+	/// 指定のCueデータを引っ張ってくる
+	/// </summary>
+	/// <param name="CueId"></param>
+	AudioCue AudioReSource::GetFormatData(int CueId)
+	{
+		AudioCue selectCue;
+
+		if (Audioresourcelist.empty())
+			return selectCue;
+
+		for (auto cue : Audioresourcelist)
+		{
+			if (cue.CueID != CueId)
+				continue;
+
+			selectCue = cue;
+		}
+
+		return selectCue;
+
+	}
+
+	/// <summary>
+	/// 指定のCueデータを引っ張ってくる
+	/// </summary>
+	/// <param name="CueName"></param>
+	AudioCue AudioReSource::GetFormatData(std::string CueName)
+	{
+		AudioCue selectCue;
+
+		if (Audioresourcelist.empty())
+			return selectCue;
+
+		for (auto cue : Audioresourcelist)
+		{
+			if (cue.CueName != CueName)
+				continue;
+
+			selectCue = cue;
+		}
+
+		return selectCue;
+	}
+
+	/// <summary>
+	/// 取得したフォーマットの破棄
+	/// </summary>
+	void AudioReSource::ReleaseFormatData()
+	{
+		if (Audioresourcelist.empty())
+			return;
+
+		for (auto cue : Audioresourcelist)
+		{
+			cue.CueEffect.clear();
+			cue.AudioInfo.clear();
+		}
 		Audioresourcelist.clear();
 	}
+
 
 }

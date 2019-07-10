@@ -14,13 +14,9 @@ using namespace htAudio;
 extern "C" {
 
 	// 総合処理
-	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeleteInstance();
+	UNITY_INTERFACE_EXPORT AudioManager* UNITY_INTERFACE_API htaCreateInstance();
+	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API htaDeleteInstance();
 
-	// デバイス
-	//UNITY_INTERFACE_EXPORT OpenALDevice* UNITY_INTERFACE_API htaCreateDevice();
-	
-	// マネージャー
-	UNITY_INTERFACE_EXPORT AudioManager* UNITY_INTERFACE_API htaCreateManager();
 	UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API ExecOrder();
 
 	// Listenerの機能

@@ -35,79 +35,30 @@ using namespace htAudio;
 		dest.shrink_to_fit();
 		return std::string(dest.begin(), dest.end());
 	}
-
-	void DeleteInstance()
-	{
-		SingletonFinalizer::finalize();
-	}
-
-	// ================================= Device ================================= //
-	/*OpenALDevice* htaCreateDevice()
-	{
-		return new OpenALDevice();
-	}
-
-	void htaDeleteDevice(OpenALDevice* Instance)
-	{
-		if (Instance == nullptr)
-		{
-			return;
-		}
-
-		delete Instance;
-		Instance = nullptr;
-	}*/
 	
+	// ================= マネージャー ======================= //
 
-	/*OpenALDevice* htaCreateDevice()
-	{
-		Singleton<OpenALDevice>::get_Instance();
-
-		bool flah = Singleton<OpenALDevice>::get_Instance()->GetCreateDeviceFlag();
-
-		if (flah == true)
-		{
-			return Singleton<OpenALDevice>::get_Instance();
-		}
-		else
-		{
-			return nullptr;
-		}
-
-
-	}*/
-
-	// =============================== AudioManager ================================= //
-	
-	
-	/*AudioManager* htaCreateManager()
-	{
-		return new AudioManager();
-	}
-
-	void ExecOrder(AudioManager* Instance)
-	{
-		Instance->ExecOrderCmd();
-	}
-
-	void htaDeleteManager(AudioManager* instance)
-	{
-		if (instance == nullptr)
-		{
-			return;
-		}
-
-		delete instance;
-		instance = nullptr;
-	}*/
-	
-
-	AudioManager* htaCreateManager()
+	/// <summary>
+	/// htaAudioの初期作成処理
+	/// </summary>
+	/// <returns></returns>
+	AudioManager* htaCreateInstance()
 	{
 		Singleton<OpenALDevice>::get_Instance();
 		return Singleton<AudioManager>::get_Instance();
 	}
 
+	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void htaDeleteInstance()
+	{
+		SingletonFinalizer::finalize();
+	}
+
+	/// <summary>
+	/// オーダーの起動
+	/// </summary>
 	void ExecOrder()
 	{
 		Singleton<AudioManager>::get_Instance()->ExecOrderCmd();
@@ -249,7 +200,7 @@ using namespace htAudio;
 	{
 		std::string name;
 		name = wide_to_multi_capi(matereialname);
-		speakerPtr->SetMaterial(name);
+		speakerPtr->SetMaterialName(name);
 	}
 
 	bool  PlayI(int speakerId)

@@ -30,9 +30,11 @@ namespace htAudio
 		AudioSpeaker();								// スピーカーのみを生成
 		~AudioSpeaker();							// スピーカーの削除処理
 
-		void SetMaterial(string Name);				// マテリアルデータの設定
+		bool SetMaterialName(string Name);			// マテリアルデータの設定
+
 		void SetAudioSorce(string filename);		// オーディオデータの設定 ファイル名
 		void SetAudioSorce(int id);					// オーディオデータの設定 ID
+		
 		void SetVolume(double volume);				// ボリュームの設定
 		
 		bool Update();								// 更新処理
@@ -60,9 +62,13 @@ namespace htAudio
 		// === 変数 === //
 		uint16_t NowUsedNumb;					// 現在使用しているSoundTypeの番号
 		uint16_t StreamBufSize;					// バッファサイズ
+		
 		std::string UseMaterialAtt;				// 現在のマテリアル情報
+		
 		std::string CueName;					// 指定Cueの名前(CueIdだけでも可)
 		int CueId;								// 指定CueのId(CueNameだけでも可)
+
+		bool HasGotWaveFormat;					// フォーマット取得に成功しているか
 
 		ALuint Source;							// Sourceの設定
 		ALuint Buffers[2];						// バッファの設定

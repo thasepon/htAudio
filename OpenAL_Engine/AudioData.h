@@ -123,15 +123,16 @@ namespace htAudio
 
 	// サウンドの初期値、設定情報
 	struct SoundType {
-		int AudioID;				// Audioの情報
-		std::string AudioName;		// オーディオファイルの名前
-		std::string Cue;			// Cueの名前
-		std::string MaterialObj;	// 属しているマテリアル
-		RIFFType RIFFType;			// ファイル拡張子の種類
-		double DefaultVolume;		// デフォルト音量
-		double MaxVolume;			// 最大音量
-		bool CreateFlag;			// 作成フラグ
-		bool Loopflag;				// ループフラグ
+		AUDIOFILEFORMAT AudioFormat;	// フォーマットの取得
+		int AudioID;					// Audioの情報
+		std::string AudioName;			// オーディオファイルの名前
+		std::string Cue;				// Cueの名前
+		std::string MaterialObj;		// 属しているマテリアル
+		RIFFType RIFFType;				// ファイル拡張子の種類
+		double DefaultVolume;			// デフォルト音量
+		double MaxVolume;				// 最大音量
+		bool CreateFlag;				// 作成フラグ
+		bool Loopflag;					// ループフラグ
 	};
 
 	// Cue(Soundtypeの大まとめ)の構造体

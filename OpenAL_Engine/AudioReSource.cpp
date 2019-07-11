@@ -35,7 +35,9 @@ namespace htAudio
 			{
 				int16_t* buffer = new int16_t();
 				
-				AudioDecoder::AudioPreloadBufferDecoder(&buffer[0]);
+				// TODO: バッファの読み込みとフォーマットの初期化
+				AudioDecoder::LoadRIFFFormat(type.AudioFormat,type, itr.Filepath);
+				AudioDecoder::AudioPreloadBufferDecoder(&buffer[0], type, type.AudioFormat, itr.Filepath);
 				
 				BufferMap.insert(std::make_pair(type.AudioID, buffer));
 			}

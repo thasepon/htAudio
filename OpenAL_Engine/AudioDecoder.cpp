@@ -194,7 +194,7 @@ namespace htAudio
 		// 拡張子の判断
 		if (type.RIFFType == RIFF_WAV)
 		{
-			PreloadWavDecoder(headerfmt, filepath + type.AudioName + ".wav", type.Loopflag,  buf);
+			PreloadWavDecoder(headerfmt, filepath + type.AudioName + ".wav", type.Loopflag, buf);
 		}
 		else if (type.RIFFType == RIFF_OGG)
 		{
@@ -457,7 +457,7 @@ namespace htAudio
 		return readsize;
 	}
 
-	unsigned long AudioDecoder::PreloadWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	unsigned long AudioDecoder::PreloadWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, void* buf)
 	{
 		FILE* fp = nullptr;			// ファイルポインタ
 		int readsize = 0;
@@ -499,7 +499,6 @@ namespace htAudio
 
 		}
 		readsize = samplesize;
-
 
 		// 終了処理
 		fclose(fp);

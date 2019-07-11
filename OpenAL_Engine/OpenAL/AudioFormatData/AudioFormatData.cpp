@@ -840,12 +840,11 @@ namespace htAudio {
 			return false;
 		}
 		
-		
 		uint16_t id;
 		std::string name;
-		double initvalue;
-		double maxvalue;
-		double minvalue;
+		double initvalue = 0;
+		double maxvalue = 0;
+		double minvalue = 0;
 
 		picojson::object obj = Val.get<picojson::object>();
 		for (auto cueitr : obj)

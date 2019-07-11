@@ -37,8 +37,9 @@ namespace htAudio
 		static unsigned long PreloadOggDecoder(AudioData& audiodata, std::string filename, bool loopflag, void* buf);
 
 		static bool BufferDecoderWav(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf); // オーディオバッファーの取得(.ogg)
+		
 		static unsigned long StreamWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf);
-		static unsigned long PreloadWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf);
+		static unsigned long PreloadWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, void* buf);
 
 
 	};

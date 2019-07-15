@@ -30,11 +30,8 @@ namespace htAudio
 		void ReleaseFormatData();	// 読み込んだjsonデータを削除する
 
 	private:
-		// 読みこんだファイル情報の保存用map
-		std::vector<AudioCue> Audioresourcelist;
-
-		// Buffer情報の保存 <AuidoID,Buffer>
-		std::map<int,int16_t*> BufferMap;
+		std::vector<AudioCue> Audioresourcelist;	// 全ファイルのファイル情報を取得
+		std::map<int,int16_t*> BufferMap;			// PreloadBuffer情報の保存 <AuidoID,Buffer>
 
 	};
 

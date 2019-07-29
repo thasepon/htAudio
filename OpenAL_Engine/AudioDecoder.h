@@ -20,10 +20,12 @@ namespace htAudio
 	public:
 		~AudioDecoder();	// デストラクタ
 
+		// headerデコード関数
 		static bool LoadRIFFFormat(AUDIOFILEFORMAT& headerfmt,SoundType audiodata,std::string filepath);		// ファイルフォーマットの取得		
-		static bool AudioBufferDecoder(void* buf, AudioData& audiodata,SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath);	// ファイルのバッファーを取得
-		static bool AudioPreloadBufferDecoder(void* buf, SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath);
-
+		
+		// Bufデコード関数
+		static bool AudioBufferDecoder(void* buf, AudioData* audiodata,SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath);	// ファイルのバッファーを取得
+		
 	private:
 		AudioDecoder();		// コンストラクタ
 
@@ -32,16 +34,9 @@ namespace htAudio
 		static bool RIFFDecoderWave(std::string filename, AUDIOFILEFORMAT& format);
 
 		// Data部分のデコーダー
-		static bool BufferDecoderOgg(AudioData& audiodata, std::string filename,bool loopflag, void* buf);	// オーディオバッファーの取得(.wav)
-		static unsigned long StreamOggDecoder(AudioData& audiodata, std::string filename, bool loopflag, void* buf);
-		static unsigned long PreloadOggDecoder(std::string filename, bool loopflag, void* buf);
-
-		static bool BufferDecoderWav(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf); // オーディオバッファーの取得(.ogg)
+		static bool BufferDecoderOgg(AUDIOFILEFORMAT Format, std::string filename,bool loopflag, AudioData* audiodata, void* buf);	// オーディオバッファーの取得(.wav)
+		static bool BufferDecoderWav(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData* audiodata, void* buf); // オーディオバッファーの取得(.ogg)
 		
-		static unsigned long StreamWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf);
-		static unsigned long PreloadWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, void* buf);
-
-
 	};
 
 }

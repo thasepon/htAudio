@@ -19,6 +19,7 @@ namespace htAudio
 		ReleaseFormatData();
 	}
 
+#pragma region Buffer関係
 	/// <summary>
 	/// 最初にPreload設定の音声を読み込む
 	/// </summary>
@@ -33,12 +34,15 @@ namespace htAudio
 		{
 			for (SoundType type : itr.AudioInfo)
 			{
-				int16_t* buffer = new int16_t();
+				long* buffer;
 				
-				// TODO: バッファの読み込みとフォーマットの初期化
+				// ヘッダー情報
 				AudioDecoder::LoadRIFFFormat(type.AudioFormat,type, itr.Filepath);
-				AudioDecoder::AudioPreloadBufferDecoder(&buffer[0], type, type.AudioFormat, itr.Filepath);
 				
+				// バッファの取得
+				AudioDecoder::AudioBufferDecoder(&buffer,nullptr,type, type.AudioFormat, itr.Filepath);
+				
+				// バッファの穂zン
 				BufferMap.insert(std::make_pair(type.AudioID, buffer));
 			}
 		}
@@ -48,7 +52,7 @@ namespace htAudio
 	/// 読み込んだbufferをクローン化して送る関数
 	/// </summary>
 	/// <param name=""></param>
-	void AudioReSource::GetAudioBuffer(SoundType Target, void* buf)
+	void AudioReSource::GetAudioBuffer(SoundType Target, long* buf)
 	{
 		if (BufferMap.empty())
 			return;
@@ -57,8 +61,7 @@ namespace htAudio
 		{
 			if (var.first == Target.AudioID)
 			{
-				// TODO: Bufferコピー
-				buf = &var.second;
+				*buf = *var.second;
 				break;
 			}
 		}
@@ -71,14 +74,18 @@ namespace htAudio
 	{
 		if (BufferMap.empty())
 			return;
-		
-		for (auto bufmap : BufferMap)
+
+		for (auto var : BufferMap)
 		{
-			delete bufmap.second;
+			delete var.second;
 		}
 
 		BufferMap.clear();
 	}
+#pragma endregion
+
+
+#pragma region Format関係
 
 	/// <summary>
 	/// Cueのフォーマットデータを一括で読み込み
@@ -148,6 +155,7 @@ namespace htAudio
 		}
 		Audioresourcelist.clear();
 	}
+#pragma endregion
 
 
 }

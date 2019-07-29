@@ -163,8 +163,8 @@ namespace htAudio
 	// バッファ用の構造体
 	struct AudioBuffer
 	{
-		std::vector<int16_t> PrimaryMixed;		// バッファ保存[1]
-		std::vector<int16_t> SecondMixed;		// バッファ保存[2](Preloadの場合は未使用)
+		long* PrimaryMixed;		// バッファ保存[1]
+		long* SecondMixed;		// バッファ保存[2](Preloadの場合は未使用)
 	};
 
 }

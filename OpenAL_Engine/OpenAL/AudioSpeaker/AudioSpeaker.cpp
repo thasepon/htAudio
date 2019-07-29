@@ -8,9 +8,9 @@
 
 namespace htAudio {
 
-	//
-	//	初期のサウンド指定無しでの動作
-	//
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	AudioSpeaker::AudioSpeaker()
 	{
 		// 変数の初期化
@@ -50,8 +50,8 @@ namespace htAudio {
 		}
 
 		SoundDatas.clear();
-		SpeakerBuffer.PrimaryMixed.clear();
-		SpeakerBuffer.SecondMixed.clear();
+		delete SpeakerBuffer.PrimaryMixed;
+		delete SpeakerBuffer.SecondMixed;
 	}
 
 	/// <summary>
@@ -69,9 +69,11 @@ namespace htAudio {
 		
 		// ヘッダー取得に失敗
 		if (!HasGotWaveFormat)
-			return;
+			return false;
 
 		ReadHeaderInfo();
+
+		return true;
 
 	}
 
@@ -382,14 +384,21 @@ namespace htAudio {
 		}
 
 		// Primaryバッファの作成
-		SpeakerBuffer.PrimaryMixed.clear();
-		SpeakerBuffer.PrimaryMixed = std::vector<int16_t>(StreamBufSize);
-		AudioDecoder::AudioBufferDecoder(&SpeakerBuffer.PrimaryMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+
+		if (SpeakerBuffer.PrimaryMixed != nullptr)
+			delete SpeakerBuffer.PrimaryMixed;
+
+		SpeakerBuffer.PrimaryMixed = new long[StreamBufSize];
+		AudioDecoder::AudioBufferDecoder(&SpeakerBuffer.PrimaryMixed[0], &SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
 		
+		AudioDecoder::AudioBufferDecoder(&SpeakerBuffer.PrimaryMixed[0], NULL, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+
 		// Secondバッファの作成
-		SpeakerBuffer.SecondMixed.clear();
-		SpeakerBuffer.SecondMixed = std::vector<int16_t>(StreamBufSize);	
-		AudioDecoder::AudioBufferDecoder(&SpeakerBuffer.SecondMixed[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+		if (SpeakerBuffer.SecondMixed != nullptr)
+			delete SpeakerBuffer.SecondMixed;
+
+		SpeakerBuffer.SecondMixed = new long[StreamBufSize];
+		AudioDecoder::AudioBufferDecoder(&SpeakerBuffer.SecondMixed[0], &SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
 		
 		// 作成したバッファの設定
 		alSourceUnqueueBuffers(Source, 2, Buffers);
@@ -402,13 +411,11 @@ namespace htAudio {
 	/// <summary>
 	/// streamの更新バッファを更新
 	/// </summary>
-	void AudioSpeaker::UpdateStreamBuffer(std::vector<int16_t> buf)
+	void AudioSpeaker::UpdateStreamBuffer(void* buf)
 	{
 		bool readSuccessflag = false;
 
-		buf.clear();
-		buf = std::vector<int16_t>(StreamBufSize);
-		readSuccessflag = AudioDecoder::AudioBufferDecoder(&buf[0], SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
+		readSuccessflag = AudioDecoder::AudioBufferDecoder(&buf, &SpeakerData, SoundDatas[NowUsedNumb], HeaderFormat, SpeakerCue.Filepath);
 
 		if (readSuccessflag == true)
 		{
@@ -417,13 +424,14 @@ namespace htAudio {
 			// バッファのデキュー
 			alSourceUnqueueBuffers(Source, 1, &UpdateBufQue);
 			// バッファの設定
-			BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &buf[0], HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
+			BufferCommand->Execute(UpdateBufQue, HeaderFormat.Fmt.Channels, &buf, HeaderFormat.Fmt.SamplesPerSec, SpeakerData.ReadBufSize);
 			// バッファのインキュー
 			alSourceQueueBuffers(Source, 1, &UpdateBufQue);
 			// バッファの移動
 			SpeakerData.SubmitTimes = !SpeakerData.SubmitTimes;
 		}
-		else {
+		else 
+		{
 			printf("UpdateStreamBufferに失敗しました\n");
 		}
 	}

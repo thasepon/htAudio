@@ -12,6 +12,8 @@ namespace htAudio
 	{
 	}
 
+#pragma region Header読み取り
+
 	/// <summary>
 	/// Ogg,wavファイルのヘッダー部分の読み込み
 	/// </summary>
@@ -153,14 +155,18 @@ namespace htAudio
 
 	}
 
+#pragma endregion
+
 	/// <summary>
 	/// オーディオバッファー読み込み用の窓口関数
 	/// </summary>
-	bool AudioDecoder::AudioBufferDecoder(void* buf
-		,AudioData& audiodata
-		,SoundType type
-		, AUDIOFILEFORMAT headerfmt
-		, std::string filepath)
+	/// <param name="buf">バッファの保存ポインタ</param>
+	/// <param name="audiodata">ストリームデータ(nullptrでPreload)</param>
+	/// <param name="type">対象のサウンド情報</param>
+	/// <param name="headerfmt">ヘッダー情報</param>
+	/// <param name="filepath">ファイルのあるフォルダー</param>
+	/// <returns></returns>
+	bool AudioDecoder::AudioBufferDecoder(void* buf,AudioData* audiodata,SoundType type, AUDIOFILEFORMAT headerfmt, std::string filepath)
 	{
 		bool loadflag = false;
 
@@ -171,7 +177,7 @@ namespace htAudio
 		}
 		else if (type.RIFFType == RIFF_OGG)
 		{
-			loadflag = BufferDecoderOgg(audiodata, filepath + type.AudioName + ".ogg", type.Loopflag, buf);
+			loadflag = BufferDecoderOgg(headerfmt, filepath + type.AudioName + ".ogg", type.Loopflag, audiodata, buf);
 		}
 
 		// 処理なし
@@ -179,40 +185,20 @@ namespace htAudio
 	}
 
 	/// <summary>
-	/// Preloadのバッファ読み込み
-	/// (一部必要のない引数があったので作成)
+	/// バッファーの読み込み(.ogg)
 	/// </summary>
-	/// <param name="buf"></param>
-	/// <returns></returns>
-	bool AudioDecoder::AudioPreloadBufferDecoder(void* buf
-		, SoundType type
-		, AUDIOFILEFORMAT headerfmt
-		, std::string filepath)
+	/// <param name="Format">Header情報</param>
+	/// <param name="filename">対象のファイルパス</param>
+	/// <param name="loopflag">ループフラグ</param>
+	/// <param name="audiodata">ストリームデータ(nullptrでPreload)</param>
+	/// <param name="buf">バッファ本体</param>
+	/// <returns>完了フラグ</returns>
+	bool AudioDecoder::BufferDecoderOgg(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData* audiodata,void* buf)
 	{
-		bool loadflag = false;
-
-		// 拡張子の判断
-		if (type.RIFFType == RIFF_WAV)
-		{
-			PreloadWavDecoder(headerfmt, filepath + type.AudioName + ".wav", type.Loopflag, buf);
-		}
-		else if (type.RIFFType == RIFF_OGG)
-		{
-			loadflag = PreloadOggDecoder( filepath + type.AudioName + ".wav", type.Loopflag, buf);
-		}
-	}
-
-
-	/// <summary>
-	/// バッファーの読み込み(.wav)
-	/// </summary>
-	/// <param name="buf"></param>
-	bool AudioDecoder::BufferDecoderOgg(AudioData& audiodata, std::string filename, bool loopflag, void* buf)
-	{
-		unsigned long requestsize = audiodata.ReadBufSize;
+		unsigned long requestsize = 0;
 		int bitstream = 0;
-		int readsize = 0;
-		UINT comsize = 0;
+		ULONG readsize = 0;
+		ULONG comsize = 0;
 		OggVorbis_File Ovf;
 		
 		if (ov_fopen(filename.c_str(), &Ovf))
@@ -221,6 +207,17 @@ namespace htAudio
 			printf("サウンドファイルの読み取りに失敗しました");
 			return false;
 		}
+
+		if (audiodata == nullptr)
+		{
+			requestsize = Format.Data.ChunkSize;
+		}
+		else 
+		{
+			requestsize = audiodata->ReadBufSize;
+			ov_pcm_seek(&Ovf, audiodata->NextFirstSample);
+		}
+
 
 		// 読みこみ部分
 		while (1)
@@ -234,7 +231,6 @@ namespace htAudio
 				if (loopflag == true)
 				{
 					ov_time_seek(&Ovf,0.0);
-					audiodata.TotalreadBufSize = 0;
 				}
 				else 
 				{
@@ -258,254 +254,92 @@ namespace htAudio
 			}
 
 		}
-		// 現在の読み込み量を加算
-		audiodata.TotalreadBufSize += comsize;
-		
+
+		if (audiodata != nullptr)
+		{
+			audiodata->NextFirstSample = comsize;
+		}
+
 		return true;
-	}
-
-	unsigned long AudioDecoder::StreamOggDecoder(AudioData& audiodata, std::string filename, bool loopflag, void* buf)
-	{
-		unsigned long requestsize = audiodata.ReadBufSize;
-		int bitstream = 0;
-		int readsize = 0;
-		UINT comsize = 0;
-		OggVorbis_File Ovf;
-
-		if (ov_fopen(filename.c_str(), &Ovf))
-		{
-			// Oggファイルオープンの失敗
-			printf("サウンドファイルの読み取りに失敗しました");
-			return false;
-		}
-
-		// 読みこみ部分
-		while (1)
-		{
-			readsize = ov_read(&Ovf, (char*)((char*)buf + comsize), requestsize, 0, 2, 1, &bitstream);
-
-			// 末端まで読み込み終了
-			if (readsize == 0)
-			{
-				// ループ処理がある場合は読み込み位置を先頭に戻す。
-				if (loopflag == true)
-				{
-					ov_time_seek(&Ovf, 0.0);
-					audiodata.TotalreadBufSize = 0;
-				}
-				else
-				{
-					// 動作無し
-					break;
-				}
-			}
-			// 今回読みこんだ量を保存
-			comsize += readsize;
-
-			// 指定量のバッファを取得出来たら終了
-			if (comsize >= requestsize)
-			{
-				break;
-			}
-
-			// 一定に達していない場合は残りの分をRequestする
-			if ((requestsize - comsize) > 0)
-			{
-				requestsize -= comsize;
-			}
-
-		}
-		// 現在の読み込み量を加算
-		audiodata.TotalreadBufSize += comsize;
-	}
-
-	unsigned long AudioDecoder::PreloadOggDecoder(std::string filename, bool loopflag, void* buf)
-	{
-		int bitstream = 0;
-		int readsize = 0;
-		UINT comsize = 0;
-		OggVorbis_File Ovf;
-
-		if (ov_fopen(filename.c_str(), &Ovf))
-		{
-			// Oggファイルオープンの失敗
-			printf("サウンドファイルの読み取りに失敗しました");
-			return false;
-		}
-
-		// 読みこみ部分
-		while (1)
-		{
-			readsize = ov_read(&Ovf, (char*)((char*)buf + comsize), 4096, 0, 2, 1, &bitstream);
-
-			// 末端まで読み込み終了
-			if (readsize == EOF)
-			{
-				break;
-			}
-			// 今回読みこんだ量を保存
-			comsize += readsize;
-		}
-
-		return 1;
-
 	}
 
 	/// <summary>
 	/// バッファーの読み込み(.wav)
 	/// </summary>
-	/// <param name="buf"></param>
-	bool AudioDecoder::BufferDecoderWav(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
+	/// <param name="Format">Header情報</param>
+	/// <param name="filename">対象のファイルパス</param>
+	/// <param name="loopflag">ループフラグ</param>
+	/// <param name="audiodata">ストリームデータ(nullptrでPreload)</param>
+	/// <param name="buf">バッファ本体</param>
+	/// <returns>完了フラグ</returns>
+	bool AudioDecoder::BufferDecoderWav(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData* audiodata, void* buf)
 	{
-		// 8bitは考えません
-		if (!buf)
+		FILE* fp = nullptr;			// ファイルポインタ
+
+		ULONG samplesize = 0;
+		ULONG freadsize = 0;
+		
+		ULONG _nextFirstSample = 0;
+		ULONG _readBufSize = 0;
+
+		// ファイルのオープン
+		fopen_s(&fp, filename.c_str(), "rb");
+		if (!fp)
 		{
-			printf("バッファのサイズの確保不足");
+			printf("サウンドファイルの読み取りに失敗しました");
 			return false;
 		}
 
-		// Stereo16bit
-		unsigned long readsample = 0;
-
-		readsample = StreamWavDecoder(Format, filename, loopflag, audiodata, buf);
-
-		if (readsample > 0)
+		// AudioDataが存在しない場合の処理
+		if (audiodata == nullptr)
 		{
-			audiodata.NextFirstSample += readsample;
-			return true;
+			_nextFirstSample = Format.FirstSampleOffSet;
+			_readBufSize = Format.Data.ChunkSize;
+
 		}
-		
-		printf("サンプルの読み込みに失敗しました\n");
-		return false;
-	}
-
-	/// <summary>
-	/// wavファイルの読み込み(StreamLoad)
-	/// </summary>
-	/// <param name="audiodata"></param>
-	/// <param name="buf"></param>
-	/// <returns></returns>
-	unsigned long AudioDecoder::StreamWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, AudioData& audiodata, void* buf)
-	{
-
-		FILE* fp = nullptr;			// ファイルポインタ
-		int readsize = 0;
-		// ファイルのオープン
-		fopen_s(&fp, filename.c_str(), "rb");
-		
-		if (!fp)
+		else 
 		{
-			printf("サウンドファイルの読み取りに失敗しました");
-			return 0;
-		}
+			_nextFirstSample = audiodata->NextFirstSample;
+			_readBufSize = audiodata->ReadBufSize;
 
-		long samplesize = 0;
-		long freadsize = 0;
-		int cnt = 0;
+		}
 
 		// バッファ読み込み量
-		fseek(fp, audiodata.NextFirstSample, SEEK_CUR);
+		fseek(fp, _nextFirstSample, SEEK_CUR);
 
-		while (samplesize < audiodata.ReadBufSize)
+		while (samplesize < _readBufSize)
 		{
 			freadsize = fread(
-				reinterpret_cast<int16_t*>(buf) + cnt,
-				Format.Fmt.BlockSize / Format.Fmt.Channels,
+				buf,
+				_readBufSize,
 				1,
 				fp);
 
-			// 読み込めなかった場合の処理
+			// 読み込みが完了した
 			if (freadsize == 0)
 			{
-				readsize = samplesize;
 				break;
 			}
 
 			samplesize += freadsize;
 			freadsize = 0;
-			cnt++;
 
 		}
-		readsize = samplesize;
-		
 
 		// 終了処理
 		fclose(fp);
 
 		// ループ処理
-		if (readsize == 0)
+		if (samplesize == 0 && audiodata != nullptr)
 		{
-			if (loopflag >= 0)
+			if (loopflag >= 0 && loopflag)
 			{
-				// バッファ読み込み終了
-				// ループ用に読み込み位置を初期化
-				audiodata.NextFirstSample = Format.FirstSampleOffSet;
+				audiodata->NextFirstSample = Format.FirstSampleOffSet;
 			}
 		}
-
-		return readsize;
-	}
-
-	/// <summary>
-	/// Wavファイルの読み込み(Preload)
-	/// </summary>
-	/// <param name="Format"></param>
-	/// <param name="filename"></param>
-	/// <param name="loopflag"></param>
-	/// <param name="buf"></param>
-	/// <returns></returns>
-	unsigned long AudioDecoder::PreloadWavDecoder(AUDIOFILEFORMAT Format, std::string filename, bool loopflag, void* buf)
-	{
-		FILE* fp = nullptr;			// ファイルポインタ
-		int readsize = 0;
-		// ファイルのオープン
-		fopen_s(&fp, filename.c_str(), "rb");
-
-		if (!fp)
-		{
-			printf("サウンドファイルの読み取りに失敗しました");
-			return 0;
-		}
-
-		long samplesize = 0;
-		long freadsize = 0;
-		int cnt = 0;
-
-		// バッファ読み込み量
-		fseek(fp, Format.FirstSampleOffSet, SEEK_CUR);
-
-		// 読み込み終了まで読み込み
-		while (1)
-		{
-			freadsize = fread(
-				reinterpret_cast<int16_t*>(buf) + cnt,
-				Format.Fmt.BlockSize / Format.Fmt.Channels,
-				1,
-				fp);
-
-			// 読み込めなかった場合の処理
-			if (freadsize <= 0)
-			{
-				readsize = samplesize;
-				break;
-			}
-
-			samplesize += freadsize;
-			freadsize = 0;
-			cnt++;
-
-		}
-		readsize = samplesize;
-
-		// 終了処理
-		fclose(fp);
-
-		// ループ処理
-		//Preloadの際はループは機能ごとのものに任せませるというかバッファに任せる
 		
+		return true;
 
-		return readsize;
 	}
-
 
 }

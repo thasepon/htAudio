@@ -50,7 +50,7 @@ namespace htAudio
 		void InitStreamBuffer();			// 指定Audioがstreamタイプだった場合の初期化準備
 		void ReadHeaderInfo();				// ヘッダー情報の読み込み
 		bool AddEffects();					// エフェクトの適応と設定
-		void UpdateStreamBuffer(std::vector<int16_t> buf);				// バッファ更新用関数
+		void UpdateStreamBuffer(void* buf);				// バッファ更新用関数
 
 		// === 構造体宣言 === //
 		AudioData SpeakerData;					// Audioのデータ(使いまわしする予定)
